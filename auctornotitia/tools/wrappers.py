@@ -41,7 +41,7 @@ class PortChecker:
         verbose_flag = " "
         if self.verbose:
             verbose_flag = " -v"
-        command = "nc -c -w " + str(self.timeout) + verbose_flag + self.address + " " + str(self.port) + " > /dev/null"
+        command = "echo 'QUIT' | nc -w " + str(self.timeout) + verbose_flag + self.address + " " + str(self.port) + " > /dev/null"
         self.logger.debug("creating command: " + command)
         return command
 
@@ -61,7 +61,7 @@ class PortChecker:
                                  self.address)
                 time.sleep(10)
             else:
-                break;
+                break
         return result
 
 class Rsync:
