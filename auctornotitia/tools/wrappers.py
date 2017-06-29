@@ -40,7 +40,7 @@ class PortChecker:
     def __generate_port_check_command(self):
         verbose_flag = " "
         if self.verbose:
-            verbose_flag = " -v"
+            verbose_flag = " -v "
         command = "echo 'QUIT' | nc -w " + str(self.timeout) + verbose_flag + self.address + " " + str(self.port) + " > /dev/null"
         self.logger.debug("creating command: " + command)
         return command
@@ -117,7 +117,7 @@ class Rsync:
             flags += "a"
         else:
             flags += "r"
-        command += flags + " " + self.__get_from_path() + " " + self.__get_to_path()
+        command += flags + " " + self.__get_from_path() + " " + self.__get_to_path() + " --timeout=120"
         self.logger.debug("creating command: '" + command + "'")
         return command
 
@@ -158,6 +158,8 @@ class Rsync:
                 if counter == 0:
                     self.logger.error("Unable to sync data, error code: %s", os.WEXITSTATUS(result))
                     raise RsyncException()
+                else:
+                    self.logger.info("Rsync failed with exit code: %s", os.WEXITSTATUS(result))
             else:
                 break
             counter -= 1
