@@ -19,12 +19,12 @@ parser.add_option("-p", "--push_or_pull", dest="push_or_pull",
                   help="Default is to pull data, this can be setting push_or_pull to 2.", default="1")
 parser.add_option("-i", "--identity_file", dest="identity_file",
                   help="Path to the location of the identity_file that will be used to authenticate the user.")
-parser.add_option("-c", "--checksum_validate", dest="checksum_validate",
+parser.add_option("-c", "--checksum_validate", dest="checksum_validate", default=False, action="store_true",
                   help="Rsync command will use checksum to validate transfered files when this parameters is set to true.")
-parser.add_option("-P", "--preserve_permissions", dest="preserve_permissions",
+parser.add_option("-P", "--preserve_permissions", dest="preserve_permissions", default=False, action="store_true",
                   help="Rsync command will preserve permissions and ownership.")
 parser.add_option("-R", "--repeat", dest="repeat",
-                  help="Number of times rsync command should be repeated, when it fails, default is 10 and -1 is forever.",default=10)
+                  help="Number of times rsync command should be repeated, when it fails, default is 20 and -1 is forever.",default=20)
 
 (options, args) = parser.parse_args()
 
