@@ -65,50 +65,57 @@ class PortChecker:
         return result
 
 class Rsync:
-    PULL = 1
-    PUSH = 2
+    FROM_IS_REMOTE = 1
+    TO_IS_REMOTE = 2
 
-    def __init__(self, from_path, to_path, remote_address, user=None, push_or_pull=1, repeat=1, identity_file=None,
-                 checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False):
+    def __init__(self, from_path, to_path, remote_address=None, user=None, from_is_remote=1, repeat=1, identity_file=None,
+                 checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False,local_sync=False):
         self.to_path = to_path
         self.from_path = from_path
         self.remote_address = remote_address
         self.user = user
         self.identity_file = identity_file
-        self.push_or_pull = push_or_pull
+        self.from_is_remote = from_is_remote
         self.checksum_validate = checksum_validate
         self.repeat = repeat
         self.preserve_permissions = preserve_permissions
         self.verbose = verbose
         self.logger = logging.getLogger(self.__class__.__name__)
         self.ignore_ping = ignore_ping
+        self.local_sync = local_sync
+        if not self.local_sync and remote_address is None:
+            self.logger.error("Sync between host cannot be performed without a remote address!")
+            raise  IncorrectInputException
         self.logger.debug("creating instance")
 
     def __get_from_path(self):
         command = ""
-        if self.push_or_pull == Rsync.PULL:
-            if self.user:
-                command += self.user + "@" + self.remote_address + ":"
-            else:
-                command += self.remote_address + ":"
+        if not self.local_sync:
+            if self.from_is_remote == Rsync.FROM_IS_REMOTE:
+                if self.user:
+                    command += self.user + "@" + self.remote_address + ":"
+                else:
+                    command += self.remote_address + ":"
         return command + self.from_path
 
     def __get_to_path(self):
         command = ""
-        if self.push_or_pull == Rsync.PUSH:
-            if self.user:
-                command += self.user + "@" + self.remote_address + ":"
-            else:
-                command += self.remote_address + ":"
+        if not self.local_sync:
+            if self.from_is_remote == Rsync.TO_IS_REMOTE:
+                if self.user:
+                    command += self.user + "@" + self.remote_address + ":"
+                else:
+                    command += self.remote_address + ":"
         return command + self.to_path
 
     def __create_sync_command(self):
         command = 'rsync'
         flags = " -zP"
-        if self.identity_file:
-            command += ' -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ' + self.identity_file + '"'
-        else:
-            command += ' -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"'
+        if not self.local_sync:
+            if self.identity_file:
+                command += ' -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ' + self.identity_file + '"'
+            else:
+                command += ' -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"'
         if self.checksum_validate:
             flags += "c"
         if self.verbose:
@@ -136,16 +143,17 @@ class Rsync:
         return command
 
     def execute(self):
-        if not self.ignore_ping:
+        if not self.local_sync and not self.ignore_ping:
             ping = AddressChecker(self.remote_address, self.verbose)
             ping.execute()
-        port_checker = PortChecker(self.remote_address, 22, self.verbose)
-        port_checker.execute()
+        if not self.local_sync:
+            port_checker = PortChecker(self.remote_address, 22, self.verbose)
+            port_checker.execute()
 
-        self.logger.debug("checking ssh access")
-        if os.system(self.__create_ssh_access_command()) != 0:
-            self.logger.error("unable to access server using ssh key, it may be password protected.")
-            raise SshAccessException()
+            self.logger.debug("checking ssh access")
+            if os.system(self.__create_ssh_access_command()) != 0:
+                self.logger.error("unable to access server using ssh key, it may be password protected.")
+                raise SshAccessException()
 
         command = self.__create_sync_command()
         result = None
@@ -166,7 +174,8 @@ class Rsync:
             self.logger.info("Unable to sync data from %s to %s, sleeping for 60 seconds", self.__get_from_path(),
                              self.__get_to_path())
             time.sleep(5)
-            port_checker.execute()
+            if not self.local_sync:
+                port_checker.execute()
         return result
 
 class PortInaccessibleException(Exception):
@@ -179,4 +188,7 @@ class AddressException(Exception):
     pass
 
 class RsyncException(Exception):
+    pass
+
+class IncorrectInputException(Exception):
     pass
