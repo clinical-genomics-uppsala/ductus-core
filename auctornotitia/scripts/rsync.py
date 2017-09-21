@@ -12,11 +12,11 @@ parser.add_option("-f", "--from_path", dest="from_path",
 parser.add_option("-t", "--to_path", dest="to_path",
                   help="Path to where folder/files that will be moved.")
 parser.add_option("-r", "--remote_address", dest="remote_address",
-                  help="The ip address to the remote host from where data will be pulled from or sent to.")
+                  help="The ip address to the remote host from where data will be sync from or to.")
 parser.add_option("-u", "--user", dest="user",
-                  help="he user name that will be used to move data, not required if the executing user is the one that will move the data.")
-parser.add_option("-p", "--push_or_pull", dest="push_or_pull",
-                  help="Default is to pull data, this can be setting push_or_pull to 2.", default="1")
+                  help="the user name that will be used to move data, not required if the executing user is the one that will move the data or if data will be moved locally.")
+parser.add_option("-p", "--from_is_remote", dest="from_is_remote",
+                  help="Set that \"from_address\" is the remote one, setting value 2 switch to \"to_path\" being remote.", default="1")
 parser.add_option("-i", "--identity_file", dest="identity_file",
                   help="Path to the location of the identity_file that will be used to authenticate the user.")
 parser.add_option("-c", "--checksum_validate", dest="checksum_validate", default=False, action="store_true",
@@ -54,7 +54,7 @@ try:
       options.to_path,
       options.remote_address,
       options.user,
-      int(options.push_or_pull),
+      int(options.from_is_remote),
       int(options.repeat),
       options.identity_file,
       not options.checksum_validate is None,
