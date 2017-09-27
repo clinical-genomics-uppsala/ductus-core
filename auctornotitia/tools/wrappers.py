@@ -403,7 +403,8 @@ if __name__ == "__main__":
     # nc will listen for connection on port 8080, used by the tests.
     proc_test = Popen("nc -l 8080 -k", shell=True,stdout=open(os.devnull, 'wb'))
 
-    doctest.testmod(extraglobs={'address_checker_local': AddressChecker("127.0.0.1"),
+    doctest.testmod(raise_on_error=True,
+                    extraglobs={'address_checker_local': AddressChecker("127.0.0.1"),
                                 'address_checker_verbose': AddressChecker("127.0.0.1",True),
                                 'address_checker_invalid': AddressChecker("127.0.1.1"),
                                 'port_checker': PortChecker("127.0.0.1",8080),
