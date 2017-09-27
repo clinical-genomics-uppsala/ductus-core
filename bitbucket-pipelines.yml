@@ -6,6 +6,11 @@ pipelines:
       - step:
           script:
             - python auctornotitia/tools/wrappers.py
+  tags:
+    v*:
+      - step:
+          script:
+            - python auctornotitia/tools/wrappers.py
   branches:
     master:
       - step:
