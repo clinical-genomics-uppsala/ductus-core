@@ -43,7 +43,7 @@ class AddressChecker:
         'ping -W 5 -c 1 -v 127.0.0.1 > /dev/null'
 
         >>> address_checker_invalid._AddressChecker__generate_ping_command()
-        'ping -W 5 -c 1 127.0.1.1 > /dev/null'
+        'ping -W 5 -c 1 10.10.10.10 > /dev/null'
         """
         verbose = " "
         if self.verbose:
@@ -403,10 +403,10 @@ if __name__ == "__main__":
     # nc will listen for connection on port 8080, used by the tests.
     proc_test = Popen("nc -l 8080 -k", shell=True,stdout=open(os.devnull, 'wb'))
 
-    doctest.testmod(raise_on_error=True,
+    result = doctest.testmod(
                     extraglobs={'address_checker_local': AddressChecker("127.0.0.1"),
                                 'address_checker_verbose': AddressChecker("127.0.0.1",True),
-                                'address_checker_invalid': AddressChecker("127.0.1.1"),
+                                'address_checker_invalid': AddressChecker("10.10.10.10"),
                                 'port_checker': PortChecker("127.0.0.1",8080),
                                 'port_checker_extra': PortChecker("127.0.0.1",8080, False, 10, 15),
                                 'port_checker_verbose': PortChecker("127.0.0.1",8080, True, 10, 15),
@@ -416,3 +416,4 @@ if __name__ == "__main__":
                                 'rsync_network': Rsync("/home/test","/home/test2","127.0.0.1"),
                                 'rsync_network_extra': Rsync("/home/test","/home/test2","127.0.0.1","test",Rsync.TO_IS_REMOTE,2,"identity_test",True,True,True,True)})
     proc_test.kill()
+    sys.exit(result.failed)
