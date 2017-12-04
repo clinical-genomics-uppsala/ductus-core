@@ -1,10 +1,8 @@
-# README #
-
-
+# Ductus core #
 
 ### What is this repository for? ###
 
-This repository contains tools used to check network access and for moving data.
+Contain wrappers for common linux tools and is mainly used with the Ductus project.
 
 ### How do I get set up? ###
 

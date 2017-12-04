@@ -1,15 +1,15 @@
 from setuptools import setup, find_packages
-from auctornotitia import __version__
+from ductus import __version__
 import os
 
 def read_file(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name='auctornotitia',
+    name='ductus',
     version=__version__,
-    description="Helper classes for the auctornotitia project",
-    long_description=read_file('README'),
+    description="Helper classes for the ductus project",
+    long_description=read_file('README.md'),
     keywords='bioinformatics',
     install_requires=[],
     author='IGP Platform, Uppsala University',
