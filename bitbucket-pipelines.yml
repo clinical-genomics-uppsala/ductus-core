@@ -5,14 +5,14 @@ pipelines:
     validate-wrappers:
       - step:
           script:
-            - python auctornotitia/tools/wrappers.py
+            - python ductus/tools/wrappers.py
   tags:
     v*:
       - step:
           script:
-            - python auctornotitia/tools/wrappers.py
+            - python ducutus/tools/wrappers.py
   branches:
     master:
       - step:
           script:
-            - python auctornotitia/tools/wrappers.py 
+            - python ductus/tools/wrappers.py 
