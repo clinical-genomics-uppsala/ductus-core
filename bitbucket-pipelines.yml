@@ -10,7 +10,7 @@ pipelines:
     v*:
       - step:
           script:
-            - python ducutus/tools/wrappers.py
+            - python ductus/tools/wrappers.py
   branches:
     master:
       - step:

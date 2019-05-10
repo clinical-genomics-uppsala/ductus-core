@@ -186,7 +186,7 @@ class Rsync:
     TO_IS_REMOTE = 2
 
     def __init__(self, from_path, to_path, remote_address=None, user=None, from_is_remote=1, repeat=1, identity_file=None,
-                 checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False,local_sync=False):
+                 checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False,local_sync=False, timeout=1200):
         """ :param from_path: where data should be transferred from
             :param to_path: where data should be transferred to
             :param remote_address: server address that should be used
@@ -199,6 +199,7 @@ class Rsync:
             :param verbose: run rsync with verbose
             :param ignore_ping: don't check if address is accessible
             :param local_sync: perform sync between folders on the same local computer
+            :param timeout: timeout used to detect stalled sync
 
 
             >>> Rsync("/home/test","/home/test2")
@@ -224,6 +225,7 @@ class Rsync:
         self.logger = logging.getLogger(self.__class__.__name__)
         self.ignore_ping = ignore_ping
         self.local_sync = local_sync
+        self.timeout = timeout
         if not self.local_sync and remote_address is None:
             self.logger.error("Sync between host cannot be performed without a remote address!")
             raise  IncorrectInputException
@@ -280,11 +282,11 @@ class Rsync:
 
 
             >>> rsync_local._Rsync__create_sync_command()
-            'rsync -zPa /home/test /home/test2 --timeout=120'
+            'rsync -zPa /home/test /home/test2 --timeout=1200'
             >>> rsync_network._Rsync__create_sync_command()
-            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" -zPa 127.0.0.1:/home/test /home/test2 --timeout=120'
+            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" -zPa 127.0.0.1:/home/test /home/test2 --timeout=1200'
             >>> rsync_network_extra._Rsync__create_sync_command()
-            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test" -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=120'
+            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test" -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=1200'
         """
         command = 'rsync'
         flags = " -zP"
@@ -301,7 +303,7 @@ class Rsync:
             flags += "a"
         else:
             flags += "r"
-        command += flags + " " + self.__get_from_path() + " " + self.__get_to_path() + " --timeout=120"
+        command += flags + " " + self.__get_from_path() + " " + self.__get_to_path() + " --timeout=" + str(self.timeout)
         self.logger.debug("creating command: '" + command + "'")
         return command
 
@@ -416,4 +418,3 @@ if __name__ == "__main__":
                                 'rsync_network': Rsync("/home/test","/home/test2","127.0.0.1"),
                                 'rsync_network_extra': Rsync("/home/test","/home/test2","127.0.0.1","test",Rsync.TO_IS_REMOTE,2,"identity_test",True,True,True,True)})
     proc_test.kill()
-    sys.exit(result.failed)
