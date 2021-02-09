@@ -6,9 +6,9 @@ def read_file(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-    name='auctornotitia',
+    name='ductuscore',
     version=__version__,
-    description="Helper classes for the auctornotitia project",
+    description="Helper classes for the ductus project",
     long_description=read_file('README'),
     keywords='bioinformatics',
     install_requires=[],
