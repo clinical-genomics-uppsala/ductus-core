@@ -190,7 +190,11 @@ class Rsync:
     TO_IS_REMOTE = 2
 
     def __init__(self, from_path, to_path, remote_address=None, user=None, from_is_remote=1, repeat=1, identity_file=None,
+<<<<<<< HEAD:ductus/tools/wrappers.py
                  checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False,local_sync=False, timeout=1200):
+=======
+                 checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False, local_sync=False):
+>>>>>>> 6e89ab9... Dummy script used to parse samplesheet.:ductuscore/tools/wrappers.py
         """ :param from_path: where data should be transferred from
             :param to_path: where data should be transferred to
             :param remote_address: server address that should be used
@@ -288,11 +292,17 @@ class Rsync:
             >>> rsync_local._Rsync__create_sync_command()
             'rsync -zPa /home/test /home/test2 --timeout=1200'
             >>> rsync_network._Rsync__create_sync_command()
+<<<<<<< HEAD:ductus/tools/wrappers.py
+            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" -zPa 127.0.0.1:/home/test /home/test2 --timeout=1200'
+            >>> rsync_network_extra._Rsync__create_sync_command()
+            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test" -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=1200'
+=======
             'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
-                -zPa 127.0.0.1:/home/test /home/test2 --timeout=1200'
+                -zPa 127.0.0.1:/home/test /home/test2 --timeout=120'
             >>> rsync_network_extra._Rsync__create_sync_command()
             'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test" \
-                -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=1200'
+                -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=120'
+>>>>>>> 6e89ab9... Dummy script used to parse samplesheet.:ductuscore/tools/wrappers.py
         """
         command = 'rsync'
         flags = " -zP"
@@ -418,6 +428,20 @@ if __name__ == "__main__":
     # nc will listen for connection on port 8080, used by the tests.
     proc_test = Popen("nc -l 8080 -k", shell=True, stdout=open(os.devnull, 'wb'))
 
+<<<<<<< HEAD:ductus/tools/wrappers.py
+    result = doctest.testmod(
+                    extraglobs={'address_checker_local': AddressChecker("127.0.0.1"),
+                                'address_checker_verbose': AddressChecker("127.0.0.1",True),
+                                'address_checker_invalid': AddressChecker("10.10.10.10"),
+                                'port_checker': PortChecker("127.0.0.1",8080),
+                                'port_checker_extra': PortChecker("127.0.0.1",8080, False, 10, 15),
+                                'port_checker_verbose': PortChecker("127.0.0.1",8080, True, 10, 15),
+                                'port_checker_invalid_address': PortChecker("127.0.1.1",8080,False,0,0),
+                                'port_checker_invalid_port': PortChecker("127.0.0.1",8081,False,0,0),
+                                'rsync_local': Rsync("/home/test","/home/test2",local_sync=True),
+                                'rsync_network': Rsync("/home/test","/home/test2","127.0.0.1"),
+                                'rsync_network_extra': Rsync("/home/test","/home/test2","127.0.0.1","test",Rsync.TO_IS_REMOTE,2,"identity_test",True,True,True,True)})
+=======
     doctest.testmod(extraglobs={'address_checker_local': AddressChecker("127.0.0.1"),
                                 'address_checker_verbose': AddressChecker("127.0.0.1", True),
                                 'address_checker_invalid': AddressChecker("127.0.1.1"),
@@ -430,4 +454,5 @@ if __name__ == "__main__":
                                 'rsync_network': Rsync("/home/test", "/home/test2", "127.0.0.1"),
                                 'rsync_network_extra': Rsync("/home/test", "/home/test2", "127.0.0.1", "test",
                                                              Rsync.TO_IS_REMOTE, 2, "identity_test", True, True, True, True)})
+>>>>>>> 6e89ab9... Dummy script used to parse samplesheet.:ductuscore/tools/wrappers.py
     proc_test.kill()
