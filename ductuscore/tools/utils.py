@@ -11,10 +11,10 @@ def extract_analysis_information(samplesheet):
         tso500 = False
         TM = False
         TE = False
-        data = {'header':"",
-                'wp1': {'klinik':[], 'projekt':[], 'forskning':[], 'utveckling':[]},
-                'wp2': {'klinik':[], 'projekt':[], 'forskning':[], 'utveckling':[]},
-                'wp3': {'klinik':[], 'projekt':[], 'forskning':[], 'utveckling':[]}}
+        data = {'header': "",
+                'wp1': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
+                'wp2': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
+                'wp3': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []}}
         for line in file:
             data['header'] = data['header'] + line
             line = line.lower()
@@ -31,12 +31,12 @@ def extract_analysis_information(samplesheet):
                 data['header'] = data['header'] + line
                 header_map = {v[1].lower(): v[0] for v in enumerate(re.split(",|;", line.rstrip()))}
                 for row in file:
-                    columns = re.split(",|;",row)
+                    columns = re.split(",|;", row)
                     if len(columns) == 1:
                         continue
                     if 'sample_project' in header_map and columns[header_map['sample_project']].startswith("TM"):
                         data["wp2"]['klinik'].append((columns[header_map['sample_id']], "TM", row))
-                    elif 'sample_project' in header_map and  columns[header_map['sample_project']].startswith("TE"):
+                    elif 'sample_project' in header_map and columns[header_map['sample_project']].startswith("TE"):
                         data["wp3"]['klinik'].append((columns[header_map['sample_id']], "TE", row))
                     else:
                         if tso500:
