@@ -3,8 +3,8 @@ import logging
 
 from optparse import OptionParser
 
-from ductuscore.tools.wrappers import Rsync
-from ductuscore.tools.wrappers import AddressException, PortInaccessibleException, SshAccessException, RsyncException
+from ductus.tools.wrappers import Rsync
+from ductus.tools.wrappers import AddressException, PortInaccessibleException, SshAccessException, RsyncException
 
 parser = OptionParser()
 parser.add_option("-f", "--from_path", dest="from_path",
