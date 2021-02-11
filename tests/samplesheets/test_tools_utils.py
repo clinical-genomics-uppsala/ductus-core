@@ -1,5 +1,5 @@
 import unittest
-from ductuscore.tools.utils import extract_analysis_information
+from ductus.tools.utils import extract_analysis_information
 
 
 class TestUtils(unittest.TestCase):
