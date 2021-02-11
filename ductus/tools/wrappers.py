@@ -15,6 +15,7 @@ import time
 import logging
 from subprocess import Popen
 
+
 class AddressChecker:
     """ This class is supposed to be used when determining if a
         address is accessible via the network, using ping.
@@ -77,6 +78,7 @@ class AddressChecker:
             raise AddressException()
         return result
 
+
 class PortChecker:
     """ This class is supposed to be used when determining if a
         network port is open, using nc.
@@ -125,7 +127,7 @@ class PortChecker:
         self.logger.debug("creating command: " + command)
         return command
 
-    def execute(self,testing=False):
+    def execute(self, testing=False):
         """ Function that will execute the generated nc command, if the port isn't
             accessible an error will be thrown (i.e if return value of command isn't 0)
 
@@ -160,11 +162,11 @@ class PortChecker:
                 proc = Popen(command, shell=True)
             else:
                 # Pipe the stdout and stderr to /dev/null if verbose haven't been set.
-                proc = Popen(command, shell=True,stdout=open(os.devnull, 'wb'),stderr=open(os.devnull, 'wb'))
+                proc = Popen(command, shell=True, stdout=open(os.devnull, 'wb'), stderr=open(os.devnull, 'wb'))
             # Perform command until timeout setting is met.
             timeout_counter = self.timeout
             while result is None:
-                time.sleep(1) # Sleep for one second
+                time.sleep(1)  # Sleep for one second
                 result = proc.poll()
                 timeout_counter -= 1
                 if timeout_counter < 0:
@@ -175,18 +177,21 @@ class PortChecker:
                 if counter < 0:
                     self.logger.error("port %s at address %s isn't accessible!", self.port, self.address)
                     raise PortInaccessibleException()
-                self.logger.info("Unable to access port %s at address %s, sleeping for 10 seconds %s", self.port, self.address, result)
+                self.logger.info("Unable to access port %s at address %s, sleeping for 10 seconds %s",
+                                 self.port, self.address, result)
                 time.sleep(10)
             else:
                 break
         return result
+
 
 class Rsync:
     FROM_IS_REMOTE = 1
     TO_IS_REMOTE = 2
 
     def __init__(self, from_path, to_path, remote_address=None, user=None, from_is_remote=1, repeat=1, identity_file=None,
-                 checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False,local_sync=False, timeout=1200):
+                 checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False, local_sync=False,
+                 timeout=1200):
         """ :param from_path: where data should be transferred from
             :param to_path: where data should be transferred to
             :param remote_address: server address that should be used
@@ -228,10 +233,10 @@ class Rsync:
         self.timeout = timeout
         if not self.local_sync and remote_address is None:
             self.logger.error("Sync between host cannot be performed without a remote address!")
-            raise  IncorrectInputException
+            raise IncorrectInputException
         if self.local_sync and remote_address is not None:
             self.logger.error("Remote address and local_sync cannot both be set")
-            raise  IncorrectInputException
+            raise IncorrectInputException
         self.logger.debug("creating instance")
 
     def __get_from_path(self):
@@ -284,9 +289,11 @@ class Rsync:
             >>> rsync_local._Rsync__create_sync_command()
             'rsync -zPa /home/test /home/test2 --timeout=1200'
             >>> rsync_network._Rsync__create_sync_command()
-            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" -zPa 127.0.0.1:/home/test /home/test2 --timeout=1200'
+            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+                -zPa 127.0.0.1:/home/test /home/test2 --timeout=1200'
             >>> rsync_network_extra._Rsync__create_sync_command()
-            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test" -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=1200'
+            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test" \
+                -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=1200'
         """
         command = 'rsync'
         flags = " -zP"
@@ -375,46 +382,53 @@ class Rsync:
             else:
                 break
             counter -= 1
-            self.logger.info("Unable to sync data from %s to %s, sleeping for 60 seconds", self.__get_from_path(), self.__get_to_path())
+            self.logger.info("Unable to sync data from %s to %s, sleeping for 60 seconds",
+                             self.__get_from_path(), self.__get_to_path())
             time.sleep(60)
         return result
+
 
 class PortInaccessibleException(Exception):
     """ Exception thrown when a port can't be accessed. """
     pass
 
+
 class SshAccessException(Exception):
     """ Exception thrown when ssh access can't be established. """
     pass
+
 
 class AddressException(Exception):
     """ Exception thrown when address isn't accessible via the network. """
     pass
 
+
 class RsyncException(Exception):
     """ Exception thrown when rsync transfer cannot be performed. """
     pass
+
 
 class IncorrectInputException(Exception):
     """ Exception thrown when incorrect input has been provided. """
     pass
 
+
 if __name__ == "__main__":
     import doctest
     logging.basicConfig(level=logging.CRITICAL, stream=sys.stdout, format='%(message)s')
     # nc will listen for connection on port 8080, used by the tests.
-    proc_test = Popen("nc -l 8080 -k", shell=True,stdout=open(os.devnull, 'wb'))
+    proc_test = Popen("nc -l 8080 -k", shell=True, stdout=open(os.devnull, 'wb'))
 
-    result = doctest.testmod(
-                    extraglobs={'address_checker_local': AddressChecker("127.0.0.1"),
-                                'address_checker_verbose': AddressChecker("127.0.0.1",True),
-                                'address_checker_invalid': AddressChecker("10.10.10.10"),
-                                'port_checker': PortChecker("127.0.0.1",8080),
-                                'port_checker_extra': PortChecker("127.0.0.1",8080, False, 10, 15),
-                                'port_checker_verbose': PortChecker("127.0.0.1",8080, True, 10, 15),
-                                'port_checker_invalid_address': PortChecker("127.0.1.1",8080,False,0,0),
-                                'port_checker_invalid_port': PortChecker("127.0.0.1",8081,False,0,0),
-                                'rsync_local': Rsync("/home/test","/home/test2",local_sync=True),
-                                'rsync_network': Rsync("/home/test","/home/test2","127.0.0.1"),
-                                'rsync_network_extra': Rsync("/home/test","/home/test2","127.0.0.1","test",Rsync.TO_IS_REMOTE,2,"identity_test",True,True,True,True)})
+    doctest.testmod(extraglobs={'address_checker_local': AddressChecker("127.0.0.1"),
+                                'address_checker_verbose': AddressChecker("127.0.0.1", True),
+                                'address_checker_invalid': AddressChecker("127.0.1.1"),
+                                'port_checker': PortChecker("127.0.0.1", 8080),
+                                'port_checker_extra': PortChecker("127.0.0.1", 8080, False, 10, 15),
+                                'port_checker_verbose': PortChecker("127.0.0.1", 8080, True, 10, 15),
+                                'port_checker_invalid_address': PortChecker("127.0.1.1", 8080, False, 0, 0),
+                                'port_checker_invalid_port': PortChecker("127.0.0.1", 8081, False, 0, 0),
+                                'rsync_local': Rsync("/home/test", "/home/test2", local_sync=True),
+                                'rsync_network': Rsync("/home/test", "/home/test2", "127.0.0.1"),
+                                'rsync_network_extra': Rsync("/home/test", "/home/test2", "127.0.0.1", "test",
+                                                             Rsync.TO_IS_REMOTE, 2, "identity_test", True, True, True, True)})
     proc_test.kill()
