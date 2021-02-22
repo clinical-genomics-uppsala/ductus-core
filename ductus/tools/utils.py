@@ -5,9 +5,9 @@ def contains(workpackage, analysis, samnplesheet):
     data = extract_analysis_information(samnplesheet)
     if workpackage in data:
         for type, analyzes,  in data[workpackage].items():
-            if analysis in analyzes:
-                return True
-
+            for a_item in analyzes:
+                if analysis in a_item:
+                    return True
     return False
 
 
@@ -45,9 +45,9 @@ def extract_analysis_information(samplesheet):
                     if len(columns) == 1:
                         continue
                     if 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
-                        data["wp2"]['klinik'].append((columns[header_map['sample_id']], "TM", row))
+                        data["wp2"]['klinik'].append((columns[header_map['sample_id']], "tm", row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
-                        data["wp3"]['klinik'].append((columns[header_map['sample_id']], "TE", row))
+                        data["wp3"]['klinik'].append((columns[header_map['sample_id']], "te", row))
                     else:
                         if tso500:
                             data["wp1"]['klinik'].append((columns[header_map['sample_id']], "tso500", row))
