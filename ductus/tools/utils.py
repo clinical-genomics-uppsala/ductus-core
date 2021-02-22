@@ -1,6 +1,16 @@
 import re
 
 
+def contains(workpackage, analysis, samnplesheet):
+    data = extract_analysis_information(samnplesheet)
+    if workpackage in data:
+        for type, analyzes,  in data[workpackage].items():
+            if analysis in analyzes:
+                return True
+
+    return False
+
+
 def extract_analysis_information(samplesheet):
     """
         Function used to extract samples from a SampleSheet.csv and group them after
@@ -34,15 +44,15 @@ def extract_analysis_information(samplesheet):
                     columns = re.split(",|;", row)
                     if len(columns) == 1:
                         continue
-                    if 'sample_project' in header_map and columns[header_map['sample_project']].startswith("TM"):
+                    if 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
                         data["wp2"]['klinik'].append((columns[header_map['sample_id']], "TM", row))
-                    elif 'sample_project' in header_map and columns[header_map['sample_project']].startswith("TE"):
+                    elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
                         data["wp3"]['klinik'].append((columns[header_map['sample_id']], "TE", row))
                     else:
                         if tso500:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_id']], "TSO500", row))
+                            data["wp1"]['klinik'].append((columns[header_map['sample_id']], "tso500", row))
                         elif haloplex:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_id']], "HaloPlex", row))
+                            data["wp1"]['klinik'].append((columns[header_map['sample_id']], "sera", row))
                         else:
                             raise Exception("Unhandled case: " + row)
         return data
