@@ -4,34 +4,38 @@ import re
 def contains(workpackage, analysis, samnplesheet):
     data = extract_analysis_information(samnplesheet)
     if workpackage in data:
-        for type, analyzes,  in data[workpackage].items():
+        for type, analyzes in data[workpackage].items():
             for a_item in analyzes:
                 if analysis in a_item:
                     return True
     return False
 
+
 def get_samples_and_project(workpackage, analysis, samnplesheet):
     data = extract_analysis_information(samnplesheet)
     sample_project = []
     if workpackage in data:
-        for project_type, data,  in data[workpackage].items():
+        for project_type, data in data[workpackage].items():
             for d in data:
                 if analysis in d:
                     sample_project.append((d[0], project_type))
     return sample_project
 
+
 def get_project_types(workpackage, analysis, samnplesheet):
     data = extract_analysis_information(samnplesheet)
     project_types = []
     if workpackage in data:
-        for project_type, analyzes,  in data[workpackage].items():
+        for project_type, analyzes in data[workpackage].items():
             for a_item in analyzes:
                 if analysis in a_item:
                     project_types.append(project_type)
     return set(project_types)
 
+
 def print_project_types(workpackage, analysis, samnplesheet):
     print(*get_project_types(workpackage, analysis, samnplesheet), sep="\n")
+
 
 def extract_analysis_information(samplesheet):
     """

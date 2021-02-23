@@ -176,41 +176,51 @@ class TestUtils(unittest.TestCase):
             ("D98-05407", "te", "D98-05407,D98-05407,EXO_K_CGU-2018-16_42_NA,TAATTCCAGC,TAATTCCAGC,ATCGTATTCG,ATCGTATTCG,TE\n")
         ])
 
-
-
     def test_contains_haloplex(self):
-        self.assertTrue(contains("wp1","sera","tests/samplesheets/files/SampleSheet.haloplex.csv"))
-        self.assertFalse(contains("wp1","tso500","tests/samplesheets/files/SampleSheet.haloplex.csv"))
-
+        self.assertTrue(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertFalse(contains("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
 
     def test_parse_tso500(self):
-        self.assertTrue(contains("wp1","tso500","tests/samplesheets/files/SampleSheet.tso500.csv"))
-        self.assertFalse(contains("wp1","sera","tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertTrue(contains("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertFalse(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.tso500.csv"))
 
     def test_parse_tm(self):
-        self.assertTrue(contains("wp2","tm","tests/samplesheets/files/SampleSheet.tm.csv"))
-        self.assertFalse(contains("wp1","sera","tests/samplesheets/files/SampleSheet.tm.csv"))
+        self.assertTrue(contains("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
+        self.assertFalse(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.tm.csv"))
 
     def test_parse_te(self):
-        self.assertTrue(contains("wp3","te","tests/samplesheets/files/SampleSheet.te.csv"))
-        self.assertFalse(contains("wp2","tm","tests/samplesheets/files/SampleSheet.te.csv"))
-
+        self.assertTrue(contains("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
+        self.assertFalse(contains("wp2", "tm", "tests/samplesheets/files/SampleSheet.te.csv"))
 
     def test_get_project_types_haloplex(self):
-        self.assertTrue(contains("wp1","sera","tests/samplesheets/files/SampleSheet.haloplex.csv"))
-        self.assertFalse(contains("wp1","tso500","tests/samplesheets/files/SampleSheet.haloplex.csv"))
-
+        self.assertTrue(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertFalse(contains("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
 
     def test_project_types_tso500(self):
-        self.assertEqual(get_project_types("wp1","sera","tests/samplesheets/files/SampleSheet.haloplex.csv"), {'klinik',})
-        self.assertEqual(get_project_types("wp1","tso500","tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
-        self.assertEqual(get_project_types("wp1","tso500","tests/samplesheets/files/SampleSheet.tso500.csv"), {'klinik'})
-
+        self.assertEqual(get_project_types("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"), {'klinik', })
+        self.assertEqual(get_project_types("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
+        self.assertEqual(get_project_types("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"), {'klinik'})
 
     def test_get_samples_projects_haloplex(self):
-        self.assertEqual([('97-181', 'klinik'), ('97-217', 'klinik'), ('97-218', 'klinik'),  ('97-219', 'klinik'),  ('97-220', 'klinik'),  ('97-221', 'klinik')], get_samples_and_project("wp1","sera","tests/samplesheets/files/SampleSheet.haloplex.csv"))
-        self.assertEqual([], get_samples_and_project("wp1","tso500","tests/samplesheets/files/SampleSheet.haloplex.csv"))
-        self.assertEqual([('R21-2', 'klinik'), ('R21-3', 'klinik'), ('R21-33', 'klinik')], get_samples_and_project("wp1","tso500","tests/samplesheets/files/SampleSheet.tso500.csv"))
-        
+        self.assertEqual(
+            [
+                ('97-181', 'klinik'),
+                ('97-217', 'klinik'),
+                ('97-218', 'klinik'),
+                ('97-219', 'klinik'),
+                ('97-220', 'klinik'),
+                ('97-221', 'klinik')
+            ],
+            get_samples_and_project("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual([], get_samples_and_project("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual(
+            [
+                ('R21-2', 'klinik'),
+                ('R21-3', 'klinik'),
+                ('R21-33', 'klinik')
+            ],
+            get_samples_and_project("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+
+
 if __name__ == '__main__':
     unittest.main()
