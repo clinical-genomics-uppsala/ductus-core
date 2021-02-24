@@ -196,10 +196,11 @@ class TestUtils(unittest.TestCase):
         self.assertTrue(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertFalse(contains("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
 
-    def test_project_types_tso500(self):
+    def test_project_types(self):
         self.assertEqual(get_project_types("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"), {'klinik', })
         self.assertEqual(get_project_types("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
-        self.assertEqual(get_project_types("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"), {'klinik'})
+        self.assertEqual(get_project_types("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"), {'klinik'})
+        self.assertEqual(get_project_types("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"), {'klinik'})
 
     def test_get_samples_projects_haloplex(self):
         self.assertEqual(
@@ -220,6 +221,23 @@ class TestUtils(unittest.TestCase):
                 ('R21-33', 'klinik')
             ],
             get_samples_and_project("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual(
+                [
+                    ('56063', 'klinik'),
+                    ('FD99-00078', 'klinik'),
+                    ('D99-00574', 'klinik'),
+                    ('D99-00576', 'klinik'),
+                    ('D99-00581', 'klinik'),
+                    ('D99-00586', 'klinik')
+                ],
+                get_samples_and_project("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
+        self.assertEqual(
+                    [
+                        ('D97-00415', 'klinik'),
+                        ('D97-00388', 'klinik'),
+                        ('D98-05407', 'klinik')
+                    ],
+                    get_samples_and_project("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
 
 
 if __name__ == '__main__':
