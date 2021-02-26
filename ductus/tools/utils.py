@@ -23,6 +23,10 @@ def get_samples(workpackage, project, analysis, samnplesheet):
     return sample
 
 
+def print_samples(workpackage, project, analysis, samnplesheet):
+    print(*get_samples(workpackage, project, analysis, samnplesheet), sep="\n")
+
+
 def get_samples_and_project(workpackage, analysis, samnplesheet):
     data = extract_analysis_information(samnplesheet)
     sample_project = []
