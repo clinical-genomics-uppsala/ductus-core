@@ -1,5 +1,5 @@
 import unittest
-from ductus.tools.utils import extract_analysis_information, contains, get_project_types, get_samples_and_project
+from ductus.tools.utils import extract_analysis_information, contains, get_project_types, get_samples_and_project, get_samples
 
 
 class TestUtils(unittest.TestCase):
@@ -202,7 +202,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(get_project_types("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"), {'klinik'})
 
-    def test_get_samples_projects_haloplex(self):
+    def test_get_samples_projects(self):
         self.assertEqual(
             [
                 ('97-181', 'klinik'),
@@ -238,6 +238,20 @@ class TestUtils(unittest.TestCase):
                         ('D98-05407', 'klinik')
                     ],
                     get_samples_and_project("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
+
+    def test_get_samples(self):
+        self.assertEqual(['97-181', '97-217', '97-218', '97-219', '97-220', '97-221'],
+                         get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual([],
+                         get_samples("wp1", "utveckling", 'sera', "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual(['R21-2', 'R21-3', 'R21-33'],
+                         get_samples("wp1", "klinik", 'tso500', "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual([],
+                         get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual(['56063', 'FD99-00078', 'D99-00574', 'D99-00576', 'D99-00581', 'D99-00586'],
+                         get_samples("wp2", "klinik", 'tm', "tests/samplesheets/files/SampleSheet.tm.csv"))
+        self.assertEqual(['D97-00415', 'D97-00388', 'D98-05407'],
+                         get_samples("wp3", "klinik", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
 
 
 if __name__ == '__main__':

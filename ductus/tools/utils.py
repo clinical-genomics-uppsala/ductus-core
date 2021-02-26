@@ -11,6 +11,18 @@ def contains(workpackage, analysis, samnplesheet):
     return False
 
 
+def get_samples(workpackage, project, analysis, samnplesheet):
+    data = extract_analysis_information(samnplesheet)
+    sample = []
+    if workpackage in data:
+        for project_type, data in data[workpackage].items():
+            if project == project_type:
+                for d in data:
+                    if analysis in d:
+                        sample.append(d[0])
+    return sample
+
+
 def get_samples_and_project(workpackage, analysis, samnplesheet):
     data = extract_analysis_information(samnplesheet)
     sample_project = []
