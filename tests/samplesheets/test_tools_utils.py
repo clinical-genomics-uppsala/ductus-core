@@ -177,24 +177,28 @@ class TestUtils(unittest.TestCase):
         ])
 
     def test_contains_haloplex(self):
-        self.assertTrue(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
-        self.assertFalse(contains("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500"))
+
+    def test_contains_klinik_haloplex(self):
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera", "klinik"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500", "klinik"))
 
     def test_parse_tso500(self):
-        self.assertTrue(contains("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
-        self.assertFalse(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "tso500"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "sera"))
 
     def test_parse_tm(self):
-        self.assertTrue(contains("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
-        self.assertFalse(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.tm.csv"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp2", "tm"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp1", "sera"))
 
     def test_parse_te(self):
-        self.assertTrue(contains("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
-        self.assertFalse(contains("wp2", "tm", "tests/samplesheets/files/SampleSheet.te.csv"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.te.csv", "wp3", "te"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.te.csv", "wp2", "tm"))
 
     def test_get_project_types_haloplex(self):
-        self.assertTrue(contains("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
-        self.assertFalse(contains("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500"))
 
     def test_project_types(self):
         self.assertEqual(get_project_types("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"), {'klinik', })

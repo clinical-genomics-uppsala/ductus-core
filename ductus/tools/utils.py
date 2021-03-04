@@ -1,13 +1,14 @@
 import re
 
 
-def contains(workpackage, analysis, samnplesheet):
+def contains(samnplesheet, workpackage=None, analysis=None, project=None):
     data = extract_analysis_information(samnplesheet)
     if workpackage in data:
         for type, analyzes in data[workpackage].items():
-            for a_item in analyzes:
-                if analysis in a_item:
-                    return True
+            if project is None or type == project:
+                for a_item in analyzes:
+                    if analysis is None or analysis in a_item:
+                        return True
     return False
 
 
