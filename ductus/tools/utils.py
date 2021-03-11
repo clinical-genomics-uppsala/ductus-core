@@ -60,7 +60,8 @@ def extract_analysis_information(samplesheet):
         workpackage and project type, example Klinik,s
     """
     with open(samplesheet) as file:
-        haloplex = False
+        pattern = re.compile(r"experiment name,\d{8}_[a-z]+")
+        sera = False
         tso500 = False
         TM = False
         TE = False
@@ -71,10 +72,11 @@ def extract_analysis_information(samplesheet):
         for line in file:
             data['header'] = data['header'] + line
             line = line.lower()
-            if "haloplex" in line:
-                haloplex = True
+            if pattern.search(line):
+                sera = True
             if "pooldna" in line or "poolrna" in line:
                 tso500 = True
+                sera = False
             if "name,te" in line:
                 TE = True
             if "name,tm" in line:
@@ -85,17 +87,18 @@ def extract_analysis_information(samplesheet):
                 header_map = {v[1].lower(): v[0] for v in enumerate(re.split(",|;", line.rstrip()))}
                 for row in file:
                     columns = re.split(",|;", row)
-                    if len(columns) == 1:
+
+                    if len(columns) <= 1:
                         continue
                     if 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
-                        data["wp2"]['klinik'].append((columns[header_map['sample_id']], "tm", row))
+                        data["wp2"]['klinik'].append((columns[header_map['sample_name']], "tm", row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
-                        data["wp3"]['klinik'].append((columns[header_map['sample_id']], "te", row))
+                        data["wp3"]['klinik'].append((columns[header_map['sample_name']], "te", row))
                     else:
                         if tso500:
                             data["wp1"]['klinik'].append((columns[header_map['sample_id']], "tso500", row))
-                        elif haloplex:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_id']], "sera", row))
+                        elif sera:
+                            data["wp1"]['klinik'].append((columns[header_map['sample_name']], "sera", row))
                         else:
                             raise Exception("Unhandled case: " + row)
         return data
