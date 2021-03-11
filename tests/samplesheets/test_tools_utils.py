@@ -101,7 +101,8 @@ class TestUtils(unittest.TestCase):
                          "AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT,,,,,,,,\n"
                          ",,,,,,,,,\n"
                          "[Data],,,,,,,,,\n"
-                         "Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description\n", result['header'])
+                         "Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID"
+                         ",index2,Sample_Project,Description\n", result['header'])
 
         self.assertEqual(result['wp1']['forskning'], [])
         self.assertEqual(result['wp1']['projekt'], [])
