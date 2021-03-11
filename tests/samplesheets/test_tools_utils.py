@@ -44,6 +44,82 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp3']['utveckling'], [])
         self.assertEqual(result['wp3']['klinik'], [])
 
+    def test_parse_swift(self):
+        result = extract_analysis_information("tests/samplesheets/files/SampleSheet.swift.mn.csv")
+
+        self.assertEqual("[Header]\n"
+                         "Local Run Manager Analysis Id,115115\n"
+                         "Date,12/23/2020\n"
+                         "Experiment Name,20201221_LU\n"
+                         "Workflow,GenerateFastQWorkflow\n"
+                         "Description,Auto generated sample sheet.  Used by workflow module to kick off Isis analysis\n"
+                         "Chemistry,Amplicon\n"
+                         "\n"
+                         "[Reads]\n"
+                         "151\n"
+                         "151\n"
+                         "\n"
+                         "[Data]\n"
+                         "Sample_ID,Sample_Name,index,I7_Index_ID,index2,I5_Index_ID\n", result['header'])
+
+        self.assertEqual(result['wp1']['forskning'], [])
+        self.assertEqual(result['wp1']['projekt'], [])
+        self.assertEqual(result['wp1']['utveckling'], [])
+        self.assertEqual(result['wp1']['klinik'],
+                         [('20-2500', 'sera', '20-2500-115115,20-2500,CACTTCGA,D01,,\n'),
+                         ('20-2501', 'sera', '20-2501-115115,20-2501,GCCAAGAC,E01,,\n')])
+
+        self.assertEqual(result['wp2']['forskning'], [])
+        self.assertEqual(result['wp2']['projekt'], [])
+        self.assertEqual(result['wp2']['utveckling'], [])
+        self.assertEqual(result['wp2']['klinik'], [])
+
+        self.assertEqual(result['wp3']['forskning'], [])
+        self.assertEqual(result['wp3']['projekt'], [])
+        self.assertEqual(result['wp3']['utveckling'], [])
+        self.assertEqual(result['wp3']['klinik'], [])
+
+        result = extract_analysis_information("tests/samplesheets/files/SampleSheet.swift.m0.csv")
+
+        self.assertEqual("[Header],,,,,,,,,\n"
+                         "IEMFileVersion,4,,,,,,,,\n"
+                         "Experiment Name,20210302_MS,,,,,,,,\n"
+                         "Date,2021-03-03,,,,,,,,\n"
+                         "Workflow,GenerateFASTQ,,,,,,,,\n"
+                         "Application,FASTQ Only,,,,,,,,\n"
+                         "Assay,TruSeq HT,,,,,,,,\n"
+                         "Description,,,,,,,,,\n"
+                         "Chemistry,Amplicon,,,,,,,,\n"
+                         ",,,,,,,,,\n"
+                         "[Reads],,,,,,,,,\n"
+                         "151,,,,,,,,,\n"
+                         "151,,,,,,,,,\n"
+                         ",,,,,,,,,\n"
+                         "[Settings],,,,,,,,,\n"
+                         "ReverseComplement,0,,,,,,,,\n"
+                         "Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,,,,,,,,\n"
+                         "AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT,,,,,,,,\n"
+                         ",,,,,,,,,\n"
+                         "[Data],,,,,,,,,\n"
+                         "Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description\n", result['header'])
+
+        self.assertEqual(result['wp1']['forskning'], [])
+        self.assertEqual(result['wp1']['projekt'], [])
+        self.assertEqual(result['wp1']['utveckling'], [])
+        self.assertEqual(result['wp1']['klinik'],
+                         [('21-399', 'sera', '21-399,21-399,,,D701,ATTACTCG,D502,ATAGAGGC,,\n'),
+                         ('21-417', 'sera', '21-417,21-417,,,D702,TCCGGAGA,D502,ATAGAGGC,,\n')])
+
+        self.assertEqual(result['wp2']['forskning'], [])
+        self.assertEqual(result['wp2']['projekt'], [])
+        self.assertEqual(result['wp2']['utveckling'], [])
+        self.assertEqual(result['wp2']['klinik'], [])
+
+        self.assertEqual(result['wp3']['forskning'], [])
+        self.assertEqual(result['wp3']['projekt'], [])
+        self.assertEqual(result['wp3']['utveckling'], [])
+        self.assertEqual(result['wp3']['klinik'], [])
+
     def test_parse_tso500(self):
         result = extract_analysis_information("tests/samplesheets/files/SampleSheet.tso500.csv")
         self.assertEqual("[Header],,,,,,,,,,,\n"
