@@ -74,15 +74,15 @@ def extract_analysis_information(samplesheet):
             line = line.lower()
             if pattern.search(line):
                 sera = True
-            if "pooldna" in line or "poolrna" in line:
-                tso500 = True
-                sera = False
             if "name,te" in line:
                 TE = True
             if "name,tm" in line:
                 TM = True
             if line.startswith("[data]"):
                 line = next(file)
+                if "description,tc" in line:
+                    tso500 = True
+                    sera = False
                 data['header'] = data['header'] + line
                 header_map = {v[1].lower(): v[0] for v in enumerate(re.split(",|;", line.rstrip()))}
                 for row in file:
