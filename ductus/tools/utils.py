@@ -116,7 +116,7 @@ def extract_wp_and_typo(samplesheet):
         TM = False
         TE = False
         for line in file:
-            line=line.lower()
+            line = line.lower()
             if pattern.search(line):
                 sera = True
             if("name,te" in line):
@@ -124,7 +124,7 @@ def extract_wp_and_typo(samplesheet):
             if("name,tm" in line):
                 TM = True
             if line.startswith("[data]"):
-                line=next(file)
+                line = next(file)
                 if "description,tc" in line.lower():
                     tso500 = True
                     sera = False
