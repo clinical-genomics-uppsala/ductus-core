@@ -19,7 +19,7 @@ Read2UMILength,7,,,,,,,,,,
 Read1StartFromCycle,9,,,,,,,,,,
 Read2StartFromCycle,9,,,,,,,,,,
 [Data],,,,,,,,,,,
-Lane,Sample_ID,index,index2,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,I5_Index_ID,Project,Description,Manifest
+Lane,Sample_ID,index,index2,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,I5_Index_ID,Project,Description,TC
 ,R21-2,ACTGCTTA,AGAGGCGC,,,,D716,D511,RNA,AP13,PoolRNA
 ,R21-3,ATGCGGCT,TAGCCGCG,,,,D714,D512,RNA,AP14,PoolRNA
 ,R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,RNA,AP15,PoolRNA
