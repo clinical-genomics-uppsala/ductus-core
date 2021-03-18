@@ -80,7 +80,7 @@ def extract_analysis_information(samplesheet):
                 TM = True
             if line.startswith("[data]"):
                 line = next(file)
-                if "description,tc" in line:
+                if "description,tc" in line.lower():
                     tso500 = True
                     sera = False
                 data['header'] = data['header'] + line
