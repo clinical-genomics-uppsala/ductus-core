@@ -110,13 +110,15 @@ def extract_wp_and_typo(samplesheet):
         workpackage and project type, example Klinik,s
     """
     with open(samplesheet) as file:
+        pattern = re.compile(r"experiment name,\d{8}_[a-z]+")
         haloplex = False
         tso500 = False
         TM = False
         TE = False
         for line in file:
-            if("HaloPlex" in line):
-                haloplex = True
+            line=line.lower()
+            if pattern.search(line):
+                sera = True
             if("PoolDNA" in line or "PoolRNA" in line):
                 tso500 = True
             if("Name,TE" in line):
@@ -124,5 +126,9 @@ def extract_wp_and_typo(samplesheet):
             if("Name,TM" in line):
                 TM = True
             if line.startswith("[Data]"):
+                line=next(file)
+                if "description,tc" in line.lower():
+                    tso500 = True
+                    sera = False
                 break
         return (('haloplex', haloplex), ('tso500', tso500), ('te', TE), ('tm', TM))
