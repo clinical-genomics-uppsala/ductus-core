@@ -119,13 +119,11 @@ def extract_wp_and_typo(samplesheet):
             line=line.lower()
             if pattern.search(line):
                 sera = True
-            if("PoolDNA" in line or "PoolRNA" in line):
-                tso500 = True
-            if("Name,TE" in line):
+            if("name,te" in line):
                 TE = True
-            if("Name,TM" in line):
+            if("name,tm" in line):
                 TM = True
-            if line.startswith("[Data]"):
+            if line.startswith("[data]"):
                 line=next(file)
                 if "description,tc" in line.lower():
                     tso500 = True
