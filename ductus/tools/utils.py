@@ -1,8 +1,28 @@
-import re
+import datetime, json, re
+
+def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, project, prep):
+    data = get_samples_and_info(workpackage, tool, samplesheet)
+    samples = []
+    for d in data:
+        if project == d[1]:
+            samples.append(
+                ({
+                "experiment.wp": workpackage.upper(),
+                "experiment.prep": prep,
+                "@timestamp": datetime.datetime.strptime(d[3],"%Y%m%d").strftime('%Y-%m-%dT01:01:01.000Z'),#"2021-09-29T01:01:01.000Z",
+                "experiment.method": analysis,
+                "experiment.rerun": False,
+                "experiment.user": d[4],
+                "experiment.tissue": d[5],
+                "experiment.id": d[2],
+                "experiment.sample": d[0],
+                "experiment.project": d[1]
+                }))
+    return  samples
 
 
-def contains(samnplesheet, workpackage=None, analysis=None, project=None):
-    data = extract_analysis_information(samnplesheet)
+def contains(samplesheet, workpackage=None, analysis=None, project=None):
+    data = extract_analysis_information(samplesheet)
     if workpackage in data:
         for type, analyzes in data[workpackage].items():
             if project is None or type == project:
@@ -12,8 +32,8 @@ def contains(samnplesheet, workpackage=None, analysis=None, project=None):
     return False
 
 
-def get_samples(workpackage, project, analysis, samnplesheet):
-    data = extract_analysis_information(samnplesheet)
+def get_samples(workpackage, project, analysis, samplesheet):
+    data = extract_analysis_information(samplesheet)
     sample = []
     if workpackage in data:
         for project_type, data in data[workpackage].items():
@@ -24,23 +44,43 @@ def get_samples(workpackage, project, analysis, samnplesheet):
     return sample
 
 
-def print_samples(workpackage, project, analysis, samnplesheet):
-    print(*get_samples(workpackage, project, analysis, samnplesheet), sep="\n")
+def print_samples(workpackage, project, analysis, samplesheet):
+    print(*get_samples(workpackage, project, analysis, samplesheet), sep="\n")
 
 
-def get_samples_and_project(workpackage, analysis, samnplesheet):
-    data = extract_analysis_information(samnplesheet)
+def get_samples_and_project(workpackage, analysis, samplesheet):
+    import warnings
+    warnings.warn(
+            "get_samples_and_project will be deprecated, use get_samples_and_info instead",
+             PendingDeprecationWarning
+        )
+    return get_samples_and_info(workpackage, analysis, samplesheet)
+
+
+def get_samples_and_info(workpackage, analysis, samplesheet):
+    data = extract_analysis_information(samplesheet)
     sample_project = []
     if workpackage in data:
         for project_type, data in data[workpackage].items():
             for d in data:
                 if analysis in d:
-                    sample_project.append((d[0], project_type))
+                    user="unknown"
+                    tissue="unknown"
+                    if(workpackage.lower() == "wp1"):
+                        user = d[1].split("_")[1]
+                        if analysis.lower() == "tso500":
+                            tissue = "RNA" if d[0].startswith("R") else "DNA"
+                    elif(workpackage.lower() == "wp2"):
+                        tissue = "Hematology"
+                    elif(workpackage.lower() == "wp3"):
+                        tissue = d[4]
+
+                    sample_project.append((d[0], project_type, d[1], d[2], user, tissue))
     return sample_project
 
 
-def get_project_types(workpackage, analysis, samnplesheet):
-    data = extract_analysis_information(samnplesheet)
+def get_project_types(workpackage, analysis, samplesheet):
+    data = extract_analysis_information(samplesheet)
     project_types = []
     if workpackage in data:
         for project_type, analyzes in data[workpackage].items():
@@ -50,8 +90,8 @@ def get_project_types(workpackage, analysis, samnplesheet):
     return set(project_types)
 
 
-def print_project_types(workpackage, analysis, samnplesheet):
-    print(*get_project_types(workpackage, analysis, samnplesheet), sep="\n")
+def print_project_types(workpackage, analysis, samplesheet):
+    print(*get_project_types(workpackage, analysis, samplesheet), sep="\n")
 
 
 def extract_analysis_information(samplesheet):
@@ -69,8 +109,19 @@ def extract_analysis_information(samplesheet):
                 'wp1': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
                 'wp2': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
                 'wp3': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []}}
+        date_string = None
+        experiment = None
         for line in file:
             data['header'] = data['header'] + line
+            if line.startswith("Date"):
+                if "/" in line:
+                    date_result = re.search(r"Date,(\d{2})/(\d{2})/(\d{4})", line)
+                    date_string = "{}{}{}".format(date_result[3],date_result[1],date_result[2])
+                else:
+                    date_result = re.search(r"^Date,(\d{4})-{0,1}(\d{2})-{0,1}(\d{2})", line)
+                    date_string = "{}{}{}".format(date_result[1],date_result[2],date_result[3])
+            if line.startswith("Experiment Name,"):
+                experiment = re.search("^Experiment Name,([A-Za-z0-9_-]+)", line)[1]
             line = line.lower()
             if pattern.search(line):
                 sera = True
@@ -86,19 +137,19 @@ def extract_analysis_information(samplesheet):
                 data['header'] = data['header'] + line
                 header_map = {v[1].lower(): v[0] for v in enumerate(re.split(",|;", line.rstrip()))}
                 for row in file:
-                    columns = re.split(",|;", row)
+                    columns = re.split(",|;", row.rstrip())
 
                     if len(columns) <= 1:
                         continue
                     if 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
-                        data["wp2"]['klinik'].append((columns[header_map['sample_name']], "tm", row))
+                        data["wp2"]['klinik'].append((columns[header_map['sample_name']],experiment, date_string, "tm", columns[header_map['description']],  row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
-                        data["wp3"]['klinik'].append((columns[header_map['sample_name']], "te", row))
+                        data["wp3"]['klinik'].append((columns[header_map['sample_name']],experiment, date_string, "te", columns[header_map['description']], row))
                     else:
                         if tso500:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_id']], "tso500", row))
+                            data["wp1"]['klinik'].append((columns[header_map['sample_id']],experiment, date_string, "tso500", columns[header_map['description']],  row))
                         elif sera:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_name']], "sera", row))
+                            data["wp1"]['klinik'].append((columns[header_map['sample_name']],experiment, date_string, "sera", columns[header_map['description']],  row))
                         else:
                             raise Exception("Unhandled case: " + row)
         return data
