@@ -2,6 +2,7 @@ import unittest
 from ductus.tools.utils import extract_analysis_information, contains, get_project_types, get_samples_and_info, get_samples
 from ductus.tools.utils import generate_elastic_statistics
 
+
 class TestUtils(unittest.TestCase):
 
     def test_parse_haloplex(self):
@@ -150,10 +151,36 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('R21-2', '20210120_LM-GL-HN', "20210120", 'tso500', ',R21-2,ACTGCTTA,AGAGGCGC,,,,D716,D511,RNA,AP13,PoolRNA\n'),
-                         ('R21-3', '20210120_LM-GL-HN', "20210120", 'tso500', ',R21-3,ATGCGGCT,TAGCCGCG,,,,D714,D512,RNA,AP14,PoolRNA\n'),
-                         ('R21-33', '20210120_LM-GL-HN', "20210120", 'tso500', ',R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,RNA,AP15,PoolRNA\n'),
-                         ('21-33', '20210120_LM-GL-HN', "20210120", 'tso500', ',R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,DNA,UP15,0.12\n')])
+                         [
+                            (
+                                'R21-2',
+                                '20210120_LM-GL-HN',
+                                "20210120",
+                                'tso500',
+                                ',R21-2,ACTGCTTA,AGAGGCGC,,,,D716,D511,RNA,AP13,PoolRNA\n'
+                            ),
+                            (
+                                'R21-3',
+                                '20210120_LM-GL-HN',
+                                "20210120",
+                                'tso500',
+                                ',R21-3,ATGCGGCT,TAGCCGCG,,,,D714,D512,RNA,AP14,PoolRNA\n'
+                            ),
+                            (
+                                'R21-33',
+                                '20210120_LM-GL-HN',
+                                "20210120",
+                                'tso500',
+                                ',R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,RNA,AP15,PoolRNA\n'
+                            ),
+                            (
+                                '21-33',
+                                '20210120_LM-GL-HN',
+                                "20210120",
+                                'tso500',
+                                ',R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,DNA,UP15,0.12\n'
+                            )
+                        ])
 
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
@@ -198,14 +225,50 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
         self.assertEqual(result['wp2']['utveckling'], [])
-        self.assertEqual(result['wp2']['klinik'], [
-            ('56063', 'TM83', '20210208', 'tm', '56063,56063,NA_NA_NA_83_CGU-2020-12,GTGAAGTG,GTGAAGTG,GAGCAATC,GAGCAATC,TM\n'),
-            ('FD99-00078', 'TM83', '20210208', 'tm', 'FD99-00078,FD99-00078,NA_NA_NA_83_CGU-2017-5,CATGGCTA,CATGGCTA,CACACATC,CACACATC,TM\n'),
-            ('D99-00574', 'TM83', '20210208', 'tm', 'D99-00574,D99-00574,NA_NA_NA_83_NA,ATGCCTGT,ATGCCTGT,AGATTGCG,AGATTGCG,TM\n'),
-            ('D99-00576', 'TM83', '20210208', 'tm', 'D99-00576,D99-00576,NA_NA_NA_83_NA,CAACACCT,CAACACCT,AGCTACCA,AGCTACCA,TM\n'),
-            ('D99-00581', 'TM83', '20210208', 'tm', 'D99-00581,D99-00581,NA_NA_NA_83_NA,TGTGACTG,TGTGACTG,AGCCTATC,AGCCTATC,TM\n'),
-            ('D99-00586', 'TM83', '20210208', 'tm', 'D99-00586,D99-00586,NA_NA_NA_83_NA,GTCATCGA,GTCATCGA,GATCCACT,GATCCACT,TM\n')
-
+        self.assertEqual(result['wp2']['klinik'],
+                         [
+                            (
+                                '56063',
+                                'TM83',
+                                '20210208',
+                                'tm',
+                                '56063,56063,NA_NA_NA_83_CGU-2020-12,GTGAAGTG,GTGAAGTG,GAGCAATC,GAGCAATC,TM\n'
+                            ),
+                            (
+                                'FD99-00078',
+                                'TM83',
+                                '20210208',
+                                'tm',
+                                'FD99-00078,FD99-00078,NA_NA_NA_83_CGU-2017-5,CATGGCTA,CATGGCTA,CACACATC,CACACATC,TM\n'
+                            ),
+                            (
+                                'D99-00574',
+                                'TM83',
+                                '20210208',
+                                'tm',
+                                'D99-00574,D99-00574,NA_NA_NA_83_NA,ATGCCTGT,ATGCCTGT,AGATTGCG,AGATTGCG,TM\n'
+                            ),
+                            (
+                                'D99-00576',
+                                'TM83',
+                                '20210208',
+                                'tm',
+                                'D99-00576,D99-00576,NA_NA_NA_83_NA,CAACACCT,CAACACCT,AGCTACCA,AGCTACCA,TM\n'
+                            ),
+                            (
+                                'D99-00581',
+                                'TM83',
+                                '20210208',
+                                'tm',
+                                'D99-00581,D99-00581,NA_NA_NA_83_NA,TGTGACTG,TGTGACTG,AGCCTATC,AGCCTATC,TM\n'
+                            ),
+                            (
+                                'D99-00586',
+                                'TM83',
+                                '20210208',
+                                'tm',
+                                'D99-00586,D99-00586,NA_NA_NA_83_NA,GTCATCGA,GTCATCGA,GATCCACT,GATCCACT,TM\n'
+                            )
         ])
 
         self.assertEqual(result['wp3']['forskning'], [])
@@ -247,10 +310,29 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp3']['forskning'], [])
         self.assertEqual(result['wp3']['projekt'], [])
         self.assertEqual(result['wp3']['utveckling'], [])
-        self.assertEqual(result['wp3']['klinik'], [
-            ("D97-00415", 'TE42', '20210206', "te", "D97-00415,D97-00415,BIN_M_NA_42_NA,CAACACCGTA,CAACACCGTA,GAACAAGCCG,GAACAAGCCG,TE\n"),
-            ("D97-00388", 'TE42', '20210206', "te", "D97-00388,D97-00388,CAD_K_NA_42_NA,CGAATATTGG,CGAATATTGG,CAGCACGGAA,CAGCACGGAA,TE\n"),
-            ("D98-05407", 'TE42', '20210206', "te", "D98-05407,D98-05407,EXO_K_CGU-2018-16_42_NA,TAATTCCAGC,TAATTCCAGC,ATCGTATTCG,ATCGTATTCG,TE\n")
+        self.assertEqual(result['wp3']['klinik'],
+                         [
+                            (
+                                "D97-00415",
+                                'TE42',
+                                '20210206',
+                                "te",
+                                "D97-00415,D97-00415,BIN_M_NA_42_NA,CAACACCGTA,CAACACCGTA,GAACAAGCCG,GAACAAGCCG,TE\n"
+                            ),
+                            (
+                                "D97-00388",
+                                'TE42',
+                                '20210206',
+                                "te",
+                                "D97-00388,D97-00388,CAD_K_NA_42_NA,CGAATATTGG,CGAATATTGG,CAGCACGGAA,CAGCACGGAA,TE\n"
+                            ),
+                            (
+                                "D98-05407",
+                                'TE42',
+                                '20210206',
+                                "te",
+                                "D98-05407,D98-05407,EXO_K_CGU-2018-16_42_NA,TAATTCCAGC,TAATTCCAGC,ATCGTATTCG,ATCGTATTCG,TE\n"
+                            )
         ])
 
     def test_contains_haloplex(self):
@@ -336,83 +418,94 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(['D97-00415', 'D97-00388', 'D98-05407'],
                          get_samples("wp3", "klinik", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
 
-
     def test_generate_elastic_statistics(self):
         self.maxDiff = None
-        #rint(generate_elastic_statistics("tests/samplesheets/files/SampleSheet.haloplex.csv","wp1", "sera", 'haloplex', "klinik", "ffpe", "lung" , "unknown"))
-        self.assertCountEqual([{'@timestamp': '2021-02-04T01:01:01.000Z',
-                          'experiment.id': '20210203_LU',
-                          'experiment.method': 'haloplex',
-                          'experiment.prep': 'ffpe',
-                          'experiment.project': 'klinik',
-                          'experiment.rerun': False,
-                          'experiment.sample': '97-181',
-                          'experiment.tissue': 'unknown',
-                          'experiment.user': 'LU',
-                          'experiment.wp': 'WP1'},
-                         {
-                          '@timestamp': '2021-02-04T01:01:01.000Z',
-                          'experiment.id': '20210203_LU',
-                          'experiment.method': 'haloplex',
-                          'experiment.prep': 'ffpe',
-                          'experiment.project': 'klinik',
-                          'experiment.rerun': False,
-                          'experiment.sample': '97-217',
-                          'experiment.tissue': 'unknown',
-                          'experiment.user': 'LU',
-                          'experiment.wp': 'WP1'
-                         },
-                         {
-                          '@timestamp': '2021-02-04T01:01:01.000Z',
-                          'experiment.id': '20210203_LU',
-                          'experiment.method': 'haloplex',
-                          'experiment.prep': 'ffpe',
-                          'experiment.project': 'klinik',
-                          'experiment.rerun': False,
-                          'experiment.sample': '97-218',
-                          'experiment.tissue': 'unknown',
-                          'experiment.user': 'LU',
-                          'experiment.wp': 'WP1'
-                         },
-                         {
-                          '@timestamp': '2021-02-04T01:01:01.000Z',
-                          'experiment.id': '20210203_LU',
-                          'experiment.method': 'haloplex',
-                          'experiment.prep': 'ffpe',
-                          'experiment.project': 'klinik',
-                          'experiment.rerun': False,
-                          'experiment.sample': '97-219',
-                          'experiment.tissue': 'unknown',
-                          'experiment.user': 'LU',
-                          'experiment.wp': 'WP1'
-                         },
-                         {
-                          '@timestamp': '2021-02-04T01:01:01.000Z',
-                          'experiment.id': '20210203_LU',
-                          'experiment.method': 'haloplex',
-                          'experiment.prep': 'ffpe',
-                          'experiment.project': 'klinik',
-                          'experiment.rerun': False,
-                          'experiment.sample': '97-220',
-                          'experiment.tissue': 'unknown',
-                          'experiment.user': 'LU',
-                          'experiment.wp': 'WP1'
-                         },
-                         {
-                          '@timestamp': '2021-02-04T01:01:01.000Z',
-                          'experiment.id': '20210203_LU',
-                          'experiment.method': 'haloplex',
-                          'experiment.prep': 'ffpe',
-                          'experiment.project': 'klinik',
-                          'experiment.rerun': False,
-                          'experiment.sample': '97-221',
-                          'experiment.tissue': 'unknown',
-                          'experiment.user': 'LU',
-                          'experiment.wp': 'WP1'
-                          }],
-                         generate_elastic_statistics("tests/samplesheets/files/SampleSheet.haloplex.csv","wp1", "sera", 'haloplex', "klinik", "ffpe"))
-        self.assertCountEqual([],
-                         generate_elastic_statistics("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera", "haloplex", "utveckling", 'ffpe'))
+        self.assertCountEqual(generate_elastic_statistics("tests/samplesheets/files/SampleSheet.haloplex.csv",
+                                                          "wp1",
+                                                          "sera",
+                                                          'haloplex',
+                                                          "klinik",
+                                                          "ffpe"),
+                              [
+                                {
+                                    '@timestamp': '2021-02-04T01:01:01.000Z',
+                                    'experiment.id': '20210203_LU',
+                                    'experiment.method': 'haloplex',
+                                    'experiment.prep': 'ffpe',
+                                    'experiment.project': 'klinik',
+                                    'experiment.rerun': False,
+                                    'experiment.sample': '97-181',
+                                    'experiment.tissue': 'unknown',
+                                    'experiment.user': 'LU',
+                                    'experiment.wp': 'WP1'
+                                },
+                                {
+                                    '@timestamp': '2021-02-04T01:01:01.000Z',
+                                    'experiment.id': '20210203_LU',
+                                    'experiment.method': 'haloplex',
+                                    'experiment.prep': 'ffpe',
+                                    'experiment.project': 'klinik',
+                                    'experiment.rerun': False,
+                                    'experiment.sample': '97-217',
+                                    'experiment.tissue': 'unknown',
+                                    'experiment.user': 'LU',
+                                    'experiment.wp': 'WP1'
+                                },
+                                {
+                                    '@timestamp': '2021-02-04T01:01:01.000Z',
+                                    'experiment.id': '20210203_LU',
+                                    'experiment.method': 'haloplex',
+                                    'experiment.prep': 'ffpe',
+                                    'experiment.project': 'klinik',
+                                    'experiment.rerun': False,
+                                    'experiment.sample': '97-218',
+                                    'experiment.tissue': 'unknown',
+                                    'experiment.user': 'LU',
+                                    'experiment.wp': 'WP1'
+                                },
+                                {
+                                    '@timestamp': '2021-02-04T01:01:01.000Z',
+                                    'experiment.id': '20210203_LU',
+                                    'experiment.method': 'haloplex',
+                                    'experiment.prep': 'ffpe',
+                                    'experiment.project': 'klinik',
+                                    'experiment.rerun': False,
+                                    'experiment.sample': '97-219',
+                                    'experiment.tissue': 'unknown',
+                                    'experiment.user': 'LU',
+                                    'experiment.wp': 'WP1'
+                                },
+                                {
+                                    '@timestamp': '2021-02-04T01:01:01.000Z',
+                                    'experiment.id': '20210203_LU',
+                                    'experiment.method': 'haloplex',
+                                    'experiment.prep': 'ffpe',
+                                    'experiment.project': 'klinik',
+                                    'experiment.rerun': False,
+                                    'experiment.sample': '97-220',
+                                    'experiment.tissue': 'unknown',
+                                    'experiment.user': 'LU',
+                                    'experiment.wp': 'WP1'
+                                },
+                                {
+                                    '@timestamp': '2021-02-04T01:01:01.000Z',
+                                    'experiment.id': '20210203_LU',
+                                    'experiment.method': 'haloplex',
+                                    'experiment.prep': 'ffpe',
+                                    'experiment.project': 'klinik',
+                                    'experiment.rerun': False,
+                                    'experiment.sample': '97-221',
+                                    'experiment.tissue': 'unknown',
+                                    'experiment.user': 'LU',
+                                    'experiment.wp': 'WP1'
+                                }]
+                              )
+        self.assertCountEqual([], generate_elastic_statistics("tests/samplesheets/files/SampleSheet.haloplex.csv",
+                                                              "wp1",
+                                                              "sera",
+                                                              "haloplex",
+                                                              "utveckling",
+                                                              'ffpe'))
         self.assertCountEqual([
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
@@ -462,9 +555,18 @@ class TestUtils(unittest.TestCase):
                                 'experiment.user': 'LM-GL-HN',
                                 'experiment.wp': 'WP1'
                             }],
-                         generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", 'tso500', 'TSO500', "klinik", 'FFPE'))
-        self.assertCountEqual([],
-                         generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", 'sera', 'TSO500', "klinik", 'plasma'))
+                         generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tso500.csv",
+                                                     "wp1",
+                                                     'tso500',
+                                                     'TSO500',
+                                                     "klinik",
+                                                     'FFPE'))
+        self.assertCountEqual([], generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tso500.csv",
+                                                              "wp1",
+                                                              'sera',
+                                                              'TSO500',
+                                                              "klinik",
+                                                              'plasma'))
         self.assertCountEqual([
                                  {
                                      '@timestamp': '2021-02-08T01:01:01.000Z',
@@ -538,7 +640,12 @@ class TestUtils(unittest.TestCase):
                                      'experiment.user': 'unknown',
                                      'experiment.wp': 'WP2'
                                  }],
-                              generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tm.csv", "wp2",  'tm', 'Twist_Myeloid', "klinik", "Fresh"))
+                              generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tm.csv",
+                                                          "wp2",
+                                                          'tm',
+                                                          'Twist_Myeloid',
+                                                          "klinik",
+                                                          "Fresh"))
         self.assertCountEqual([
                           {
                               '@timestamp': '2021-02-06T01:01:01.000Z',
@@ -576,8 +683,12 @@ class TestUtils(unittest.TestCase):
                               'experiment.user': 'unknown',
                               'experiment.wp': 'WP3'
                           }],
-                       generate_elastic_statistics("tests/samplesheets/files/SampleSheet.te.csv", "wp3", "te", "TWIST", "klinik", 'TWIST'))
-
+                       generate_elastic_statistics("tests/samplesheets/files/SampleSheet.te.csv",
+                                                   "wp3",
+                                                   "te",
+                                                   "TWIST",
+                                                   "klinik",
+                                                   'TWIST'))
 
 
 if __name__ == '__main__':

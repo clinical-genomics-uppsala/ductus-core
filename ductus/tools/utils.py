@@ -1,4 +1,7 @@
-import datetime, json, re
+import datetime
+import json
+import re
+
 
 def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, project, prep):
     data = get_samples_and_info(workpackage, tool, samplesheet)
@@ -7,18 +10,18 @@ def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, projec
         if project == d[1]:
             samples.append(
                 ({
-                "experiment.wp": workpackage.upper(),
-                "experiment.prep": prep,
-                "@timestamp": datetime.datetime.strptime(d[3],"%Y%m%d").strftime('%Y-%m-%dT01:01:01.000Z'),#"2021-09-29T01:01:01.000Z",
-                "experiment.method": analysis,
-                "experiment.rerun": False,
-                "experiment.user": d[4],
-                "experiment.tissue": d[5],
-                "experiment.id": d[2],
-                "experiment.sample": d[0],
-                "experiment.project": d[1]
+                  "experiment.wp": workpackage.upper(),
+                  "experiment.prep": prep,
+                  "@timestamp": datetime.datetime.strptime(d[3], "%Y%m%d").strftime('%Y-%m-%dT01:01:01.000Z'),
+                  "experiment.method": analysis,
+                  "experiment.rerun": False,
+                  "experiment.user": d[4],
+                  "experiment.tissue": d[5],
+                  "experiment.id": d[2],
+                  "experiment.sample": d[0],
+                  "experiment.project": d[1]
                 }))
-    return  samples
+    return samples
 
 
 def contains(samplesheet, workpackage=None, analysis=None, project=None):
@@ -51,8 +54,8 @@ def print_samples(workpackage, project, analysis, samplesheet):
 def get_samples_and_project(workpackage, analysis, samplesheet):
     import warnings
     warnings.warn(
-            "get_samples_and_project will be deprecated, use get_samples_and_info instead",
-             PendingDeprecationWarning
+                  "get_samples_and_project will be deprecated, use get_samples_and_info instead",
+                  PendingDeprecationWarning
         )
     return get_samples_and_info(workpackage, analysis, samplesheet)
 
@@ -64,8 +67,8 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
         for project_type, data in data[workpackage].items():
             for d in data:
                 if analysis in d:
-                    user="unknown"
-                    tissue="unknown"
+                    user = "unknown"
+                    tissue = "unknown"
                     if(workpackage.lower() == "wp1"):
                         user = d[1].split("_")[1]
                         if analysis.lower() == "tso500":
@@ -116,10 +119,10 @@ def extract_analysis_information(samplesheet):
             if line.startswith("Date"):
                 if "/" in line:
                     date_result = re.search(r"Date,(\d{2})/(\d{2})/(\d{4})", line)
-                    date_string = "{}{}{}".format(date_result[3],date_result[1],date_result[2])
+                    date_string = "{}{}{}".format(date_result[3], date_result[1], date_result[2])
                 else:
                     date_result = re.search(r"^Date,(\d{4})-{0,1}(\d{2})-{0,1}(\d{2})", line)
-                    date_string = "{}{}{}".format(date_result[1],date_result[2],date_result[3])
+                    date_string = "{}{}{}".format(date_result[1], date_result[2], date_result[3])
             if line.startswith("Experiment Name,"):
                 experiment = re.search("^Experiment Name,([A-Za-z0-9_-]+)", line)[1]
             line = line.lower()
@@ -142,14 +145,33 @@ def extract_analysis_information(samplesheet):
                     if len(columns) <= 1:
                         continue
                     if 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
-                        data["wp2"]['klinik'].append((columns[header_map['sample_name']],experiment, date_string, "tm", columns[header_map['description']],  row))
+                        data["wp2"]['klinik'].append((columns[header_map['sample_name']],
+                                                      experiment, date_string,
+                                                      "tm",
+                                                      columns[header_map['description']],
+                                                      row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
-                        data["wp3"]['klinik'].append((columns[header_map['sample_name']],experiment, date_string, "te", columns[header_map['description']], row))
+                        data["wp3"]['klinik'].append((columns[header_map['sample_name']],
+                                                      experiment,
+                                                      date_string,
+                                                      "te",
+                                                      columns[header_map['description']],
+                                                      row))
                     else:
                         if tso500:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_id']],experiment, date_string, "tso500", columns[header_map['description']],  row))
+                            data["wp1"]['klinik'].append((columns[header_map['sample_id']],
+                                                          experiment,
+                                                          date_string,
+                                                          "tso500",
+                                                          columns[header_map['description']],
+                                                          row))
                         elif sera:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_name']],experiment, date_string, "sera", columns[header_map['description']],  row))
+                            data["wp1"]['klinik'].append((columns[header_map['sample_name']],
+                                                          experiment,
+                                                          date_string,
+                                                          "sera",
+                                                          columns[header_map['description']],
+                                                          row))
                         else:
                             raise Exception("Unhandled case: " + row)
         return data
