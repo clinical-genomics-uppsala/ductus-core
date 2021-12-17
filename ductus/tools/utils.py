@@ -75,8 +75,10 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                             tissue = "RNA" if d[0].startswith("R") else "DNA"
                     elif(workpackage.lower() == "wp2"):
                         tissue = "Hematology"
-                    elif(workpackage.lower() == "wp3"):
+                    elif(workpackage.lower() == "wp3" and analysis.lower() == "te"):
                         tissue = d[4]
+                    elif(workpackage.lower() == "wp3" and analysis.lower() == "tc"):
+                        tissue =  "Blood"
 
                     sample_project.append((d[0], project_type, d[1], d[2], user, tissue))
     return sample_project
@@ -108,6 +110,7 @@ def extract_analysis_information(samplesheet):
         tso500 = False
         TM = False
         TE = False
+        TC = False
         data = {'header': "",
                 'wp1': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
                 'wp2': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
@@ -132,6 +135,8 @@ def extract_analysis_information(samplesheet):
                 TE = True
             if "name,tm" in line:
                 TM = True
+            if "name,tc" in line:
+                TC = True
             if line.startswith("[data]"):
                 line = next(file)
                 if "description,tc" in line.lower():
@@ -155,6 +160,13 @@ def extract_analysis_information(samplesheet):
                                                       experiment,
                                                       date_string,
                                                       "te",
+                                                      columns[header_map['description']],
+                                                      row))
+                    elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tc"):
+                        data["wp3"]['klinik'].append((columns[header_map['sample_name']],
+                                                      experiment,
+                                                      date_string,
+                                                      "tc",
                                                       columns[header_map['description']],
                                                       row))
                     else:
@@ -188,6 +200,7 @@ def extract_wp_and_typo(samplesheet):
         tso500 = False
         TM = False
         TE = False
+        TC = False
         for line in file:
             line = line.lower()
             if pattern.search(line):
@@ -196,10 +209,12 @@ def extract_wp_and_typo(samplesheet):
                 TE = True
             if("name,tm" in line):
                 TM = True
+            if("name,tc" in line):
+                TC = True
             if line.startswith("[data]"):
                 line = next(file)
                 if "description,tc" in line.lower():
                     tso500 = True
                     sera = False
                 break
-        return (('haloplex', haloplex), ('tso500', tso500), ('te', TE), ('tm', TM))
+        return (('haloplex', haloplex), ('tso500', tso500), ('te', TE), ('tm', TM), ('tc', TC))
