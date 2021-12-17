@@ -78,7 +78,7 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                     elif(workpackage.lower() == "wp3" and analysis.lower() == "te"):
                         tissue = d[4]
                     elif(workpackage.lower() == "wp3" and analysis.lower() == "tc"):
-                        tissue =  "Blood"
+                        tissue = "Blood"
 
                     sample_project.append((d[0], project_type, d[1], d[2], user, tissue))
     return sample_project

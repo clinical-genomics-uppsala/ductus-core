@@ -372,21 +372,21 @@ class TestUtils(unittest.TestCase):
                          [
                              (
                                 "D99-06299",
-                                 "TC42",
-                                 "20211103",
-                                 "tc",
-                                 "NA_NA_NA_42_NA",
-                                 "D99-06299,D99-06299,NA_NA_NA_42_NA,GGCCTTGTTA,GGCCTTGTTA,GTGTTCCACG,GTGTTCCACG,TC\n"
+                                "TC42",
+                                "20211103",
+                                "tc",
+                                "NA_NA_NA_42_NA",
+                                "D99-06299,D99-06299,NA_NA_NA_42_NA,GGCCTTGTTA,GGCCTTGTTA,GTGTTCCACG,GTGTTCCACG,TC\n"
                              ),
                              (
-                                 "D99-01027",
-                                 "TC42",
-                                 "20211103",
-                                 "tc",
-                                 "NA_NA_NA_42_NA",
-                                 "D99-01027,D99-01027,NA_NA_NA_42_NA,CCTTGTAGCG,CCTTGTAGCG,TTGAGCCAGC,TTGAGCCAGC,TC\n"
-                             ),
-                         ])
+                                "D99-01027",
+                                "TC42",
+                                "20211103",
+                                "tc",
+                                "NA_NA_NA_42_NA",
+                                "D99-01027,D99-01027,NA_NA_NA_42_NA,CCTTGTAGCG,CCTTGTAGCG,TTGAGCCAGC,TTGAGCCAGC,TC\n"
+                             )
+        ])
 
     def test_contains_haloplex(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
@@ -759,36 +759,36 @@ class TestUtils(unittest.TestCase):
                                                    "klinik",
                                                    'TWIST'))
         self.assertEqual([
-                            {
-                                '@timestamp': '2021-11-03T01:01:01.000Z',
-                                'experiment.id': 'TC42',
-                                'experiment.method': 'TWIST Cancer',
-                                'experiment.prep': 'TWIST',
-                                'experiment.project': 'klinik',
-                                'experiment.rerun': False,
-                                'experiment.sample': 'D99-06299',
-                                'experiment.tissue': 'Blood',
-                                'experiment.user': 'unknown',
-                                'experiment.wp': 'WP3'
-                            },
-                            {
-                                '@timestamp': '2021-11-03T01:01:01.000Z',
-                                'experiment.id': 'TC42',
-                                'experiment.method': 'TWIST Cancer',
-                                'experiment.prep': 'TWIST',
-                                'experiment.project': 'klinik',
-                                'experiment.rerun': False,
-                                'experiment.sample': 'D99-01027',
-                                'experiment.tissue': 'Blood',
-                                'experiment.user': 'unknown',
-                                'experiment.wp': 'WP3'
-                            }],
-                        generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tc.csv",
-                                                    "wp3",
-                                                    "tc",
-                                                    "TWIST Cancer",
-                                                    "klinik",
-                                                    "TWIST"))
+                    {
+                        '@timestamp': '2021-11-03T01:01:01.000Z',
+                        'experiment.id': 'TC42',
+                        'experiment.method': 'TWIST Cancer',
+                        'experiment.prep': 'TWIST',
+                        'experiment.project': 'klinik',
+                        'experiment.rerun': False,
+                        'experiment.sample': 'D99-06299',
+                        'experiment.tissue': 'Blood',
+                        'experiment.user': 'unknown',
+                        'experiment.wp': 'WP3'
+                    },
+                    {
+                        '@timestamp': '2021-11-03T01:01:01.000Z',
+                        'experiment.id': 'TC42',
+                        'experiment.method': 'TWIST Cancer',
+                        'experiment.prep': 'TWIST',
+                        'experiment.project': 'klinik',
+                        'experiment.rerun': False,
+                        'experiment.sample': 'D99-01027',
+                        'experiment.tissue': 'Blood',
+                        'experiment.user': 'unknown',
+                        'experiment.wp': 'WP3'
+                    }],
+                    generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tc.csv",
+                                                "wp3",
+                                                "tc",
+                                                "TWIST Cancer",
+                                                "klinik",
+                                                "TWIST"))
 
 
 if __name__ == '__main__':
