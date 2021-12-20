@@ -466,8 +466,8 @@ class TestUtils(unittest.TestCase):
 
         self.assertEqual(
                 [
-                    ('D99-06299', 'klinik', 'TC42', '20211103', 'unknown', 'NA_NA_NA_42_NA'),
-                    ('D99-01027', 'klinik', 'TC42', '20211103', 'unknown', 'NA_NA_NA_42_NA')
+                    ('D99-06299', 'klinik', 'TC42', '20211103', 'unknown', 'Blood'),
+                    ('D99-01027', 'klinik', 'TC42', '20211103', 'unknown', 'Blood')
                 ],
                 get_samples_and_info('wp3', 'tc', 'tests/samplesheets/files/SampleSheet.tc.csv'))
 
