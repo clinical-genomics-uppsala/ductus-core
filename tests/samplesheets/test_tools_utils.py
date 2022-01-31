@@ -121,13 +121,14 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp3']['utveckling'], [])
         self.assertEqual(result['wp3']['klinik'], [])
 
-    def test_parse_tso500(self):
+    def test_parse_tso(self):
+        self.maxDiff = None
         result = extract_analysis_information("tests/samplesheets/files/SampleSheet.tso500.csv")
         self.assertEqual("[Header],,,,,,,,,,,\n"
                          "IEMFileVersion,4,,,,,,,,,,\n"
                          "Investigator Name,,,,,,,,,,,\n"
-                         "Experiment Name,20210120_LM-GL-HN,,,,,,,,,,\n"
-                         "Date,2021-01-20,,,,,,,,,,\n"
+                         "Experiment Name,20190409_LM-GL-HN,,,,,,,,,,\n"
+                         "Date,2019-04-09,,,,,,,,,,\n"
                          "Project,New Project,,,,,,,,,,\n"
                          "Workflow,GenerateFASTQ,,,,,,,,,,\n"
                          "[Manifests],,,,,,,,\n"
@@ -145,7 +146,7 @@ class TestUtils(unittest.TestCase):
                          "Read2StartFromCycle,9,,,,,,,,,,\n"
                          "[Data],,,,,,,,,,,\n"
                          "Lane,Sample_ID,index,index2,Sample_Name,Sample_Plate,Sample_Well,"
-                         "I7_Index_ID,I5_Index_ID,Project,Description,Manifest\n", result['header'])
+                         "I7_Index_ID,I5_Index_ID,Project,Description,TC\n", result['header'])
 
         self.assertEqual(result['wp1']['forskning'], [])
         self.assertEqual(result['wp1']['projekt'], [])
@@ -154,31 +155,35 @@ class TestUtils(unittest.TestCase):
                          [
                             (
                                 'R21-2',
-                                '20210120_LM-GL-HN',
-                                "20210120",
+                                '20190409_LM-GL-HN',
+                                "20190409",
                                 'tso500',
+                                'AP13',
                                 ',R21-2,ACTGCTTA,AGAGGCGC,,,,D716,D511,RNA,AP13,PoolRNA\n'
                             ),
                             (
                                 'R21-3',
-                                '20210120_LM-GL-HN',
-                                "20210120",
+                                '20190409_LM-GL-HN',
+                                "20190409",
                                 'tso500',
+                                'AP14',
                                 ',R21-3,ATGCGGCT,TAGCCGCG,,,,D714,D512,RNA,AP14,PoolRNA\n'
                             ),
                             (
                                 'R21-33',
-                                '20210120_LM-GL-HN',
-                                "20210120",
+                                '20190409_LM-GL-HN',
+                                "20190409",
                                 'tso500',
+                                'AP15',
                                 ',R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,RNA,AP15,PoolRNA\n'
                             ),
                             (
                                 '21-33',
-                                '20210120_LM-GL-HN',
-                                "20210120",
+                                '20190409_LM-GL-HN',
+                                "20190409",
                                 'tso500',
-                                ',R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,DNA,UP15,0.12\n'
+                                'UP15',
+                                ',21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,DNA,UP15,0.2\n'
                             )
                         ])
 
@@ -193,6 +198,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp3']['klinik'], [])
 
     def test_parse_tm(self):
+        self.maxDiff = None
         result = extract_analysis_information("tests/samplesheets/files/SampleSheet.tm.csv")
         self.assertEqual("[Header]\n"
                          "Local Run Manager Analysis Id,64064\n"
@@ -214,14 +220,13 @@ class TestUtils(unittest.TestCase):
                          "Read2StartFromCycle,6\n"
                          "\n"
                          "[Data]\n"
-                         "Sample_ID,Sample_Name,Description,index,I7_Index_ID,index2,I5_Index_ID,Sample_info\n",
+                         "Sample_ID,Sample_Name,Description,index,I7_Index_ID,index2,I5_Index_ID,Sample_Project\n",
                          result['header'])
 
         self.assertEqual(result['wp1']['forskning'], [])
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'], [])
-        self.maxDiff = None
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
         self.assertEqual(result['wp2']['utveckling'], [])
@@ -232,6 +237,7 @@ class TestUtils(unittest.TestCase):
                                 'TM83',
                                 '20210208',
                                 'tm',
+                                'NA_NA_NA_83_CGU-2020-12',
                                 '56063,56063,NA_NA_NA_83_CGU-2020-12,GTGAAGTG,GTGAAGTG,GAGCAATC,GAGCAATC,TM\n'
                             ),
                             (
@@ -239,6 +245,7 @@ class TestUtils(unittest.TestCase):
                                 'TM83',
                                 '20210208',
                                 'tm',
+                                'NA_NA_NA_83_CGU-2017-5',
                                 'FD99-00078,FD99-00078,NA_NA_NA_83_CGU-2017-5,CATGGCTA,CATGGCTA,CACACATC,CACACATC,TM\n'
                             ),
                             (
@@ -246,6 +253,7 @@ class TestUtils(unittest.TestCase):
                                 'TM83',
                                 '20210208',
                                 'tm',
+                                'NA_NA_NA_83_NA',
                                 'D99-00574,D99-00574,NA_NA_NA_83_NA,ATGCCTGT,ATGCCTGT,AGATTGCG,AGATTGCG,TM\n'
                             ),
                             (
@@ -253,6 +261,7 @@ class TestUtils(unittest.TestCase):
                                 'TM83',
                                 '20210208',
                                 'tm',
+                                'NA_NA_NA_83_NA',
                                 'D99-00576,D99-00576,NA_NA_NA_83_NA,CAACACCT,CAACACCT,AGCTACCA,AGCTACCA,TM\n'
                             ),
                             (
@@ -260,6 +269,7 @@ class TestUtils(unittest.TestCase):
                                 'TM83',
                                 '20210208',
                                 'tm',
+                                'NA_NA_NA_83_NA',
                                 'D99-00581,D99-00581,NA_NA_NA_83_NA,TGTGACTG,TGTGACTG,AGCCTATC,AGCCTATC,TM\n'
                             ),
                             (
@@ -267,6 +277,7 @@ class TestUtils(unittest.TestCase):
                                 'TM83',
                                 '20210208',
                                 'tm',
+                                'NA_NA_NA_83_NA',
                                 'D99-00586,D99-00586,NA_NA_NA_83_NA,GTCATCGA,GTCATCGA,GATCCACT,GATCCACT,TM\n'
                             )
         ])
@@ -294,7 +305,7 @@ class TestUtils(unittest.TestCase):
                          "[Settings]\n"
                          "\n"
                          "[Data]\n"
-                         "Sample_ID,Sample_Name,Description,index,I7_Index_ID,index2,I5_Index_ID,Sample_info\n",
+                         "Sample_ID,Sample_Name,Description,index,I7_Index_ID,index2,I5_Index_ID,Sample_Project\n",
                          result['header'])
 
         self.assertEqual(result['wp1']['forskning'], [])
@@ -317,6 +328,7 @@ class TestUtils(unittest.TestCase):
                                 'TE42',
                                 '20210206',
                                 "te",
+                                'BIN_M_NA_42_NA',
                                 "D97-00415,D97-00415,BIN_M_NA_42_NA,CAACACCGTA,CAACACCGTA,GAACAAGCCG,GAACAAGCCG,TE\n"
                             ),
                             (
@@ -324,6 +336,7 @@ class TestUtils(unittest.TestCase):
                                 'TE42',
                                 '20210206',
                                 "te",
+                                'CAD_K_NA_42_NA',
                                 "D97-00388,D97-00388,CAD_K_NA_42_NA,CGAATATTGG,CGAATATTGG,CAGCACGGAA,CAGCACGGAA,TE\n"
                             ),
                             (
@@ -331,29 +344,89 @@ class TestUtils(unittest.TestCase):
                                 'TE42',
                                 '20210206',
                                 "te",
+                                'EXO_K_CGU-2018-16_42_NA',
                                 "D98-05407,D98-05407,EXO_K_CGU-2018-16_42_NA,TAATTCCAGC,TAATTCCAGC,ATCGTATTCG,ATCGTATTCG,TE\n"
                             )
         ])
 
+    def test_parse_tc(self):
+        result = extract_analysis_information("tests/samplesheets/files/SampleSheet.tc.csv")
+        self.assertEqual("[Header]\n"
+                         "Local Run Manager Analysis Id,10010\n"
+                         "Experiment Name,TC42\n"
+                         "Date,2021-11-03\n"
+                         "Module,GenerateFASTQ - 3.0.1\n"
+                         "Workflow,GenerateFASTQ\n"
+                         "Library Prep Kit,Custom\n"
+                         "Index Kit,Custom\n"
+                         "Chemistry,Amplicon\n"
+                         "\n"
+                         "[Reads]\n"
+                         "149\n"
+                         "149\n"
+                         "\n"
+                         "[Settings]\n"
+                         "\n"
+                         "[Data]\n"
+                         "Sample_ID,Sample_Name,Description,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project\n",
+                         result['header'])
+
+        self.assertEqual(result['wp1']['forskning'], [])
+        self.assertEqual(result['wp1']['projekt'], [])
+        self.assertEqual(result['wp1']['utveckling'], [])
+        self.assertEqual(result['wp1']['klinik'], [])
+        self.assertEqual(result['wp2']['forskning'], [])
+        self.assertEqual(result['wp2']['projekt'], [])
+        self.assertEqual(result['wp2']['utveckling'], [])
+        self.assertEqual(result['wp2']['klinik'], [])
+        self.assertEqual(result['wp3']['forskning'], [])
+        self.assertEqual(result['wp3']['projekt'], [])
+        self.assertEqual(result['wp3']['utveckling'], [])
+        self.assertEqual(result['wp3']['klinik'],
+                         [
+                             (
+                                "D99-06299",
+                                "TC42",
+                                "20211103",
+                                "tc",
+                                "NA_NA_NA_42_NA",
+                                "D99-06299,D99-06299,NA_NA_NA_42_NA,GGCCTTGTTA,GGCCTTGTTA,GTGTTCCACG,GTGTTCCACG,TC\n"
+                             ),
+                             (
+                                "D99-01027",
+                                "TC42",
+                                "20211103",
+                                "tc",
+                                "NA_NA_NA_42_NA",
+                                "D99-01027,D99-01027,NA_NA_NA_42_NA,CCTTGTAGCG,CCTTGTAGCG,TTGAGCCAGC,TTGAGCCAGC,TC\n"
+                             )
+        ])
+
     def test_contains_haloplex(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso5100"))
 
     def test_contains_klinik_haloplex(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera", "klinik"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500", "klinik"))
 
-    def test_parse_tso500(self):
+    def test_contains_tso500(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "tso500"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "sera"))
 
-    def test_parse_tm(self):
+    def test_contains_tm(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp2", "tm"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp1", "sera"))
 
-    def test_parse_te(self):
+    def test_contains_te(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.te.csv", "wp3", "te"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.te.csv", "wp2", "tm"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.te.csv", "wp3", "tc"))
+
+    def test_contains_wp3_tc(self):
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tc.csv", "wp3", "tc"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tc.csv", "wp2", "tm"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tc.csv", "wp3", "te"))
 
     def test_get_info_types_haloplex(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
@@ -364,8 +437,10 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(get_project_types("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
         self.assertEqual(get_project_types("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"), {'klinik'})
+        self.assertEqual(get_project_types("wp3", "tc", "tests/samplesheets/files/SampleSheet.tc.csv"), {'klinik'})
 
     def test_get_samples_info(self):
+        self.maxDiff = None
         self.assertEqual(
             [
                 ('97-181', 'klinik', '20210203_LU', '20210204', 'LU', 'unknown'),
@@ -379,10 +454,10 @@ class TestUtils(unittest.TestCase):
         self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual(
             [
-                ('R21-2', 'klinik', '20210120_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
-                ('R21-3', 'klinik', '20210120_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
-                ('R21-33', 'klinik', '20210120_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
-                ('21-33', 'klinik', '20210120_LM-GL-HN', '20190409', 'LM-GL-HN', 'DNA')
+                ('R21-2', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
+                ('R21-3', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
+                ('R21-33', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
+                ('21-33', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'DNA')
             ],
             get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual(
@@ -404,6 +479,13 @@ class TestUtils(unittest.TestCase):
                     ],
                     get_samples_and_info("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
 
+        self.assertEqual(
+                [
+                    ('D99-06299', 'klinik', 'TC42', '20211103', 'unknown', 'Blood'),
+                    ('D99-01027', 'klinik', 'TC42', '20211103', 'unknown', 'Blood')
+                ],
+                get_samples_and_info('wp3', 'tc', 'tests/samplesheets/files/SampleSheet.tc.csv'))
+
     def test_get_samples(self):
         self.assertEqual(["97-181", "97-217", "97-218", "97-219", "97-220", "97-221"],
                          get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.haloplex.csv"))
@@ -417,6 +499,8 @@ class TestUtils(unittest.TestCase):
                          get_samples("wp2", "klinik", 'tm', "tests/samplesheets/files/SampleSheet.tm.csv"))
         self.assertEqual(['D97-00415', 'D97-00388', 'D98-05407'],
                          get_samples("wp3", "klinik", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
+        self.assertEqual(['D99-06299', 'D99-01027'],
+                         get_samples("wp3", "klinik", "tc", "tests/samplesheets/files/SampleSheet.tc.csv"))
 
     def test_generate_elastic_statistics(self):
         self.maxDiff = None
@@ -509,7 +593,7 @@ class TestUtils(unittest.TestCase):
         self.assertCountEqual([
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
-                                'experiment.id': '20210120_LM-GL-HN',
+                                'experiment.id': '20190409_LM-GL-HN',
                                 'experiment.method': 'TSO500',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -521,7 +605,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
-                                'experiment.id': '20210120_LM-GL-HN',
+                                'experiment.id': '20190409_LM-GL-HN',
                                 'experiment.method': 'TSO500',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -533,7 +617,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
-                                'experiment.id': '20210120_LM-GL-HN',
+                                'experiment.id': '20190409_LM-GL-HN',
                                 'experiment.method': 'TSO500',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -545,7 +629,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
-                                'experiment.id': '20210120_LM-GL-HN',
+                                'experiment.id': '20190409_LM-GL-HN',
                                 'experiment.method': 'TSO500',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -689,6 +773,37 @@ class TestUtils(unittest.TestCase):
                                                    "TWIST",
                                                    "klinik",
                                                    'TWIST'))
+        self.assertEqual([
+                    {
+                        '@timestamp': '2021-11-03T01:01:01.000Z',
+                        'experiment.id': 'TC42',
+                        'experiment.method': 'TWIST Cancer',
+                        'experiment.prep': 'TWIST',
+                        'experiment.project': 'klinik',
+                        'experiment.rerun': False,
+                        'experiment.sample': 'D99-06299',
+                        'experiment.tissue': 'Blood',
+                        'experiment.user': 'unknown',
+                        'experiment.wp': 'WP3'
+                    },
+                    {
+                        '@timestamp': '2021-11-03T01:01:01.000Z',
+                        'experiment.id': 'TC42',
+                        'experiment.method': 'TWIST Cancer',
+                        'experiment.prep': 'TWIST',
+                        'experiment.project': 'klinik',
+                        'experiment.rerun': False,
+                        'experiment.sample': 'D99-01027',
+                        'experiment.tissue': 'Blood',
+                        'experiment.user': 'unknown',
+                        'experiment.wp': 'WP3'
+                    }],
+                    generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tc.csv",
+                                                "wp3",
+                                                "tc",
+                                                "TWIST Cancer",
+                                                "klinik",
+                                                "TWIST"))
 
 
 if __name__ == '__main__':
