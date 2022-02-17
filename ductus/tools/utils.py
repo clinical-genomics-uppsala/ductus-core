@@ -105,7 +105,7 @@ def extract_analysis_information(samplesheet):
         workpackage and project type, example Klinik,s
     """
     with open(samplesheet) as file:
-        pattern = re.compile(r"experiment name,\d{8}_[a-z]+")
+        pattern = re.compile(r"experiment name,\d{8}_[a-z-]+")
         sera = False
         tso500 = False
         TM = False
