@@ -149,25 +149,28 @@ def extract_analysis_information(samplesheet):
 
                     if len(columns) <= 1:
                         continue
+                    description = ""
+                    if 'description' in header_map:
+                        description = columns[header_map['description']]
                     if 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
                         data["wp2"]['klinik'].append((columns[header_map['sample_name']],
                                                       experiment, date_string,
                                                       "tm",
-                                                      columns[header_map['description']],
+                                                      description,
                                                       row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
                         data["wp3"]['klinik'].append((columns[header_map['sample_name']],
                                                       experiment,
                                                       date_string,
                                                       "te",
-                                                      columns[header_map['description']],
+                                                      description,
                                                       row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tc"):
                         data["wp3"]['klinik'].append((columns[header_map['sample_name']],
                                                       experiment,
                                                       date_string,
                                                       "tc",
-                                                      columns[header_map['description']],
+                                                      description,
                                                       row))
                     else:
                         if tso500:
@@ -175,14 +178,14 @@ def extract_analysis_information(samplesheet):
                                                           experiment,
                                                           date_string,
                                                           "tso500",
-                                                          columns[header_map['description']],
+                                                          description,
                                                           row))
                         elif sera:
                             data["wp1"]['klinik'].append((columns[header_map['sample_name']],
                                                           experiment,
                                                           date_string,
                                                           "sera",
-                                                          columns[header_map['description']],
+                                                          description,
                                                           row))
                         else:
                             raise Exception("Unhandled case: " + row)
