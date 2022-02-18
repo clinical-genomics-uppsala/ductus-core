@@ -105,7 +105,7 @@ def extract_analysis_information(samplesheet):
         workpackage and project type, example Klinik,s
     """
     with open(samplesheet) as file:
-        pattern = re.compile(r"experiment name,\d{8}_[a-z]+")
+        pattern = re.compile(r"experiment name,\d{8}_[a-z-]+")
         sera = False
         tso500 = False
         TM = False
@@ -121,11 +121,11 @@ def extract_analysis_information(samplesheet):
             data['header'] = data['header'] + line
             if line.startswith("Date"):
                 if "/" in line:
-                    date_result = re.search(r"Date,(\d{2})/(\d{2})/(\d{4})", line)
-                    date_string = "{}{}{}".format(date_result[3], date_result[1], date_result[2])
+                    date_result = re.search(r"Date,(\d{1,2})/(\d{1,2})/(\d{4})", line)
+                    date_string = "{}{:02d}{:02d}".format(date_result[3], int(date_result[1]), int(date_result[2]))
                 else:
-                    date_result = re.search(r"^Date,(\d{4})-{0,1}(\d{2})-{0,1}(\d{2})", line)
-                    date_string = "{}{}{}".format(date_result[1], date_result[2], date_result[3])
+                    date_result = re.search(r"^Date,(\d{4})-{0,1}(\d{1,2})-{0,1}(\d{1,2})", line)
+                    date_string = "{}{:02d}{:02d}".format(date_result[1], int(date_result[2]), int(date_result[3]))
             if line.startswith("Experiment Name,"):
                 experiment = re.search("^Experiment Name,([A-Za-z0-9_-]+)", line)[1]
             line = line.lower()
@@ -149,25 +149,28 @@ def extract_analysis_information(samplesheet):
 
                     if len(columns) <= 1:
                         continue
+                    description = ""
+                    if 'description' in header_map:
+                        description = columns[header_map['description']]
                     if 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
                         data["wp2"]['klinik'].append((columns[header_map['sample_name']],
                                                       experiment, date_string,
                                                       "tm",
-                                                      columns[header_map['description']],
+                                                      description,
                                                       row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
                         data["wp3"]['klinik'].append((columns[header_map['sample_name']],
                                                       experiment,
                                                       date_string,
                                                       "te",
-                                                      columns[header_map['description']],
+                                                      description,
                                                       row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tc"):
                         data["wp3"]['klinik'].append((columns[header_map['sample_name']],
                                                       experiment,
                                                       date_string,
                                                       "tc",
-                                                      columns[header_map['description']],
+                                                      description,
                                                       row))
                     else:
                         if tso500:
@@ -175,14 +178,14 @@ def extract_analysis_information(samplesheet):
                                                           experiment,
                                                           date_string,
                                                           "tso500",
-                                                          columns[header_map['description']],
+                                                          description,
                                                           row))
                         elif sera:
                             data["wp1"]['klinik'].append((columns[header_map['sample_name']],
                                                           experiment,
                                                           date_string,
                                                           "sera",
-                                                          columns[header_map['description']],
+                                                          description,
                                                           row))
                         else:
                             raise Exception("Unhandled case: " + row)
