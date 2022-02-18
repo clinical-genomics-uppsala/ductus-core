@@ -121,11 +121,11 @@ def extract_analysis_information(samplesheet):
             data['header'] = data['header'] + line
             if line.startswith("Date"):
                 if "/" in line:
-                    date_result = re.search(r"Date,(\d{2})/(\d{2})/(\d{4})", line)
-                    date_string = "{}{}{}".format(date_result[3], date_result[1], date_result[2])
+                    date_result = re.search(r"Date,(\d{1,2})/(\d{1,2})/(\d{4})", line)
+                    date_string = "{}{:02d}{:02d}".format(date_result[3], int(date_result[1]), int(date_result[2]))
                 else:
-                    date_result = re.search(r"^Date,(\d{4})-{0,1}(\d{2})-{0,1}(\d{2})", line)
-                    date_string = "{}{}{}".format(date_result[1], date_result[2], date_result[3])
+                    date_result = re.search(r"^Date,(\d{4})-{0,1}(\d{1,2})-{0,1}(\d{1,2})", line)
+                    date_string = "{}{:02d}{:02d}".format(date_result[1], int(date_result[2]), int(date_result[3]))
             if line.startswith("Experiment Name,"):
                 experiment = re.search("^Experiment Name,([A-Za-z0-9_-]+)", line)[1]
             line = line.lower()
