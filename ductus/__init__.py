@@ -1,1 +1,2 @@
-__version__ = "1.4.0"
+from . import _version
+__version__ = _version.get_versions()['version']
