@@ -804,7 +804,7 @@ class TestUtils(unittest.TestCase):
                             }],
                          generate_elastic_statistics("tests/samplesheets/files/SampleSheet.GMS560.csv",
                                                      "wp1",
-                                                     'gms560',
+                                                     'GMS560',
                                                      'GMS560',
                                                      "klinik",
                                                      'FFPE'))

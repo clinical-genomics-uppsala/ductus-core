@@ -71,7 +71,7 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                     tissue = "unknown"
                     if(workpackage.lower() == "wp1"):
                         user = d[1].split("_")[1]
-                        if analysis.lower() == "tso500" or analysis.lower() == "gms560":
+                        if analysis.lower() == "tso500" or analysis.upper() == "GMS560":
                             tissue = "RNA" if d[0].startswith("R") else "DNA"
                     elif(workpackage.lower() == "wp2"):
                         tissue = "Hematology"
