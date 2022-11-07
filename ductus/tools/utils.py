@@ -192,7 +192,7 @@ def extract_analysis_information(samplesheet):
                                                           description,
                                                           row))
                         elif GMS560:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_name']],
+                            data["wp1"]['klinik'].append((columns[header_map['sample_id']],
                                                           experiment,
                                                           date_string,
                                                           "GMS560",

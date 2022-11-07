@@ -204,7 +204,7 @@ class TestUtils(unittest.TestCase):
                          "IEMFileVersion,4,,,,,,,,,\n"
                          "Investigator Name,,,,,,,,,,\n"
                          "Experiment Name,20221025_MS,,,,,,,,,\n"
-                         "Date,,,,,,,,,,\n"
+                         "Date,20221025,,,,,,,,,\n"
                          "Project,New Project,,,,,,,,,\n"
                          "Workflow,GenerateFASTQ,,,,,,,,,\n"
                          "[Reads],,,,,,,,,,\n"
@@ -541,8 +541,8 @@ class TestUtils(unittest.TestCase):
                 ('21-33', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'DNA')
             ],
             get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
-            self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.tso500.csv"))
-            self.assertEqual([], get_samples_and_info("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual([], get_samples_and_info("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual(
             [
                 ('22-2427', 'klinik', '20221025_MS', '20221025', 'MS', 'DNA'),
@@ -551,33 +551,33 @@ class TestUtils(unittest.TestCase):
                 ('R22-2430', 'klinik', '20221025_MS', '20221025', 'MS', 'RNA')
             ],
             get_samples_and_info("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
-            self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
-            self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+        self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+        self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual(
-                [
-                    ('56063', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
-                    ('FD99-00078', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
-                    ('D99-00574', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
-                    ('D99-00576', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
-                    ('D99-00581', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
-                    ('D99-00586', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology')
-                ],
-                get_samples_and_info("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
+            [
+                ('56063', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
+                ('FD99-00078', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
+                ('D99-00574', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
+                ('D99-00576', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
+                ('D99-00581', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
+                ('D99-00586', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology')
+            ],
+            get_samples_and_info("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
 
         self.assertEqual(
-                    [
-                        ('D97-00415', 'klinik', 'TE42', '20210206', 'unknown',  'BIN_M_NA_42_NA'),
-                        ('D97-00388', 'klinik', 'TE42', '20210206', 'unknown',  'CAD_K_NA_42_NA'),
-                        ('D98-05407', 'klinik', 'TE42', '20210206', 'unknown',  'EXO_K_CGU-2018-16_42_NA')
-                    ],
-                    get_samples_and_info("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
+            [
+                ('D97-00415', 'klinik', 'TE42', '20210206', 'unknown',  'BIN_M_NA_42_NA'),
+                ('D97-00388', 'klinik', 'TE42', '20210206', 'unknown',  'CAD_K_NA_42_NA'),
+                ('D98-05407', 'klinik', 'TE42', '20210206', 'unknown',  'EXO_K_CGU-2018-16_42_NA')
+            ],
+            get_samples_and_info("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
 
         self.assertEqual(
-                [
-                    ('D99-06299', 'klinik', 'TC42', '20211103', 'unknown', 'Blood'),
-                    ('D99-01027', 'klinik', 'TC42', '20211103', 'unknown', 'Blood')
-                ],
-                get_samples_and_info('wp3', 'tc', 'tests/samplesheets/files/SampleSheet.tc.csv'))
+            [
+                ('D99-06299', 'klinik', 'TC42', '20211103', 'unknown', 'Blood'),
+                ('D99-01027', 'klinik', 'TC42', '20211103', 'unknown', 'Blood')
+            ],
+            get_samples_and_info('wp3', 'tc', 'tests/samplesheets/files/SampleSheet.tc.csv'))
 
     def test_get_samples(self):
         self.assertEqual(["97-181", "97-217", "97-218", "97-219", "97-220", "97-221"],
