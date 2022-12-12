@@ -71,7 +71,7 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                     tissue = "unknown"
                     if(workpackage.lower() == "wp1"):
                         user = d[1].split("_")[1]
-                        if analysis.lower() == "tso500":
+                        if analysis.lower() == "tso500" or analysis.upper() == "GMS560":
                             tissue = "RNA" if d[0].startswith("R") else "DNA"
                     elif(workpackage.lower() == "wp2"):
                         tissue = "Hematology"
@@ -108,6 +108,7 @@ def extract_analysis_information(samplesheet):
         pattern = re.compile(r"experiment name,\d{8}_[a-z-]+")
         sera = False
         tso500 = False
+        GMS560 = False
         TM = False
         TE = False
         TC = False
@@ -142,6 +143,9 @@ def extract_analysis_information(samplesheet):
                 if "description,tc" in line.lower():
                     tso500 = True
                     sera = False
+                    if "lane" not in line.lower():
+                        GMS560 = True
+                        tso500 = False
                 data['header'] = data['header'] + line
                 header_map = {v[1].lower(): v[0] for v in enumerate(re.split(",|;", line.rstrip()))}
                 for row in file:
@@ -187,6 +191,13 @@ def extract_analysis_information(samplesheet):
                                                           "sera",
                                                           description,
                                                           row))
+                        elif GMS560:
+                            data["wp1"]['klinik'].append((columns[header_map['sample_id']],
+                                                          experiment,
+                                                          date_string,
+                                                          "GMS560",
+                                                          description,
+                                                          row))
                         else:
                             raise Exception("Unhandled case: " + row)
         return data
@@ -201,6 +212,7 @@ def extract_wp_and_typo(samplesheet):
         pattern = re.compile(r"experiment name,\d{8}_[a-z]+")
         haloplex = False
         tso500 = False
+        GMS560 = False
         TM = False
         TE = False
         TC = False
@@ -219,5 +231,8 @@ def extract_wp_and_typo(samplesheet):
                 if "description,tc" in line.lower():
                     tso500 = True
                     sera = False
+                    if "lane" not in line.lower():
+                        GMS560 = True
+                        tso500 = False
                 break
-        return (('haloplex', haloplex), ('tso500', tso500), ('te', TE), ('tm', TM), ('tc', TC))
+        return (('haloplex', haloplex), ('tso500', tso500), ('GMS560', GMS560), ('te', TE), ('tm', TM), ('tc', TC))
