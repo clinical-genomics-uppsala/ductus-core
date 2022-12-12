@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.5.0...v1.6.0) (2022-12-12)
+
+
+### Features
+
+* added GMS560 analysis ([fab67ed](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/fab67ed08c75d9be64ddbceb22faff35f7f66aa9))
+
+
+### Bug Fixes
+
+* fixed so that tests run ok ([06f6bd6](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/06f6bd66e8c51ed64bb22921eb71700260c94095))
+
 ## [1.5.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.4.0...v1.5.0) (2022-02-18)
 
 
