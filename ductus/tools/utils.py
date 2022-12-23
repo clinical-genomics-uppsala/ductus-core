@@ -95,6 +95,17 @@ def get_project_types(workpackage, analysis, samplesheet):
     return set(project_types)
 
 
+def get_project_and_experiment(workpackage, analysis, samplesheet):
+    data = extract_analysis_information(samplesheet)
+    project_and_analysis = []
+    if workpackage in data:
+        for project_type, analyzes in data[workpackage].items():
+            for a_item in analyzes:
+                if analysis in a_item:
+                    project_and_analysis.append((project_type, a_item[1]))
+    return set(project_and_analysis)
+
+
 def print_project_types(workpackage, analysis, samplesheet):
     print(*get_project_types(workpackage, analysis, samplesheet), sep="\n")
 
