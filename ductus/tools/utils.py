@@ -102,7 +102,7 @@ def get_project_and_experiment(workpackage, analysis, samplesheet):
         for project_type, analyzes in data[workpackage].items():
             for a_item in analyzes:
                 if analysis in a_item:
-                    project_and_analysis.append((project_type, analyzes[1]))
+                    project_and_analysis.append((project_type, a_item[1]))
     return set(project_and_analysis)
 
 

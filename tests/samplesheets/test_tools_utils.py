@@ -1,5 +1,10 @@
 import unittest
-from ductus.tools.utils import extract_analysis_information, contains, get_project_types, get_samples_and_info, get_samples
+from ductus.tools.utils import extract_analysis_information
+from ductus.tools.utils import contains
+from ductus.tools.utils import get_project_and_experiment
+from ductus.tools.utils import get_project_types
+from ductus.tools.utils import get_samples
+from ductus.tools.utils import get_samples_and_info
 from ductus.tools.utils import generate_elastic_statistics
 
 
@@ -518,6 +523,26 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(get_project_types("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp3", "tc", "tests/samplesheets/files/SampleSheet.tc.csv"), {'klinik'})
+
+    def test_get_project_and_experiment(self):
+        self.assertEqual({("klinik", "20210203_LU")},
+                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual(set(),
+                         get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual({("klinik", "20201221_LU")},
+                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.swift.mn.csv"))
+        self.assertEqual({("klinik", "20210302_MS")},
+                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.swift.m0.csv"))
+        self.assertEqual({("klinik", "20190409_LM-GL-HN")},
+                         get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual({("klinik", "20221025_MS")},
+                         get_project_and_experiment("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+        self.assertEqual({("klinik", "TM83")},
+                         get_project_and_experiment("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
+        self.assertEqual({("klinik", "TE42")},
+                         get_project_and_experiment("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
+        self.assertEqual({("klinik", "TC42")},
+                         get_project_and_experiment("wp3", "tc", "tests/samplesheets/files/SampleSheet.tc.csv"))
 
     def test_get_samples_info(self):
         self.maxDiff = None
