@@ -69,15 +69,15 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                 if analysis in d:
                     user = "unknown"
                     tissue = "unknown"
-                    if(workpackage.lower() == "wp1"):
+                    if workpackage.lower() == "wp1":
                         user = d[1].split("_")[1]
                         if analysis.lower() == "tso500" or analysis.lower() == "gms560":
                             tissue = "RNA" if d[0].startswith("R") else "DNA"
-                    elif(workpackage.lower() == "wp2"):
+                    elif workpackage.lower() == "wp2":
                         tissue = "Hematology"
-                    elif(workpackage.lower() == "wp3" and analysis.lower() == "te"):
+                    elif workpackage.lower() == "wp3" and analysis.lower() == "te":
                         tissue = d[4]
-                    elif(workpackage.lower() == "wp3" and analysis.lower() == "tc"):
+                    elif workpackage.lower() == "wp3" and analysis.lower() == "tc":
                         tissue = "Blood"
 
                     sample_project.append((d[0], project_type, d[1], d[2], user, tissue))
@@ -220,11 +220,11 @@ def extract_wp_and_typo(samplesheet):
             line = line.lower()
             if pattern.search(line):
                 sera = True
-            if("name,te" in line):
+            if "name,te" in line:
                 TE = True
-            if("name,tm" in line):
+            if "name,tm" in line:
                 TM = True
-            if("name,tc" in line):
+            if "name,tc" in line:
                 TC = True
             if line.startswith("[data]"):
                 line = next(file)
