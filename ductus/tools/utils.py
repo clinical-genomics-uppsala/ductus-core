@@ -69,15 +69,15 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                 if analysis in d:
                     user = "unknown"
                     tissue = "unknown"
-                    if(workpackage.lower() == "wp1"):
+                    if workpackage.lower() == "wp1":
                         user = d[1].split("_")[1]
-                        if analysis.lower() == "tso500" or analysis.upper() == "GMS560":
+                        if analysis.lower() == "tso500" or analysis.lower() == "gms560":
                             tissue = "RNA" if d[0].startswith("R") else "DNA"
-                    elif(workpackage.lower() == "wp2"):
+                    elif workpackage.lower() == "wp2":
                         tissue = "Hematology"
-                    elif(workpackage.lower() == "wp3" and analysis.lower() == "te"):
+                    elif workpackage.lower() == "wp3" and analysis.lower() == "te":
                         tissue = d[4]
-                    elif(workpackage.lower() == "wp3" and analysis.lower() == "tc"):
+                    elif workpackage.lower() == "wp3" and analysis.lower() == "tc":
                         tissue = "Blood"
 
                     sample_project.append((d[0], project_type, d[1], d[2], user, tissue))
@@ -95,6 +95,17 @@ def get_project_types(workpackage, analysis, samplesheet):
     return set(project_types)
 
 
+def get_project_and_experiment(workpackage, analysis, samplesheet):
+    data = extract_analysis_information(samplesheet)
+    project_and_analysis = []
+    if workpackage in data:
+        for project_type, analyzes in data[workpackage].items():
+            for a_item in analyzes:
+                if analysis in a_item:
+                    project_and_analysis.append((project_type, a_item[1]))
+    return set(project_and_analysis)
+
+
 def print_project_types(workpackage, analysis, samplesheet):
     print(*get_project_types(workpackage, analysis, samplesheet), sep="\n")
 
@@ -108,7 +119,7 @@ def extract_analysis_information(samplesheet):
         pattern = re.compile(r"experiment name,\d{8}_[a-z-]+")
         sera = False
         tso500 = False
-        GMS560 = False
+        gms560 = False
         TM = False
         TE = False
         TC = False
@@ -144,7 +155,7 @@ def extract_analysis_information(samplesheet):
                     tso500 = True
                     sera = False
                     if "lane" not in line.lower():
-                        GMS560 = True
+                        gms560 = True
                         tso500 = False
                 data['header'] = data['header'] + line
                 header_map = {v[1].lower(): v[0] for v in enumerate(re.split(",|;", line.rstrip()))}
@@ -191,11 +202,11 @@ def extract_analysis_information(samplesheet):
                                                           "sera",
                                                           description,
                                                           row))
-                        elif GMS560:
+                        elif gms560:
                             data["wp1"]['klinik'].append((columns[header_map['sample_id']],
                                                           experiment,
                                                           date_string,
-                                                          "GMS560",
+                                                          "gms560",
                                                           description,
                                                           row))
                         else:
@@ -212,7 +223,7 @@ def extract_wp_and_typo(samplesheet):
         pattern = re.compile(r"experiment name,\d{8}_[a-z]+")
         haloplex = False
         tso500 = False
-        GMS560 = False
+        gms560 = False
         TM = False
         TE = False
         TC = False
@@ -220,11 +231,11 @@ def extract_wp_and_typo(samplesheet):
             line = line.lower()
             if pattern.search(line):
                 sera = True
-            if("name,te" in line):
+            if "name,te" in line:
                 TE = True
-            if("name,tm" in line):
+            if "name,tm" in line:
                 TM = True
-            if("name,tc" in line):
+            if "name,tc" in line:
                 TC = True
             if line.startswith("[data]"):
                 line = next(file)
@@ -232,7 +243,7 @@ def extract_wp_and_typo(samplesheet):
                     tso500 = True
                     sera = False
                     if "lane" not in line.lower():
-                        GMS560 = True
+                        gms560 = True
                         tso500 = False
                 break
-        return (('haloplex', haloplex), ('tso500', tso500), ('GMS560', GMS560), ('te', TE), ('tm', TM), ('tc', TC))
+        return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('tc', TC))

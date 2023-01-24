@@ -1,5 +1,10 @@
 import unittest
-from ductus.tools.utils import extract_analysis_information, contains, get_project_types, get_samples_and_info, get_samples
+from ductus.tools.utils import extract_analysis_information
+from ductus.tools.utils import contains
+from ductus.tools.utils import get_project_and_experiment
+from ductus.tools.utils import get_project_types
+from ductus.tools.utils import get_samples
+from ductus.tools.utils import get_samples_and_info
 from ductus.tools.utils import generate_elastic_statistics
 
 
@@ -227,7 +232,7 @@ class TestUtils(unittest.TestCase):
                                 '22-2427',
                                 '20221025_MS',
                                 "20221025",
-                                'GMS560',
+                                'gms560',
                                 'xGen_UDI_Index1',
                                 '22-2427,CTGATCGT,GCGCATAT,,,,,,DNA,xGen_UDI_Index1,0.7\n'
                             ),
@@ -235,7 +240,7 @@ class TestUtils(unittest.TestCase):
                                 '22-2428',
                                 '20221025_MS',
                                 "20221025",
-                                'GMS560',
+                                'gms560',
                                 'xGen_UDI_Index2',
                                 '22-2428,ACTCTCGA,CTGTACCA,,,,,,DNA,xGen_UDI_Index2,0.6\n'
                             ),
@@ -243,7 +248,7 @@ class TestUtils(unittest.TestCase):
                                 'R22-2429',
                                 '20221025_MS',
                                 "20221025",
-                                'GMS560',
+                                'gms560',
                                 'xGen_UDI_Index3',
                                 'R22-2429,TGAGCTAG,GAACGGTT,,,,,,RNA,xGen_UDI_Index3,\n'
                             ),
@@ -251,7 +256,7 @@ class TestUtils(unittest.TestCase):
                                 'R22-2430',
                                 '20221025_MS',
                                 "20221025",
-                                'GMS560',
+                                'gms560',
                                 'xGen_UDI_Index4',
                                 'R22-2430,GAGACGAT,ACCGGTTA,,,,,,RNA,xGen_UDI_Index4,\n'
                             )
@@ -475,20 +480,20 @@ class TestUtils(unittest.TestCase):
     def test_contains_haloplex(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "GMS560"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "gms560"))
 
     def test_contains_klinik_haloplex(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera", "klinik"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500", "klinik"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "GMS560", "klinik"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "gms560", "klinik"))
 
     def test_contains_tso500(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "tso500"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "sera"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "GMS560"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "gms560"))
 
     def test_contains_gms560(self):
-        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "GMS560"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "gms560"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "sera"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "tso500"))
 
@@ -509,15 +514,35 @@ class TestUtils(unittest.TestCase):
     def test_get_info_types_haloplex(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "GMS560"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "gms560"))
 
     def test_info_types(self):
         self.assertEqual(get_project_types("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"), {'klinik', })
         self.assertEqual(get_project_types("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
-        self.assertEqual(get_project_types("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
+        self.assertEqual(get_project_types("wp1", "gms560", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
         self.assertEqual(get_project_types("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp3", "tc", "tests/samplesheets/files/SampleSheet.tc.csv"), {'klinik'})
+
+    def test_get_project_and_experiment(self):
+        self.assertEqual({("klinik", "20210203_LU")},
+                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual(set(),
+                         get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual({("klinik", "20201221_LU")},
+                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.swift.mn.csv"))
+        self.assertEqual({("klinik", "20210302_MS")},
+                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.swift.m0.csv"))
+        self.assertEqual({("klinik", "20190409_LM-GL-HN")},
+                         get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual({("klinik", "20221025_MS")},
+                         get_project_and_experiment("wp1", "gms560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+        self.assertEqual({("klinik", "TM83")},
+                         get_project_and_experiment("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
+        self.assertEqual({("klinik", "TE42")},
+                         get_project_and_experiment("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
+        self.assertEqual({("klinik", "TC42")},
+                         get_project_and_experiment("wp3", "tc", "tests/samplesheets/files/SampleSheet.tc.csv"))
 
     def test_get_samples_info(self):
         self.maxDiff = None
@@ -532,7 +557,7 @@ class TestUtils(unittest.TestCase):
             ],
             get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
-        self.assertEqual([], get_samples_and_info("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+        self.assertEqual([], get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual(
             [
                 ('R21-2', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
@@ -542,7 +567,7 @@ class TestUtils(unittest.TestCase):
             ],
             get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.tso500.csv"))
-        self.assertEqual([], get_samples_and_info("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual([], get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual(
             [
                 ('22-2427', 'klinik', '20221025_MS', '20221025', 'MS', 'DNA'),
@@ -550,7 +575,7 @@ class TestUtils(unittest.TestCase):
                 ('R22-2429', 'klinik', '20221025_MS', '20221025', 'MS', 'RNA'),
                 ('R22-2430', 'klinik', '20221025_MS', '20221025', 'MS', 'RNA')
             ],
-            get_samples_and_info("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+            get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual(
@@ -589,9 +614,9 @@ class TestUtils(unittest.TestCase):
         self.assertEqual([],
                          get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual([],
-                         get_samples("wp1", "klinik", 'GMS560', "tests/samplesheets/files/SampleSheet.tso500.csv"))
+                         get_samples("wp1", "klinik", 'gms560', "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual(['22-2427', '22-2428', 'R22-2429', 'R22-2430'],
-                         get_samples("wp1", "klinik", 'GMS560', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+                         get_samples("wp1", "klinik", 'gms560', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([],
                          get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([],
@@ -757,7 +782,7 @@ class TestUtils(unittest.TestCase):
                             {
                                 '@timestamp': '2022-10-25T01:01:01.000Z',
                                 'experiment.id': '20221025_MS',
-                                'experiment.method': 'GMS560',
+                                'experiment.method': 'gms560',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
                                 'experiment.rerun': False,
@@ -769,7 +794,7 @@ class TestUtils(unittest.TestCase):
                             {
                                 '@timestamp': '2022-10-25T01:01:01.000Z',
                                 'experiment.id': '20221025_MS',
-                                'experiment.method': 'GMS560',
+                                'experiment.method': 'gms560',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
                                 'experiment.rerun': False,
@@ -781,7 +806,7 @@ class TestUtils(unittest.TestCase):
                             {
                                 '@timestamp': '2022-10-25T01:01:01.000Z',
                                 'experiment.id': '20221025_MS',
-                                'experiment.method': 'GMS560',
+                                'experiment.method': 'gms560',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
                                 'experiment.rerun': False,
@@ -793,7 +818,7 @@ class TestUtils(unittest.TestCase):
                             {
                                 '@timestamp': '2022-10-25T01:01:01.000Z',
                                 'experiment.id': '20221025_MS',
-                                'experiment.method': 'GMS560',
+                                'experiment.method': 'gms560',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
                                 'experiment.rerun': False,
@@ -804,20 +829,20 @@ class TestUtils(unittest.TestCase):
                             }],
                          generate_elastic_statistics("tests/samplesheets/files/SampleSheet.GMS560.csv",
                                                      "wp1",
-                                                     'GMS560',
-                                                     'GMS560',
+                                                     'gms560',
+                                                     'gms560',
                                                      "klinik",
                                                      'FFPE'))
         self.assertCountEqual([], generate_elastic_statistics("tests/samplesheets/files/SampleSheet.GMS560.csv",
                                                               "wp1",
                                                               'sera',
-                                                              'GMS560',
+                                                              'gms560',
                                                               "klinik",
                                                               'plasma'))
         self.assertCountEqual([], generate_elastic_statistics("tests/samplesheets/files/SampleSheet.GMS560.csv",
                                                               "wp1",
                                                               'tso500',
-                                                              'GMS560',
+                                                              'gms560',
                                                               "klinik",
                                                               'plasma'))
 
