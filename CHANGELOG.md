@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.6.0...v1.7.0) (2023-01-24)
+
+
+### Features
+
+* add get_project_and_experiment function ([34a578f](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/34a578fabf782e2f74b61e4b758ce701b89c7e37))
+* add test for get_project_and_experiment ([4369e5f](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/4369e5f210b5be78c3dad4fb3e06d7afe0f3a638))
+
 ## [1.6.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.5.0...v1.6.0) (2022-12-12)
 
 
