@@ -536,7 +536,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual({("klinik", "20190409_LM-GL-HN")},
                          get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual({("klinik", "20221025_MS")},
-                         get_project_and_experiment("wp1", "GMS560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+                         get_project_and_experiment("wp1", "gms560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual({("klinik", "TM83")},
                          get_project_and_experiment("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
         self.assertEqual({("klinik", "TE42")},
