@@ -116,7 +116,7 @@ def extract_analysis_information(samplesheet):
         workpackage and project type, example Klinik,s
     """
     with open(samplesheet) as file:
-        pattern = re.compile(r"experiment name,\d{8}_[a-z-]+")
+        pattern = re.compile(r"experiment name,\d{8}_[a-z0-9-]+")
         sera = False
         tso500 = False
         gms560 = False
@@ -220,7 +220,7 @@ def extract_wp_and_typo(samplesheet):
         workpackage and project type, example Klinik,s
     """
     with open(samplesheet) as file:
-        pattern = re.compile(r"experiment name,\d{8}_[a-z]+")
+        pattern = re.compile(r"experiment name,\d{8}_[a-z0-9-]+")
         haloplex = False
         tso500 = False
         gms560 = False
