@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.8.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.7.0...v1.8.0) (2023-04-21)
+
+
+### Features
+
+* add abl ([d2d8351](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/d2d8351655a1775ba275c5f4348ce8a107a8bab3))
+
+
+### Bug Fixes
+
+* **wp1:** allow - in user part of experiment name ([3ae23b9](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/3ae23b930153686cebbca9504ee8bb9edf53a149))
+
 ## [1.7.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.6.0...v1.7.0) (2023-01-24)
 
 
