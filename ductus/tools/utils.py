@@ -73,8 +73,10 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                         user = d[1].split("_")[1]
                         if analysis.lower() == "tso500" or analysis.lower() == "gms560":
                             tissue = "RNA" if d[0].startswith("R") else "DNA"
-                    elif workpackage.lower() == "wp2":
+                    elif workpackage.lower() == "wp2" and analysis.lower() == "tm":
                         tissue = "Hematology"
+                    elif workpackage.lower() == "wp2" and analysis.lower() == "abl":
+                        tissue = "RNA"
                     elif workpackage.lower() == "wp3" and analysis.lower() == "te":
                         tissue = d[4]
                     elif workpackage.lower() == "wp3" and analysis.lower() == "tc":
@@ -121,6 +123,7 @@ def extract_analysis_information(samplesheet):
         tso500 = False
         gms560 = False
         TM = False
+        ABL = False
         TE = False
         TC = False
         data = {'header': "",
@@ -147,6 +150,8 @@ def extract_analysis_information(samplesheet):
                 TE = True
             if "name,tm" in line:
                 TM = True
+            if "name,bcrabl" in line:
+                ABL = True
             if "name,tc" in line:
                 TC = True
             if line.startswith("[data]"):
@@ -171,6 +176,12 @@ def extract_analysis_information(samplesheet):
                         data["wp2"]['klinik'].append((columns[header_map['sample_name']],
                                                       experiment, date_string,
                                                       "tm",
+                                                      description,
+                                                      row))
+                    elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("abl"):
+                        data["wp2"]['klinik'].append((columns[header_map['sample_name']],
+                                                      experiment, date_string,
+                                                      "abl",
                                                       description,
                                                       row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
@@ -225,6 +236,7 @@ def extract_wp_and_typo(samplesheet):
         tso500 = False
         gms560 = False
         TM = False
+        ABL = False
         TE = False
         TC = False
         for line in file:
@@ -235,6 +247,8 @@ def extract_wp_and_typo(samplesheet):
                 TE = True
             if "name,tm" in line:
                 TM = True
+            if "name,bcrabl" in line:
+                ABL = True
             if "name,tc" in line:
                 TC = True
             if line.startswith("[data]"):
@@ -246,4 +260,4 @@ def extract_wp_and_typo(samplesheet):
                         gms560 = True
                         tso500 = False
                 break
-        return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('tc', TC))
+        return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
