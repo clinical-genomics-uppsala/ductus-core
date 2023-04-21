@@ -272,6 +272,59 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp3']['utveckling'], [])
         self.assertEqual(result['wp3']['klinik'], [])
 
+    def test_parse_abl(self):
+        result = extract_analysis_information("tests/samplesheets/files/SampleSheet.abl.csv")
+        self.assertEqual("[Header]\n"
+                         "Local Run Manager Analysis Id,123123\n"
+                         "Experiment Name,BCRABL42\n"
+                         "Date,2023-03-24\n"
+                         "Module,GenerateFASTQ - 3.0.1\n"
+                         "Workflow,GenerateFASTQ\n"
+                         "Library Prep Kit,Custom\n"
+                         "Index Kit,Custom\n"
+                         "Chemistry,Amplicon\n"
+                         "\n"
+                         "[Reads]\n"
+                         "151\n"
+                         "151\n"
+                         "\n"
+                         "[Settings]\n"
+                         "\n"
+                         "[Data]\n"
+                         "Sample_ID,Sample_Name,Description,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project\n",
+                         result['header'])
+
+        self.assertEqual(result['wp1']['forskning'], [])
+        self.assertEqual(result['wp1']['projekt'], [])
+        self.assertEqual(result['wp1']['utveckling'], [])
+        self.assertEqual(result['wp1']['klinik'], [])
+        self.assertEqual(result['wp2']['forskning'], [])
+        self.assertEqual(result['wp2']['projekt'], [])
+        self.assertEqual(result['wp2']['utveckling'], [])
+        self.assertEqual(result['wp2']['klinik'],
+                         [
+                            (
+                               "R99-00277",
+                               "BCRABL42",
+                               "20230324",
+                               "abl",
+                               "NA_NA_NA_42_NA",
+                               "R99-00277,R99-00277,NA_NA_NA_42_NA,TAGGCATG,TAGGCATG,AGAGTAGA,AGAGTAGA,ABL\n"
+                            ),
+                            (
+                               "R99-00255",
+                               "BCRABL42",
+                               "20230324",
+                               "abl",
+                               "NA_NA_NA_42_NA",
+                               "R99-00255,R99-00255,NA_NA_NA_42_NA,TAGGCATG,TAGGCATG,GCGTAAGA,GCGTAAGA,ABL\n"
+                            )
+                         ])
+        self.assertEqual(result['wp3']['forskning'], [])
+        self.assertEqual(result['wp3']['projekt'], [])
+        self.assertEqual(result['wp3']['utveckling'], [])
+        self.assertEqual(result['wp3']['klinik'], [])
+
     def test_parse_tm(self):
         self.maxDiff = None
         result = extract_analysis_information("tests/samplesheets/files/SampleSheet.tm.csv")
@@ -497,6 +550,10 @@ class TestUtils(unittest.TestCase):
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "sera"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "tso500"))
 
+    def test_contains_abl(self):
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.abl.csv", "wp2", "abl"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.abl.csv", "wp1", "sera"))
+
     def test_contains_tm(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp2", "tm"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp1", "sera"))
@@ -520,6 +577,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(get_project_types("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"), {'klinik', })
         self.assertEqual(get_project_types("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
         self.assertEqual(get_project_types("wp1", "gms560", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
+        self.assertEqual(get_project_types("wp2", "abl", "tests/samplesheets/files/SampleSheet.abl.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"), {'klinik'})
         self.assertEqual(get_project_types("wp3", "tc", "tests/samplesheets/files/SampleSheet.tc.csv"), {'klinik'})
@@ -537,6 +595,8 @@ class TestUtils(unittest.TestCase):
                          get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual({("klinik", "20221025_MS")},
                          get_project_and_experiment("wp1", "gms560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+        self.assertEqual({("klinik", "BCRABL42")},
+                         get_project_and_experiment("wp2", "abl", "tests/samplesheets/files/SampleSheet.abl.csv"))
         self.assertEqual({("klinik", "TM83")},
                          get_project_and_experiment("wp2", "tm", "tests/samplesheets/files/SampleSheet.tm.csv"))
         self.assertEqual({("klinik", "TE42")},
@@ -580,6 +640,12 @@ class TestUtils(unittest.TestCase):
         self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual(
             [
+                ('R99-00277', 'klinik', 'BCRABL42', '20230324', 'unknown', 'RNA'),
+                ('R99-00255', 'klinik', 'BCRABL42', '20230324', 'unknown', 'RNA')
+            ],
+            get_samples_and_info('wp2', 'abl', 'tests/samplesheets/files/SampleSheet.abl.csv'))
+        self.assertEqual(
+            [
                 ('56063', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
                 ('FD99-00078', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
                 ('D99-00574', 'klinik', 'TM83', '20210208', 'unknown', 'Hematology'),
@@ -621,6 +687,8 @@ class TestUtils(unittest.TestCase):
                          get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([],
                          get_samples("wp1", "klinik", 'tso500', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+        self.assertEqual(['R99-00277', 'R99-00255'],
+                         get_samples("wp2", "klinik", "abl", "tests/samplesheets/files/SampleSheet.abl.csv"))
         self.assertEqual(['56063', 'FD99-00078', 'D99-00574', 'D99-00576', 'D99-00581', 'D99-00586'],
                          get_samples("wp2", "klinik", 'tm', "tests/samplesheets/files/SampleSheet.tm.csv"))
         self.assertEqual(['D97-00415', 'D97-00388', 'D98-05407'],
@@ -845,6 +913,38 @@ class TestUtils(unittest.TestCase):
                                                               'gms560',
                                                               "klinik",
                                                               'plasma'))
+
+        self.assertCountEqual([
+                                 {
+                                     '@timestamp': '2023-03-24T01:01:01.000Z',
+                                     'experiment.id': 'BCRABL42',
+                                     'experiment.method': 'BCR_ABL1',
+                                     'experiment.prep': 'Nextera',
+                                     'experiment.project': 'klinik',
+                                     'experiment.rerun': False,
+                                     'experiment.sample': 'R99-00277',
+                                     'experiment.tissue': 'RNA',
+                                     'experiment.user': 'unknown',
+                                     'experiment.wp': 'WP2'
+                                 },
+                                 {
+                                     '@timestamp': '2023-03-24T01:01:01.000Z',
+                                     'experiment.id': 'BCRABL42',
+                                     'experiment.method': 'BCR_ABL1',
+                                     'experiment.prep': 'Nextera',
+                                     'experiment.project': 'klinik',
+                                     'experiment.rerun': False,
+                                     'experiment.sample': 'R99-00255',
+                                     'experiment.tissue': 'RNA',
+                                     'experiment.user': 'unknown',
+                                     'experiment.wp': 'WP2'
+                                 }],
+                              generate_elastic_statistics("tests/samplesheets/files/SampleSheet.abl.csv",
+                                                          "wp2",
+                                                          'abl',
+                                                          'BCR_ABL1',
+                                                          "klinik",
+                                                          "Nextera"))
 
         self.assertCountEqual([
                                  {
