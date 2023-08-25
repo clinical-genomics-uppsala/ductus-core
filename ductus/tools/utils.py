@@ -77,10 +77,14 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                         tissue = "Hematology"
                     elif workpackage.lower() == "wp2" and analysis.lower() == "abl":
                         tissue = "RNA"
+                    elif workpackage.lower() == "wp2" and analysis.lower() == "wgswp2":
+                        tissue = "RNA" if d[4].startswith("R") elif "Tumor" if d[4].startswith("T") else "DNA"
                     elif workpackage.lower() == "wp3" and analysis.lower() == "te":
                         tissue = d[4]
                     elif workpackage.lower() == "wp3" and analysis.lower() == "tc":
                         tissue = "Blood"
+                    elif workpackage.lower() == "wp3" and analysis.lower() == "wgswp3":
+                        tissue = "RNA" if d[4].startswith("R") else "DNA"
 
                     sample_project.append((d[0], project_type, d[1], d[2], user, tissue))
     return sample_project
