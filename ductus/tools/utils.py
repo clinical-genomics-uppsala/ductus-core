@@ -130,6 +130,7 @@ def extract_analysis_information(samplesheet):
         ABL = False
         TE = False
         TC = False
+        HG = False
         data = {'header': "",
                 'wp1': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
                 'wp2': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
@@ -158,6 +159,8 @@ def extract_analysis_information(samplesheet):
                 ABL = True
             if "name,tc" in line:
                 TC = True
+            if "name,hg" in line:
+                HG = True
             if line.startswith("[data]"):
                 line = next(file)
                 if "description,tc" in line.lower():
@@ -188,6 +191,13 @@ def extract_analysis_information(samplesheet):
                                                       "abl",
                                                       description,
                                                       row))
+                    elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("wgswp2"):
+                        data["wp2"]['forskning'].append((columns[header_map['sample_name']],
+                                                      experiment,
+                                                      date_string,
+                                                      "wgswp2",
+                                                      description,
+                                                      row))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
                         data["wp3"]['klinik'].append((columns[header_map['sample_name']],
                                                       experiment,
@@ -200,6 +210,13 @@ def extract_analysis_information(samplesheet):
                                                       experiment,
                                                       date_string,
                                                       "tc",
+                                                      description,
+                                                      row))
+                    elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("wgswp3"):
+                        data["wp3"]['klinik'].append((columns[header_map['sample_name']],
+                                                      experiment,
+                                                      date_string,
+                                                      "wgswp3",
                                                       description,
                                                       row))
                     else:
@@ -243,12 +260,15 @@ def extract_wp_and_typo(samplesheet):
         ABL = False
         TE = False
         TC = False
+        HG = False
         for line in file:
             line = line.lower()
             if pattern.search(line):
                 sera = True
             if "name,te" in line:
                 TE = True
+            if "name,hg" in line:
+                HG = True
             if "name,tm" in line:
                 TM = True
             if "name,bcrabl" in line:
@@ -264,4 +284,4 @@ def extract_wp_and_typo(samplesheet):
                         gms560 = True
                         tso500 = False
                 break
-        return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
+        return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC), ('hg', HG))
