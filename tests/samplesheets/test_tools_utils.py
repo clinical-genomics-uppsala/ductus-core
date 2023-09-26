@@ -31,32 +31,37 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('20-2500', '20230607_LU', '20230607', 'SERA', 'Desc1', '20-2500,Desc1,WP1__SERA__20230607_LU\n'),
-                         ('20-2501', '20230607_LI', '20230607', 'SERA', 'Desc2', '20-2501,Desc2,WP1__SERA__20230607_LI\n'),
-                         ('20-2502', '20230607_LA', '20230607', 'GMS560', 'Desc3', '20-2502,Desc3,WP1__GMS560__20230607_LA\n')])
+                         [('20-2500', '20230607-LU', '20230607', 'SERA',
+                           'K1%Desc1', '20-2500,K1%Desc1,WP1_SERA_20230607-LU\n'),
+                         ('20-2501', '20230607-LU', '20230607', 'SERA',
+                          'K1%Desc2', '20-2501,K1%Desc2,WP1_SERA_20230607-LU\n'),
+                         ('20-2502', '20230607-LA', '20230607', 'GMS560',
+                          'K1%Desc3', '20-2502,K1%Desc3,WP1_GMS560_20230607-LA\n')])
 
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
         self.assertEqual(result['wp2']['utveckling'], [])
         self.assertEqual(result['wp2']['klinik'],
-                         [('D99-00581', 'TM83', '20230607', 'TM', 'NA_NA_NA_83_NA', 'D99-00581,NA_NA_NA_83_NA,WP2__TM__TM83\n'),
-                          ('D99-00586', 'TM83', '20230607', 'TM', 'NA_NA_NA_83_NA', 'D99-00586,NA_NA_NA_83_NA,WP2__TM__TM83\n')])
+                         [('D99-00581', 'TM83', '20230607', 'TM',
+                           'K1%NA_K2%NA_K3%NA_K4%83_K5%NA', 'D99-00581,K1%NA_K2%NA_K3%NA_K4%83_K5%NA,WP2_TM_TM83\n'),
+                          ('D99-00586', 'TM83', '20230607', 'TM',
+                           'K1%NA_K2%NA_K3%NA_K4%83_K5%NA', 'D99-00586,K1%NA_K2%NA_K3%NA_K4%83_K5%NA,WP2_TM_TM83\n')])
 
         self.assertEqual(result['wp3']['forskning'], [])
         self.assertEqual(result['wp3']['projekt'], [])
         self.assertEqual(result['wp3']['utveckling'], [])
         self.assertEqual(result['wp3']['klinik'],
-                         [('D98-05407', 'TE42', '20230607', 'TE', 'EXO_K_CGU-2018-16_42_NA',
-                           'D98-05407,EXO_K_CGU-2018-16_42_NA,WP3__TE__TE42\n'),
-                          ('D98-05408', 'TE42', '20230607', 'TE', 'EXO_K_CGU-2018-16_42_NA',
-                           'D98-05408,EXO_K_CGU-2018-16_42_NA,WP3__TE__TE42\n')])
+                         [('D98-05407', 'TE42', '20230607', 'TE', 'K1%EXO_K2%K_K3%CGU-2018-16_K4%42_K5%NA',
+                           'D98-05407,K1%EXO_K2%K_K3%CGU-2018-16_K4%42_K5%NA,WP3_TE_TE42\n'),
+                          ('D98-05408', 'TE42', '20230607', 'TE', 'K1%EXO_K2%K_K3%CGU-2018-16_K4%42_K5%NA',
+                           'D98-05408,K1%EXO_K2%K_K3%CGU-2018-16_K4%42_K5%NA,WP3_TE_TE42\n')])
 
     def test_parse_haloplex(self):
         result = extract_analysis_information("tests/samplesheets/files/SampleSheet.haloplex.csv")
 
         self.assertEqual("[Header]\n"
                          "Local Run Manager Analysis Id,56056\n"
-                         "Experiment Name,20210203_LU\n"
+                         "Experiment Name,20210203-LU\n"
                          "Date,2021-02-04\n"
                          "Module,GenerateFASTQ - 2.0.0\n"
                          "Workflow,GenerateFASTQ\n"
@@ -72,18 +77,18 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('97-181', '20210203_LU', '20210204', 'sera', '',
-                           '97-181,97-181,,ACCTCCAA,E03,WP1__SERA__20210203_LU\n'),
-                         ('97-217', '20210203_LU', '20210204', 'sera', '',
-                          '97-217,97-217,,GCGAGTAA,F03,WP1__SERA__20210203_LU\n'),
-                         ('97-218', '20210203_LU', '20210204', 'sera', '',
-                          '97-218,97-218,,ACTATGCA,G03,WP1__SERA__20210203_LU\n'),
-                         ('97-219', '20210203_LU', '20210204', 'sera', '',
-                          '97-219,97-219,,CGGATTGC,H03,WP1__SERA__20210203_LU\n'),
-                         ('97-220', '20210203_LU', '20210204', 'sera', '',
-                          '97-220,97-220,,AACTCACC,A04,WP1__SERA__20210203_LU\n'),
-                         ('97-221', '20210203_LU', '20210204', 'sera', '',
-                          '97-221,97-221,,GCTAACGA,B04,WP1__SERA__20210203_LU\n')])
+                         [('97-181', '20210203-LU', '20210204', 'sera', '',
+                           '97-181,97-181,,ACCTCCAA,E03,WP1_SERA_20210203-LU\n'),
+                         ('97-217', '20210203-LU', '20210204', 'sera', '',
+                          '97-217,97-217,,GCGAGTAA,F03,WP1_SERA_20210203-LU\n'),
+                         ('97-218', '20210203-LU', '20210204', 'sera', '',
+                          '97-218,97-218,,ACTATGCA,G03,WP1_SERA_20210203-LU\n'),
+                         ('97-219', '20210203-LU', '20210204', 'sera', '',
+                          '97-219,97-219,,CGGATTGC,H03,WP1_SERA_20210203-LU\n'),
+                         ('97-220', '20210203-LU', '20210204', 'sera', '',
+                          '97-220,97-220,,AACTCACC,A04,WP1_SERA_20210203-LU\n'),
+                         ('97-221', '20210203-LU', '20210204', 'sera', '',
+                          '97-221,97-221,,GCTAACGA,B04,WP1_SERA_20210203-LU\n')])
 
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
@@ -101,7 +106,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual("[Header]\n"
                          "Local Run Manager Analysis Id,115115\n"
                          "Date,12/23/2020\n"
-                         "Experiment Name,20201221_LU\n"
+                         "Experiment Name,20201221-LU\n"
                          "Workflow,GenerateFastQWorkflow\n"
                          "Description,Auto generated sample sheet.  Used by workflow module to kick off Isis analysis\n"
                          "Chemistry,Amplicon\n"
@@ -115,10 +120,10 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('20-2500', '20201221_LU', "20201223", 'sera', '',
-                           '20-2500,20-2500,CACTTCGA,D01,,,,WP1__SERA__20201221_LU\n'),
-                         ('20-2501', '20201221_LU', "20201223", 'sera', '',
-                          '20-2501,20-2501,GCCAAGAC,E01,,,,WP1__SERA__20201221_LU\n')])
+                         [('20-2500', '20201221-LU', "20201223", 'sera', '',
+                           '20-2500,20-2500,CACTTCGA,D01,,,,WP1_SERA_20201221-LU\n'),
+                         ('20-2501', '20201221-LU', "20201223", 'sera', '',
+                          '20-2501,20-2501,GCCAAGAC,E01,,,,WP1_SERA_20201221-LU\n')])
 
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
@@ -133,7 +138,7 @@ class TestUtils(unittest.TestCase):
         result = extract_analysis_information("tests/samplesheets/files/SampleSheet.swift.m0.csv")
         self.assertEqual("[Header],,,,,,,,,\n"
                          "IEMFileVersion,4,,,,,,,,\n"
-                         "Experiment Name,20210302_MS,,,,,,,,\n"
+                         "Experiment Name,20210302-MS,,,,,,,,\n"
                          "Date,2021-03-03,,,,,,,,\n"
                          "Workflow,GenerateFASTQ,,,,,,,,\n"
                          "Application,FASTQ Only,,,,,,,,\n"
@@ -155,10 +160,10 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('21-399', '20210302_MS', '20210303', 'sera', '',
-                           '21-399,21-399,,,D701,ATTACTCG,D502,ATAGAGGC,WP1__SERA__20210302_MS,\n'),
-                         ('21-417', '20210302_MS', '20210303', 'sera', '',
-                          '21-417,21-417,,,D702,TCCGGAGA,D502,ATAGAGGC,WP1__SERA__20210302_MS,\n')])
+                         [('21-399', '20210302-MS', '20210303', 'sera', '',
+                           '21-399,21-399,,,D701,ATTACTCG,D502,ATAGAGGC,WP1_SERA_20210302-MS,\n'),
+                         ('21-417', '20210302-MS', '20210303', 'sera', '',
+                          '21-417,21-417,,,D702,TCCGGAGA,D502,ATAGAGGC,WP1_SERA_20210302-MS,\n')])
 
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
@@ -176,7 +181,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual("[Header],,,,,,,,,,,\n"
                          "IEMFileVersion,4,,,,,,,,,,\n"
                          "Investigator Name,,,,,,,,,,,\n"
-                         "Experiment Name,20190409_LM-GL-HN,,,,,,,,,,\n"
+                         "Experiment Name,20190409-LM-GL-HN,,,,,,,,,,\n"
                          "Date,2019-04-09,,,,,,,,,,\n"
                          "Project,New Project,,,,,,,,,,\n"
                          "Workflow,GenerateFASTQ,,,,,,,,,,\n"
@@ -201,35 +206,35 @@ class TestUtils(unittest.TestCase):
                          [
                             (
                                 'R21-2',
-                                '20190409_LM-GL-HN',
+                                '20190409-LM-GL-HN',
                                 "20190409",
                                 'tso500',
                                 'AP13',
-                                ',R21-2,ACTGCTTA,AGAGGCGC,,,,D716,D511,WP1__TSO500__20190409_LM-GL-HN,AP13,PoolRNA\n'
+                                ',R21-2,ACTGCTTA,AGAGGCGC,,,,D716,D511,WP1_TSO500_20190409-LM-GL-HN,AP13,PoolRNA\n'
                             ),
                             (
                                 'R21-3',
-                                '20190409_LM-GL-HN',
+                                '20190409-LM-GL-HN',
                                 "20190409",
                                 'tso500',
                                 'AP14',
-                                ',R21-3,ATGCGGCT,TAGCCGCG,,,,D714,D512,WP1__TSO500__20190409_LM-GL-HN,AP14,PoolRNA\n'
+                                ',R21-3,ATGCGGCT,TAGCCGCG,,,,D714,D512,WP1_TSO500_20190409-LM-GL-HN,AP14,PoolRNA\n'
                             ),
                             (
                                 'R21-33',
-                                '20190409_LM-GL-HN',
+                                '20190409-LM-GL-HN',
                                 "20190409",
                                 'tso500',
                                 'AP15',
-                                ',R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,WP1__TSO500__20190409_LM-GL-HN,AP15,PoolRNA\n'
+                                ',R21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,WP1_TSO500_20190409-LM-GL-HN,AP15,PoolRNA\n'
                             ),
                             (
                                 '21-33',
-                                '20190409_LM-GL-HN',
+                                '20190409-LM-GL-HN',
                                 "20190409",
                                 'tso500',
                                 'UP15',
-                                ',21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,WP1__TSO500__20190409_LM-GL-HN,UP15,0.2\n'
+                                ',21-33,GCCTCTCT,TTCGTAGG,,,,D718,D514,WP1_TSO500_20190409-LM-GL-HN,UP15,0.2\n'
                             )
                         ])
 
@@ -249,7 +254,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual("[Header],,,,,,,,,,\n"
                          "IEMFileVersion,4,,,,,,,,,\n"
                          "Investigator Name,,,,,,,,,,\n"
-                         "Experiment Name,20221025_MS,,,,,,,,,\n"
+                         "Experiment Name,20221025-MS,,,,,,,,,\n"
                          "Date,20221025,,,,,,,,,\n"
                          "Project,New Project,,,,,,,,,\n"
                          "Workflow,GenerateFASTQ,,,,,,,,,\n"
@@ -268,35 +273,35 @@ class TestUtils(unittest.TestCase):
                          [
                             (
                                 '22-2427',
-                                '20221025_MS',
+                                '20221025-MS',
                                 "20221025",
                                 'gms560',
                                 'xGen_UDI_Index1',
-                                '22-2427,CTGATCGT,GCGCATAT,,,,,,WP1__GMS560__20221025_MS,xGen_UDI_Index1,0.7\n'
+                                '22-2427,CTGATCGT,GCGCATAT,,,,,,WP1_GMS560_20221025-MS,xGen_UDI_Index1,0.7\n'
                             ),
                             (
                                 '22-2428',
-                                '20221025_MS',
+                                '20221025-MS',
                                 "20221025",
                                 'gms560',
                                 'xGen_UDI_Index2',
-                                '22-2428,ACTCTCGA,CTGTACCA,,,,,,WP1__GMS560__20221025_MS,xGen_UDI_Index2,0.6\n'
+                                '22-2428,ACTCTCGA,CTGTACCA,,,,,,WP1_GMS560_20221025-MS,xGen_UDI_Index2,0.6\n'
                             ),
                             (
                                 'R22-2429',
-                                '20221025_MS',
+                                '20221025-MS',
                                 "20221025",
                                 'gms560',
                                 'xGen_UDI_Index3',
-                                'R22-2429,TGAGCTAG,GAACGGTT,,,,,,WP1__GMS560__20221025_MS,xGen_UDI_Index3,\n'
+                                'R22-2429,TGAGCTAG,GAACGGTT,,,,,,WP1_GMS560_20221025-MS,xGen_UDI_Index3,\n'
                             ),
                             (
                                 'R22-2430',
-                                '20221025_MS',
+                                '20221025-MS',
                                 "20221025",
                                 'gms560',
                                 'xGen_UDI_Index4',
-                                'R22-2430,GAGACGAT,ACCGGTTA,,,,,,WP1__GMS560__20221025_MS,xGen_UDI_Index4,\n'
+                                'R22-2430,GAGACGAT,ACCGGTTA,,,,,,WP1_GMS560_20221025-MS,xGen_UDI_Index4,\n'
                             )
                         ])
 
@@ -344,16 +349,18 @@ class TestUtils(unittest.TestCase):
                                "BCRABL42",
                                "20230324",
                                "abl",
-                               "NA_NA_NA_42_NA",
-                               "R99-00277,R99-00277,NA_NA_NA_42_NA,TAGGCATG,TAGGCATG,AGAGTAGA,AGAGTAGA,WP2__ABL__BCRABL42\n"
+                               "K1%NA_K2%NA_K3%NA_K4%42_K5%NA",
+                               "R99-00277,R99-00277,K1%NA_K2%NA_K3%NA_K4%42_K5%NA,TAGGCATG,"
+                               "TAGGCATG,AGAGTAGA,AGAGTAGA,WP2_ABL_BCRABL42\n"
                             ),
                             (
                                "R99-00255",
                                "BCRABL42",
                                "20230324",
                                "abl",
-                               "NA_NA_NA_42_NA",
-                               "R99-00255,R99-00255,NA_NA_NA_42_NA,TAGGCATG,TAGGCATG,GCGTAAGA,GCGTAAGA,WP2__ABL__BCRABL42\n"
+                               "K1%NA_K2%NA_K3%NA_K4%42_K5%NA",
+                               "R99-00255,R99-00255,K1%NA_K2%NA_K3%NA_K4%42_K5%NA,TAGGCATG,"
+                               "TAGGCATG,GCGTAAGA,GCGTAAGA,WP2_ABL_BCRABL42\n"
                             )
                          ])
         self.assertEqual(result['wp3']['forskning'], [])
@@ -398,48 +405,54 @@ class TestUtils(unittest.TestCase):
                                 'TM83',
                                 '20210208',
                                 'tm',
-                                'NA_NA_NA_83_CGU-2020-12',
-                                '56063,56063,NA_NA_NA_83_CGU-2020-12,GTGAAGTG,GTGAAGTG,GAGCAATC,GAGCAATC,WP2__TM__TM83\n'
+                                'K1%NA_K2%NA_K3%NA_K4%83_K5%CGU-2020-12',
+                                '56063,56063,K1%NA_K2%NA_K3%NA_K4%83_K5%CGU-2020-12,GTGAAGTG,'
+                                'GTGAAGTG,GAGCAATC,GAGCAATC,WP2_TM_TM83\n'
                             ),
                             (
                                 'FD99-00078',
                                 'TM83',
                                 '20210208',
                                 'tm',
-                                'NA_NA_NA_83_CGU-2017-5',
-                                'FD99-00078,FD99-00078,NA_NA_NA_83_CGU-2017-5,CATGGCTA,CATGGCTA,CACACATC,CACACATC,WP2__TM__TM83\n'
+                                'K1%NA_K2%NA_K3%NA_K4%83_K5%CGU-2017-5',
+                                'FD99-00078,FD99-00078,K1%NA_K2%NA_K3%NA_K4%83_K5%CGU-2017-5,CATGGCTA,'
+                                'CATGGCTA,CACACATC,CACACATC,WP2_TM_TM83\n'
                             ),
                             (
                                 'D99-00574',
                                 'TM83',
                                 '20210208',
                                 'tm',
-                                'NA_NA_NA_83_NA',
-                                'D99-00574,D99-00574,NA_NA_NA_83_NA,ATGCCTGT,ATGCCTGT,AGATTGCG,AGATTGCG,WP2__TM__TM83\n'
+                                'K1%NA_K2%NA_K3%NA_K4%83_K5%NA',
+                                'D99-00574,D99-00574,K1%NA_K2%NA_K3%NA_K4%83_K5%NA,ATGCCTGT,'
+                                'ATGCCTGT,AGATTGCG,AGATTGCG,WP2_TM_TM83\n'
                             ),
                             (
                                 'D99-00576',
                                 'TM83',
                                 '20210208',
                                 'tm',
-                                'NA_NA_NA_83_NA',
-                                'D99-00576,D99-00576,NA_NA_NA_83_NA,CAACACCT,CAACACCT,AGCTACCA,AGCTACCA,WP2__TM__TM83\n'
+                                'K1%NA_K2%NA_K3%NA_K4%83_K5%NA',
+                                'D99-00576,D99-00576,K1%NA_K2%NA_K3%NA_K4%83_K5%NA,CAACACCT,'
+                                'CAACACCT,AGCTACCA,AGCTACCA,WP2_TM_TM83\n'
                             ),
                             (
                                 'D99-00581',
                                 'TM83',
                                 '20210208',
                                 'tm',
-                                'NA_NA_NA_83_NA',
-                                'D99-00581,D99-00581,NA_NA_NA_83_NA,TGTGACTG,TGTGACTG,AGCCTATC,AGCCTATC,WP2__TM__TM83\n'
+                                'K1%NA_K2%NA_K3%NA_K4%83_K5%NA',
+                                'D99-00581,D99-00581,K1%NA_K2%NA_K3%NA_K4%83_K5%NA,TGTGACTG,'
+                                'TGTGACTG,AGCCTATC,AGCCTATC,WP2_TM_TM83\n'
                             ),
                             (
                                 'D99-00586',
                                 'TM83',
                                 '20210208',
                                 'tm',
-                                'NA_NA_NA_83_NA',
-                                'D99-00586,D99-00586,NA_NA_NA_83_NA,GTCATCGA,GTCATCGA,GATCCACT,GATCCACT,WP2__TM__TM83\n'
+                                'K1%NA_K2%NA_K3%NA_K4%83_K5%NA',
+                                'D99-00586,D99-00586,K1%NA_K2%NA_K3%NA_K4%83_K5%NA,GTCATCGA,'
+                                'GTCATCGA,GATCCACT,GATCCACT,WP2_TM_TM83\n'
                             )
         ])
 
@@ -486,25 +499,27 @@ class TestUtils(unittest.TestCase):
                                 'TE42',
                                 '20210206',
                                 "te",
-                                'BIN_M_NA_42_NA',
-                                "D97-00415,D97-00415,BIN_M_NA_42_NA,CAACACCGTA,CAACACCGTA,GAACAAGCCG,GAACAAGCCG,WP3__TE__TE42\n"
+                                'K1%BIN_K2%M_K3%NA_K4%42_K5%NA',
+                                "D97-00415,D97-00415,K1%BIN_K2%M_K3%NA_K4%42_K5%NA,CAACACCGTA,"
+                                "CAACACCGTA,GAACAAGCCG,GAACAAGCCG,WP3_TE_TE42\n"
                             ),
                             (
                                 "D97-00388",
                                 'TE42',
                                 '20210206',
                                 "te",
-                                'CAD_K_NA_42_NA',
-                                "D97-00388,D97-00388,CAD_K_NA_42_NA,CGAATATTGG,CGAATATTGG,CAGCACGGAA,CAGCACGGAA,WP3__TE__TE42\n"
+                                'K1%CAD_K2%K_K3%NA_K4%42_K5%NA',
+                                "D97-00388,D97-00388,K1%CAD_K2%K_K3%NA_K4%42_K5%NA,CGAATATTGG,"
+                                "CGAATATTGG,CAGCACGGAA,CAGCACGGAA,WP3_TE_TE42\n"
                             ),
                             (
                                 "D98-05407",
                                 'TE42',
                                 '20210206',
                                 "te",
-                                'EXO_K_CGU-2018-16_42_NA',
-                                "D98-05407,D98-05407,EXO_K_CGU-2018-16_42_NA,TAATTCCAGC,TAATTCCAGC,"
-                                "ATCGTATTCG,ATCGTATTCG,WP3__TE__TE42\n"
+                                'K1%EXO_K2%K_K3%CGU-2018-16_K4%42_K5%NA',
+                                "D98-05407,D98-05407,K1%EXO_K2%K_K3%CGU-2018-16_K4%42_K5%NA,TAATTCCAGC,TAATTCCAGC,"
+                                "ATCGTATTCG,ATCGTATTCG,WP3_TE_TE42\n"
                             )
         ])
 
@@ -545,16 +560,18 @@ class TestUtils(unittest.TestCase):
                                 "TC42",
                                 "20211103",
                                 "tc",
-                                "NA_NA_NA_42_NA",
-                                "D99-06299,D99-06299,NA_NA_NA_42_NA,GGCCTTGTTA,GGCCTTGTTA,GTGTTCCACG,GTGTTCCACG,WP3__TC__TC42\n"
+                                "K1%NA_K2%NA_K3%NA_K4%42_K5%NA",
+                                "D99-06299,D99-06299,K1%NA_K2%NA_K3%NA_K4%42_K5%NA,GGCCTTGTTA,"
+                                "GGCCTTGTTA,GTGTTCCACG,GTGTTCCACG,WP3_TC_TC42\n"
                              ),
                              (
                                 "D99-01027",
                                 "TC42",
                                 "20211103",
                                 "tc",
-                                "NA_NA_NA_42_NA",
-                                "D99-01027,D99-01027,NA_NA_NA_42_NA,CCTTGTAGCG,CCTTGTAGCG,TTGAGCCAGC,TTGAGCCAGC,WP3__TC__TC42\n"
+                                "K1%NA_K2%NA_K3%NA_K4%42_K5%NA",
+                                "D99-01027,D99-01027,K1%NA_K2%NA_K3%NA_K4%42_K5%NA,CCTTGTAGCG,"
+                                "CCTTGTAGCG,TTGAGCCAGC,TTGAGCCAGC,WP3_TC_TC42\n"
                              )
         ])
 
@@ -611,17 +628,17 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(get_project_types("wp3", "tc", "tests/samplesheets/files/SampleSheet.tc.csv"), {'klinik'})
 
     def test_get_project_and_experiment(self):
-        self.assertEqual({("klinik", "20210203_LU")},
+        self.assertEqual({("klinik", "20210203-LU")},
                          get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual(set(),
                          get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
-        self.assertEqual({("klinik", "20201221_LU")},
+        self.assertEqual({("klinik", "20201221-LU")},
                          get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.swift.mn.csv"))
-        self.assertEqual({("klinik", "20210302_MS")},
+        self.assertEqual({("klinik", "20210302-MS")},
                          get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.swift.m0.csv"))
-        self.assertEqual({("klinik", "20190409_LM-GL-HN")},
+        self.assertEqual({("klinik", "20190409-LM-GL-HN")},
                          get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
-        self.assertEqual({("klinik", "20221025_MS")},
+        self.assertEqual({("klinik", "20221025-MS")},
                          get_project_and_experiment("wp1", "gms560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual({("klinik", "BCRABL42")},
                          get_project_and_experiment("wp2", "abl", "tests/samplesheets/files/SampleSheet.abl.csv"))
@@ -636,32 +653,32 @@ class TestUtils(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(
             [
-                ('97-181', 'klinik', '20210203_LU', '20210204', 'LU', 'unknown'),
-                ('97-217', 'klinik', '20210203_LU', '20210204', 'LU', 'unknown'),
-                ('97-218', 'klinik', '20210203_LU', '20210204', 'LU', 'unknown'),
-                ('97-219', 'klinik', '20210203_LU', '20210204', 'LU', 'unknown'),
-                ('97-220', 'klinik', '20210203_LU', '20210204', 'LU', 'unknown'),
-                ('97-221', 'klinik', '20210203_LU', '20210204', 'LU', 'unknown')
+                ('97-181', 'klinik', '20210203-LU', '20210204', 'LU', 'unknown'),
+                ('97-217', 'klinik', '20210203-LU', '20210204', 'LU', 'unknown'),
+                ('97-218', 'klinik', '20210203-LU', '20210204', 'LU', 'unknown'),
+                ('97-219', 'klinik', '20210203-LU', '20210204', 'LU', 'unknown'),
+                ('97-220', 'klinik', '20210203-LU', '20210204', 'LU', 'unknown'),
+                ('97-221', 'klinik', '20210203-LU', '20210204', 'LU', 'unknown')
             ],
             get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual(
             [
-                ('R21-2', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
-                ('R21-3', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
-                ('R21-33', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
-                ('21-33', 'klinik', '20190409_LM-GL-HN', '20190409', 'LM-GL-HN', 'DNA')
+                ('R21-2', 'klinik', '20190409-LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
+                ('R21-3', 'klinik', '20190409-LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
+                ('R21-33', 'klinik', '20190409-LM-GL-HN', '20190409', 'LM-GL-HN', 'RNA'),
+                ('21-33', 'klinik', '20190409-LM-GL-HN', '20190409', 'LM-GL-HN', 'DNA')
             ],
             get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual(
             [
-                ('22-2427', 'klinik', '20221025_MS', '20221025', 'MS', 'DNA'),
-                ('22-2428', 'klinik', '20221025_MS', '20221025', 'MS', 'DNA'),
-                ('R22-2429', 'klinik', '20221025_MS', '20221025', 'MS', 'RNA'),
-                ('R22-2430', 'klinik', '20221025_MS', '20221025', 'MS', 'RNA')
+                ('22-2427', 'klinik', '20221025-MS', '20221025', 'MS', 'DNA'),
+                ('22-2428', 'klinik', '20221025-MS', '20221025', 'MS', 'DNA'),
+                ('R22-2429', 'klinik', '20221025-MS', '20221025', 'MS', 'RNA'),
+                ('R22-2430', 'klinik', '20221025-MS', '20221025', 'MS', 'RNA')
             ],
             get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
@@ -685,9 +702,9 @@ class TestUtils(unittest.TestCase):
 
         self.assertEqual(
             [
-                ('D97-00415', 'klinik', 'TE42', '20210206', 'unknown',  'BIN_M_NA_42_NA'),
-                ('D97-00388', 'klinik', 'TE42', '20210206', 'unknown',  'CAD_K_NA_42_NA'),
-                ('D98-05407', 'klinik', 'TE42', '20210206', 'unknown',  'EXO_K_CGU-2018-16_42_NA')
+                ('D97-00415', 'klinik', 'TE42', '20210206', 'unknown',  'K1%BIN_K2%M_K3%NA_K4%42_K5%NA'),
+                ('D97-00388', 'klinik', 'TE42', '20210206', 'unknown',  'K1%CAD_K2%K_K3%NA_K4%42_K5%NA'),
+                ('D98-05407', 'klinik', 'TE42', '20210206', 'unknown',  'K1%EXO_K2%K_K3%CGU-2018-16_K4%42_K5%NA')
             ],
             get_samples_and_info("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
 
@@ -735,7 +752,7 @@ class TestUtils(unittest.TestCase):
                               [
                                 {
                                     '@timestamp': '2021-02-04T01:01:01.000Z',
-                                    'experiment.id': '20210203_LU',
+                                    'experiment.id': '20210203-LU',
                                     'experiment.method': 'haloplex',
                                     'experiment.prep': 'ffpe',
                                     'experiment.project': 'klinik',
@@ -747,7 +764,7 @@ class TestUtils(unittest.TestCase):
                                 },
                                 {
                                     '@timestamp': '2021-02-04T01:01:01.000Z',
-                                    'experiment.id': '20210203_LU',
+                                    'experiment.id': '20210203-LU',
                                     'experiment.method': 'haloplex',
                                     'experiment.prep': 'ffpe',
                                     'experiment.project': 'klinik',
@@ -759,7 +776,7 @@ class TestUtils(unittest.TestCase):
                                 },
                                 {
                                     '@timestamp': '2021-02-04T01:01:01.000Z',
-                                    'experiment.id': '20210203_LU',
+                                    'experiment.id': '20210203-LU',
                                     'experiment.method': 'haloplex',
                                     'experiment.prep': 'ffpe',
                                     'experiment.project': 'klinik',
@@ -771,7 +788,7 @@ class TestUtils(unittest.TestCase):
                                 },
                                 {
                                     '@timestamp': '2021-02-04T01:01:01.000Z',
-                                    'experiment.id': '20210203_LU',
+                                    'experiment.id': '20210203-LU',
                                     'experiment.method': 'haloplex',
                                     'experiment.prep': 'ffpe',
                                     'experiment.project': 'klinik',
@@ -783,7 +800,7 @@ class TestUtils(unittest.TestCase):
                                 },
                                 {
                                     '@timestamp': '2021-02-04T01:01:01.000Z',
-                                    'experiment.id': '20210203_LU',
+                                    'experiment.id': '20210203-LU',
                                     'experiment.method': 'haloplex',
                                     'experiment.prep': 'ffpe',
                                     'experiment.project': 'klinik',
@@ -795,7 +812,7 @@ class TestUtils(unittest.TestCase):
                                 },
                                 {
                                     '@timestamp': '2021-02-04T01:01:01.000Z',
-                                    'experiment.id': '20210203_LU',
+                                    'experiment.id': '20210203-LU',
                                     'experiment.method': 'haloplex',
                                     'experiment.prep': 'ffpe',
                                     'experiment.project': 'klinik',
@@ -815,7 +832,7 @@ class TestUtils(unittest.TestCase):
         self.assertCountEqual([
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
-                                'experiment.id': '20190409_LM-GL-HN',
+                                'experiment.id': '20190409-LM-GL-HN',
                                 'experiment.method': 'TSO500',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -827,7 +844,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
-                                'experiment.id': '20190409_LM-GL-HN',
+                                'experiment.id': '20190409-LM-GL-HN',
                                 'experiment.method': 'TSO500',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -839,7 +856,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
-                                'experiment.id': '20190409_LM-GL-HN',
+                                'experiment.id': '20190409-LM-GL-HN',
                                 'experiment.method': 'TSO500',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -851,7 +868,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2019-04-09T01:01:01.000Z',
-                                'experiment.id': '20190409_LM-GL-HN',
+                                'experiment.id': '20190409-LM-GL-HN',
                                 'experiment.method': 'TSO500',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -877,7 +894,7 @@ class TestUtils(unittest.TestCase):
         self.assertCountEqual([
                             {
                                 '@timestamp': '2022-10-25T01:01:01.000Z',
-                                'experiment.id': '20221025_MS',
+                                'experiment.id': '20221025-MS',
                                 'experiment.method': 'gms560',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -889,7 +906,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2022-10-25T01:01:01.000Z',
-                                'experiment.id': '20221025_MS',
+                                'experiment.id': '20221025-MS',
                                 'experiment.method': 'gms560',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -901,7 +918,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2022-10-25T01:01:01.000Z',
-                                'experiment.id': '20221025_MS',
+                                'experiment.id': '20221025-MS',
                                 'experiment.method': 'gms560',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -913,7 +930,7 @@ class TestUtils(unittest.TestCase):
                             },
                             {
                                 '@timestamp': '2022-10-25T01:01:01.000Z',
-                                'experiment.id': '20221025_MS',
+                                'experiment.id': '20221025-MS',
                                 'experiment.method': 'gms560',
                                 'experiment.prep': 'FFPE',
                                 'experiment.project': 'klinik',
@@ -1062,7 +1079,7 @@ class TestUtils(unittest.TestCase):
                               'experiment.project': 'klinik',
                               'experiment.rerun': False,
                               'experiment.sample': 'D97-00415',
-                              'experiment.tissue': 'BIN_M_NA_42_NA',
+                              'experiment.tissue': 'K1%BIN_K2%M_K3%NA_K4%42_K5%NA',
                               'experiment.user': 'unknown',
                               'experiment.wp': 'WP3'
                           },
@@ -1074,7 +1091,7 @@ class TestUtils(unittest.TestCase):
                               'experiment.project': 'klinik',
                               'experiment.rerun': False,
                               'experiment.sample': 'D97-00388',
-                              'experiment.tissue': 'CAD_K_NA_42_NA',
+                              'experiment.tissue': 'K1%CAD_K2%K_K3%NA_K4%42_K5%NA',
                               'experiment.user': 'unknown',
                               'experiment.wp': 'WP3'
                           },
@@ -1086,7 +1103,7 @@ class TestUtils(unittest.TestCase):
                               'experiment.project': 'klinik',
                               'experiment.rerun': False,
                               'experiment.sample': 'D98-05407',
-                              'experiment.tissue': 'EXO_K_CGU-2018-16_42_NA',
+                              'experiment.tissue': 'K1%EXO_K2%K_K3%CGU-2018-16_K4%42_K5%NA',
                               'experiment.user': 'unknown',
                               'experiment.wp': 'WP3'
                           }],
@@ -1132,14 +1149,13 @@ class TestUtils(unittest.TestCase):
         self.maxDiff = None
         result = get_experiments("tests/samplesheets/files/SampleSheet.v2.csv")
         self.assertEqual({
-                          '20230607_LU': {'analysis': 'SERA', 'samples': ['20-2500']},
-                          '20230607_LI': {'analysis': 'SERA', 'samples': ['20-2501']},
-                          '20230607_LA': {'analysis': 'GMS560', 'samples': ['20-2502']},
-                          'TM83': {'analysis': 'TM', 'samples': ['D99-00586']},
-                          'TE42': {'analysis': 'TE', 'samples': ['D98-05408']}
+                          '20230607-LU': {'analysis': 'SERA', 'wp': 'wp1', 'samples': ['20-2500', '20-2501']},
+                          '20230607-LA': {'analysis': 'GMS560', 'wp': 'wp1', 'samples': ['20-2502']},
+                          'TM83': {'analysis': 'TM', 'wp': 'wp2', 'samples': ['D99-00581', 'D99-00586']},
+                          'TE42': {'analysis': 'TE', 'wp': 'wp3', 'samples': ['D98-05407', 'D98-05408']}
                          },
                          result)
 
 
-if __name__ == '__main__':
+if __name__ == '_main_':
     unittest.main()

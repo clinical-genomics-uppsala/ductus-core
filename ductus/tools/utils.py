@@ -71,7 +71,8 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                     user = "unknown"
                     tissue = "unknown"
                     if workpackage.lower() == "wp1":
-                        user = d[1].split("_")[1]
+                        print(d)
+                        user = "-".join(d[1].split("-")[1:])
                         if analysis.lower() == "tso500" or analysis.lower() == "gms560":
                             tissue = "RNA" if d[0].startswith("R") else "DNA"
                     elif workpackage.lower() == "wp2" and analysis.lower() == "tm":
@@ -117,13 +118,19 @@ def get_experiments(samplesheet):
     data = extract_analysis_information(samplesheet)
     del data['header']
     experiments = {}
+    print(data)
     for wp in data:
         for type in data[wp]:
             for item in data[wp][type]:
+                print(item[1])
                 if item[1] in experiments:
-                    experiments[item[1]] = {'analysis': item[3], 'samples': [item[0]]}
+                    if experiments[item[1]]['analysis'] == item[3] and experiments[item[1]]['wp'] == wp:
+                        experiments[item[1]]['samples'].append(item[0])
+                    else:
+                        raise Exception(f"Trying to mix different wp or analyis within the same experiment. Experiment "
+                                        "{item[1]}, adding ({wp}, {item[3]}) to f{experiments[item[1]]})")
                 else:
-                    experiments[item[1]] = {'analysis': item[3], 'samples': [item[0]]}
+                    experiments[item[1]] = {'analysis': item[3], 'wp': wp, 'samples': [item[0]]}
     return experiments
 
 
@@ -185,7 +192,7 @@ def parse_v1_format(file_iterator, data, date):
 
         if len(columns) <= 1:
             continue
-        (wp, analysis, experiment) = columns[header_map[project_key]].rstrip().split("__")
+        (wp, analysis, experiment) = columns[header_map[project_key]].rstrip().split("_")
         data[wp.lower()]['klinik'].append((columns[header_map[sample_name_key]],
                                            experiment, date,
                                            analysis.lower(),
@@ -232,7 +239,7 @@ def parse_v2_format(application, file_iterator, data, date):
                         columns = re.split(",|;", row.rstrip())
                         if len(columns) <= 1 or application == "bclconvert":
                             continue
-                        (wp, analysis, experiment) = columns[header_map[project_key]].split("__")
+                        (wp, analysis, experiment) = columns[header_map[project_key]].split("_")
                         application_data[application][wp.lower()]['klinik'].append((columns[header_map[sample_name_key]],
                                                                                     experiment, date,
                                                                                     analysis,
