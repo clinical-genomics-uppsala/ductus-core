@@ -122,8 +122,7 @@ def get_experiments(samplesheet):
     for wp in data:
         for type in data[wp]:
             for item in data[wp][type]:
-                print(item[1])
-                if item[1] in experiments:
+                if item and item[1] in experiments:
                     if experiments[item[1]]['analysis'] == item[3] and experiments[item[1]]['wp'] == wp:
                         experiments[item[1]]['samples'].append(item[0])
                     else:
