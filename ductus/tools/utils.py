@@ -176,7 +176,6 @@ def extract_analysis_information(samplesheet):
 
 def parse_v1_format(file_iterator, data, date):
     line = next(file_iterator)
-    data['table_header'] = line
     header_map = {v[1].lower(): v[0] for v in enumerate(re.split(",|;", line.rstrip()))}
 
     sample_name_key = "sample_id"
