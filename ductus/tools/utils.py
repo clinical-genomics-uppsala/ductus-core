@@ -118,7 +118,6 @@ def get_experiments(samplesheet):
     data = extract_analysis_information(samplesheet)
     del data['header']
     experiments = {}
-    print(data)
     for wp in data:
         for type in data[wp]:
             for item in data[wp][type]:
