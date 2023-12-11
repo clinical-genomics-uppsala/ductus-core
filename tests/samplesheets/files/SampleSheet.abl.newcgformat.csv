@@ -1,0 +1,20 @@
+[Header]
+Local Run Manager Analysis Id,123123
+Experiment Name,BCRABL42
+Date,2023-03-24
+Module,GenerateFASTQ - 3.0.1
+Workflow,GenerateFASTQ
+Library Prep Kit,Custom
+Index Kit,Custom
+Chemistry,Amplicon
+
+[Reads]
+151
+151
+
+[Settings]
+
+[Data]
+Sample_ID,Sample_Name,Description,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project
+BCRABL42-R99-00277,BCRABL42-R99-00277,NA_NA_NA_42_NA,TAGGCATG,TAGGCATG,AGAGTAGA,AGAGTAGA,ABL
+BCRABL42-R99-00255,BCRABL42-R99-00255,NA_NA_NA_42_NA,TAGGCATG,TAGGCATG,GCGTAAGA,GCGTAAGA,ABL

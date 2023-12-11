@@ -1,0 +1,18 @@
+[Header]
+Local Run Manager Analysis Id,143143
+Date,4/9/2022
+Experiment Name,20220408_MS
+Workflow,GenerateFastQWorkflow
+Description,Auto generated sample sheet.  Used by workflow module to kick off Isis analysis
+Chemistry,Amplicon
+
+[Reads]
+151
+151
+
+[Data]
+Sample_ID,Sample_Name,index,I7_Index_ID,index2,I5_Index_ID,Sample_Project
+22-741-143143,22-741,TAATGCGC,D708,GTCAGTAC,D508,WP1__SERA__20220408_MS
+22-758-143143,22-758,CGGCTATG,D709,GTCAGTAC,D508,WP1__SERA__20220408_MS
+22-759-143143,22-759,TCCGCGAA,D710,GTCAGTAC,D508,WP1__SERA__20220408_MS
+22-751-143143,22-751,AGCGATAG,D712,GTCAGTAC,D508,WP1__SERA__20220408_MS

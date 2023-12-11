@@ -60,6 +60,21 @@ def get_samples_and_project(workpackage, analysis, samplesheet):
     return get_samples_and_info(workpackage, analysis, samplesheet)
 
 
+def is_old_ductus_format(samplesheet, new_format_regex=["20[0-9]{6}-[-A-Z]*-[0-9]*-[0-9]*",
+                                                        "BCRABL[0-9]*-[A-Z]{1}[0-9-]*",
+                                                        "TE[0-9]*-[A-Z0-9-]*",
+                                                        "TM[0-9]*-[A-Z0-9-]*",
+                                                        "TC[0-9]*-[A-Z0-9-]*"]):
+    new_format = False
+    s_data = extract_analysis_information(samplesheet)
+    for wp in s_data:
+        if wp.startswith("wp"):
+            for project_type, data in s_data[wp].items():
+                for d in data:
+                    if True in {re.match(r, d[0]) is not None for r in new_format_regex}:
+                        new_format = True
+    return not new_format
+
 def get_samples_and_info(workpackage, analysis, samplesheet):
     data = extract_analysis_information(samplesheet)
     sample_project = []

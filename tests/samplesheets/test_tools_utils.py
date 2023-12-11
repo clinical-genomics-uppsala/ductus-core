@@ -1100,6 +1100,40 @@ class TestUtils(unittest.TestCase):
                                                 "klinik",
                                                 "TWIST"))
 
+    def test_old_or_new_format(self):
+        from ductus.tools.utils import is_old_ductus_format
+        old_format = [
+            "tests/samplesheets/files/SampleSheet.abl.csv",
+            "tests/samplesheets/files/SampleSheet.GMS560.csv",
+            "tests/samplesheets/files/SampleSheet.haloplex.csv",
+            "tests/samplesheets/files/SampleSheet.swift.m0.csv",
+            "tests/samplesheets/files/SampleSheet.swift.mn.csv",
+            "tests/samplesheets/files/SampleSheet.tc.csv",
+            "tests/samplesheets/files/SampleSheet.te.csv",
+            "tests/samplesheets/files/SampleSheet.tm.csv",
+        ]
+
+        for old_file in old_format:
+            match_old_format_only = is_old_ductus_format(old_file)
+            if not match_old_format_only:
+                print(old_file)
+            self.assertTrue(match_old_format_only)
+
+        new_format = [
+            "tests/samplesheets/files/SampleSheet.abl.newcgformat.csv",
+            "tests/samplesheets/files/SampleSheet.GMS560.newcgformat.csv",
+            "tests/samplesheets/files/SampleSheet.haloplex.newcgformat.csv",
+            "tests/samplesheets/files/SampleSheet.tc.newcgformat.csv",
+            "tests/samplesheets/files/SampleSheet.te.newcgformat.csv",
+            "tests/samplesheets/files/SampleSheet.tm.newcgformat.csv",
+        ]
+
+        for new_file in new_format:
+            match_old_format_only = is_old_ductus_format(new_file)
+            if match_old_format_only:
+                print(new_file)
+            self.assertFalse(match_old_format_only)
+
 
 if __name__ == '__main__':
     unittest.main()
