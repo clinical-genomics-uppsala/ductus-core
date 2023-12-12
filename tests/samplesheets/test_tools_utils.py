@@ -1,3 +1,5 @@
+import tempfile
+import os
 import unittest
 from ductus.tools.utils import extract_analysis_information
 from ductus.tools.utils import contains
@@ -233,32 +235,32 @@ class TestUtils(unittest.TestCase):
                                 '20221025_MS',
                                 "20221025",
                                 'gms560',
-                                'xGen_UDI_Index1',
-                                '22-2427,CTGATCGT,GCGCATAT,,,,,,DNA,xGen_UDI_Index1,0.7\n'
+                                '0.7',
+                                '22-2427,CTGATCGT,GCGCATAT,,,,,DNA,xGen_UDI_Index1,0.7\n'
                             ),
                             (
                                 '22-2428',
                                 '20221025_MS',
                                 "20221025",
                                 'gms560',
-                                'xGen_UDI_Index2',
-                                '22-2428,ACTCTCGA,CTGTACCA,,,,,,DNA,xGen_UDI_Index2,0.6\n'
+                                '0.6',
+                                '22-2428,ACTCTCGA,CTGTACCA,,,,,DNA,xGen_UDI_Index2,0.6\n'
                             ),
                             (
                                 'R22-2429',
                                 '20221025_MS',
                                 "20221025",
                                 'gms560',
-                                'xGen_UDI_Index3',
-                                'R22-2429,TGAGCTAG,GAACGGTT,,,,,,RNA,xGen_UDI_Index3,\n'
+                                '',
+                                'R22-2429,TGAGCTAG,GAACGGTT,,,,,RNA,xGen_UDI_Index3,\n'
                             ),
                             (
                                 'R22-2430',
                                 '20221025_MS',
                                 "20221025",
                                 'gms560',
-                                'xGen_UDI_Index4',
-                                'R22-2430,GAGACGAT,ACCGGTTA,,,,,,RNA,xGen_UDI_Index4,\n'
+                                '',
+                                'R22-2430,GAGACGAT,ACCGGTTA,,,,,RNA,xGen_UDI_Index4,\n'
                             )
                         ])
 
@@ -1134,6 +1136,45 @@ class TestUtils(unittest.TestCase):
                 print(new_file)
             self.assertFalse(match_old_format_only)
 
+    def test_convert_old_cgu_format_to_new(self):
+        from ductus.tools.utils import convert_old_cgu_samplesheet_format_to_new
+        self.maxDiff = None        
+        
+        with tempfile.TemporaryDirectory() as temp_dir:
+            old_samplesheet_cg_format = "tests/samplesheets/files/SampleSheet.GMS560.csv"
+            expected_new_samplesheet_cg_format = "tests/samplesheets/files/SampleSheet.GMS560.newcgformat.csv"
+            new_samplesheet = os.path.join(temp_dir, "new_samplesheet.csv")
+            convert_old_cgu_samplesheet_format_to_new(old_samplesheet_cg_format, new_samplesheet)
+            with open(new_samplesheet, 'r') as f1, open(expected_new_samplesheet_cg_format, 'r') as f2:
+                generated_lines = f1.readlines()
+                expected_lines = f2.readlines()
+                self.assertEqual(generated_lines, expected_lines)
+    
+    def test_create_analysis_file_from_samplesheet(self):
+        from ductus.tools.utils import create_analysis_file
+        self.maxDiff = None        
+        gms560 = "tests/samplesheets/files/SampleSheet.GMS560.csv"
+        gms560_expected_analysis = "tests/analysis/20221025_MS_analysis.csv"
+        sera = "tests/samplesheets/files/SampleSheet.haloplex.csv"
+        sera_expected_analysis = "tests/analysis/20210203_LU_analysis.csv"
+        tc = "tests/samplesheets/files/SampleSheet.tc.csv"
+        tc_expected_analysis = "tests/analysis/TC42_analysis.csv"
+        te = "tests/samplesheets/files/SampleSheet.te.csv"
+        te_expected_analysis = "tests/analysis/TE42_analysis.csv"
+        tm = "tests/samplesheets/files/SampleSheet.tm.csv"
+        tm_expected_analysis = "tests/analysis/TM83_analysis.csv"
 
+        with tempfile.TemporaryDirectory() as temp_dir:
+            file_created = create_analysis_file(gms560, "tests/analysis")
+            self.assertEqual(open(file_created[0]).read(), open(gms560_expected_analysis).read())
+            file_created = create_analysis_file(sera, "tests/analysis")           
+            self.assertEqual(open(file_created[0]).read(), open(sera_expected_analysis).read())
+            file_created = create_analysis_file(tc, "tests/analysis")
+            self.assertEqual(open(file_created[0]).read(), open(tc_expected_analysis).read())
+            file_created = create_analysis_file(tm, "tests/analysis")
+            self.assertEqual(open(file_created[0]).read(), open(tm_expected_analysis).read())
+            file_created = create_analysis_file(te, "tests/analysis")
+            self.assertEqual(open(file_created[0]).read(), open(te_expected_analysis).read())
+                
 if __name__ == '__main__':
     unittest.main()

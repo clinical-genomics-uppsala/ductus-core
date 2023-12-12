@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import re
 
 
@@ -75,6 +76,49 @@ def is_old_ductus_format(samplesheet, new_format_regex=["20[0-9]{6}-[-A-Z]*-[0-9
                         new_format = True
     return not new_format
 
+def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
+    with open(new_file, "w") as writer:
+        s_data = extract_analysis_information(samplesheet)
+        writer.write(s_data['header'])
+        for wp in s_data:
+            if wp.startswith("wp"):
+                for _, data in s_data[wp].items():
+                    for d in data:
+                        new_samplesheet_format = f"{d[1]}-{d[0]}".replace('_', '-')
+                        writer.write(d[-1].replace(d[0], new_samplesheet_format))
+
+def create_analysis_file(samplesheet, outputfolder):
+    def create_description(wp, data):
+        if "wp1" == wp:
+            if re.match(r"[10]+\.[0-9]+", data):
+                return f"TC:{data}" 
+            else:
+                return ""
+        elif wp in ["wp2", "wp3"]:
+            keys = ['panel', 'gender', 'trio', 'experiment', 'project']
+            return "_".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
+        elif "wp3":
+            return "wp3"
+    s_data = extract_analysis_information(samplesheet)
+    files_created = []
+    for wp in s_data:
+        if wp.startswith("wp"):
+            for _, data in s_data[wp].items():
+                if data:
+                    files_created.append(os.path.join(outputfolder, f"{data[0][1]}_analysis.csv"))
+                    with open(files_created[-1], 'w') as writer:
+                        writer.write(",".join(["Workpackage", "Experiment", "Analysis", "Sample_ID", "Description"]))
+                        for d in data:
+                            writer.write('\n' + ','.join([
+                                wp,
+                                d[1].replace('_', '-'),
+                                d[3],
+                                d[0],
+                                create_description(wp, d[4])
+                        ]))
+    return files_created
+                            
+
 def get_samples_and_info(workpackage, analysis, samplesheet):
     data = extract_analysis_information(samplesheet)
     sample_project = []
@@ -133,7 +177,7 @@ def extract_analysis_information(samplesheet):
         workpackage and project type, example Klinik,s
     """
     with open(samplesheet) as file:
-        pattern = re.compile(r"experiment name,\d{8}_[a-z0-9-]+")
+        pattern = re.compile(r"experiment name,\d{8}[_-][a-z0-9-]+")
         sera = False
         tso500 = False
         gms560 = False
