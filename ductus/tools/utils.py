@@ -2,6 +2,7 @@ import datetime
 import json
 import os
 import re
+import logging
 
 
 def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, project, prep):
@@ -320,3 +321,47 @@ def extract_wp_and_typo(samplesheet):
                         tso500 = False
                 break
         return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
+
+def combine_files_with_samples(sample_list, file_list):
+    """
+        The function takes two inputs:
+         - a list of tuples, containing sample id and experiment id
+         - a list of files
+
+         It will attempt to match files to the provided sample/experiment
+         information and return a new list of tuples containing (sample_id, experiment_id, file).
+         If a file can't be matched to a sample, an exception will be raised. If a
+         sample isn't assigned any files, an exception will be raised. A warning will
+         be generated if a sample doesn't have an even number of files assigned."
+
+         The expected file format is either experiment-id_sample-id or just sample-id
+    """
+    sample_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1], 'file_list': []}), sample_list))
+    for f in file_list[:]:
+        file_name = os.path.basename(f).split('_')
+        if file_name[1] in sample_dict and sample_dict[file_name[1]]['experiment_id'] == file_name[0]:
+            sample_dict[file_name[1]]['file_list'].append(f)
+            file_list.remove(f)
+        elif file_name[0] in sample_dict:
+            sample_dict[file_name[0]]['file_list'].append(f)
+            file_list.remove(f)
+        elif "Undetermined" in file_name[0]:
+            file_list.remove(f)
+        else:
+            raise Exception(f"Couldn't match file {f} with sample list {sample_list}")
+
+    if len(file_list) > 0:
+        raise Exception("Couldn't match all fastq files to a sample")
+    result_list = []
+    for sample in sample_dict:
+        if not sample_dict[sample]['file_list']:
+            logging.error(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
+            raise Exception(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
+        elif len(sample_dict[sample]['file_list']) % 2 != 0:
+            logging.warning(f"Un-even number of fastq files found for sample {sample}, {sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
+        for f in sample_dict[sample]['file_list']:
+            result_list.append((sample, sample_dict[sample]['experiment_id'], f))
+    return result_list
+
+def create_json_update_fastq(sample_list, operation='add'):
+    return  {operation: list(map(lambda info: dict(zip(('sample', 'experiment', 'path'), info)), sample_list))}
