@@ -1,7 +1,7 @@
 [Header]
 Local Run Manager Analysis Id,143143
 Date,4/9/2022
-Experiment Name,20220408_MS
+Experiment Name,20220408-MS
 Workflow,GenerateFastQWorkflow
 Description,Auto generated sample sheet.  Used by workflow module to kick off Isis analysis
 Chemistry,Amplicon
