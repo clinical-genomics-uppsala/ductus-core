@@ -115,8 +115,10 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('21-399', '20210302-MS', '20210303', 'sera', '', '21-399,21-399,,,D701,ATTACTCG,D502,ATAGAGGC,,\n', True),
-                         ('21-417', '20210302-MS', '20210303', 'sera', '', '21-417,21-417,,,D702,TCCGGAGA,D502,ATAGAGGC,,\n', True)])
+                         [('21-399', '20210302-MS', '20210303', 'sera', '',
+                           '21-399,21-399,,,D701,ATTACTCG,D502,ATAGAGGC,,\n', True),
+                         ('21-417', '20210302-MS', '20210303', 'sera', '',
+                          '21-417,21-417,,,D702,TCCGGAGA,D502,ATAGAGGC,,\n', True)])
 
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
@@ -1159,8 +1161,8 @@ class TestUtils(unittest.TestCase):
 
     def test_convert_old_cgu_format_to_new(self):
         from ductus.tools.utils import convert_old_cgu_samplesheet_format_to_new
-        self.maxDiff = None        
-        
+        self.maxDiff = None
+
         with tempfile.TemporaryDirectory() as temp_dir:
             old_samplesheet_cg_format = "tests/samplesheets/files/SampleSheet.GMS560.csv"
             expected_new_samplesheet_cg_format = "tests/samplesheets/files/SampleSheet.GMS560.newcgformat.csv"
@@ -1170,10 +1172,10 @@ class TestUtils(unittest.TestCase):
                 generated_lines = f1.readlines()
                 expected_lines = f2.readlines()
                 self.assertEqual(generated_lines, expected_lines)
-    
+
     def test_create_analysis_file_from_samplesheet(self):
         from ductus.tools.utils import create_analysis_file
-        self.maxDiff = None        
+        self.maxDiff = None
         gms560 = "tests/samplesheets/files/SampleSheet.GMS560.csv"
         gms560_expected_analysis = "tests/analysis/20221025-MS_analysis.csv"
         sera = "tests/samplesheets/files/SampleSheet.haloplex.csv"
@@ -1188,7 +1190,7 @@ class TestUtils(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             file_created = create_analysis_file(gms560, "tests/analysis")
             self.assertEqual(open(file_created[0]).read(), open(gms560_expected_analysis).read())
-            file_created = create_analysis_file(sera, "tests/analysis")           
+            file_created = create_analysis_file(sera, "tests/analysis")
             self.assertEqual(open(file_created[0]).read(), open(sera_expected_analysis).read())
             file_created = create_analysis_file(tc, "tests/analysis")
             self.assertEqual(open(file_created[0]).read(), open(tc_expected_analysis).read())
@@ -1199,10 +1201,13 @@ class TestUtils(unittest.TestCase):
 
     def test_combine_sample_and_files(self):
         from ductus.tools.utils import combine_files_with_samples
-        self.maxDiff = None        
-        
+        self.maxDiff = None
+
         sample_list = [('S1', 'E1'), ('S2', 'E2'), ('S3', 'E3')]
-        file_list=['path/S1_test_f.R1.fastq.gz', 'path/S2_test_f.R1.fastq.gz', 'path/S2_test_f.R2.fastq.gz', 'path/S1_test_f.R2.fastq.gz','path/E3_S3_test_f1.R1.fastq.gz', 'path/E3_S3_test_f1.R2.fastq.gz', 'path/E3_S3_test_f2.R1.fastq.gz', 'path/E3_S3_test_f.R2.fastq.gz']
+        file_list = ['path/S1_test_f.R1.fastq.gz', 'path/S2_test_f.R1.fastq.gz',
+                     'path/S2_test_f.R2.fastq.gz', 'path/S1_test_f.R2.fastq.gz',
+                     'path/E3_S3_test_f1.R1.fastq.gz', 'path/E3_S3_test_f1.R2.fastq.gz',
+                     'path/E3_S3_test_f2.R1.fastq.gz', 'path/E3_S3_test_f.R2.fastq.gz']
 
         self.assertEqual([
             ('S1', 'E1', 'path/S1_test_f.R1.fastq.gz'),
@@ -1214,62 +1219,49 @@ class TestUtils(unittest.TestCase):
             ('S3', 'E3', 'path/E3_S3_test_f2.R1.fastq.gz'),
             ('S3', 'E3', 'path/E3_S3_test_f.R2.fastq.gz')
         ], combine_files_with_samples(sample_list, file_list.copy()))
-        
+
         with self.assertRaises(Exception) as context:
             combine_files_with_samples(sample_list[1:], file_list.copy())
         self.assertTrue(str(context.exception).startswith("Couldn't match file path"))
-        
+
         with self.assertRaises(Exception) as e:
             combine_files_with_samples(sample_list, [file_list[0]] + file_list[3:])
         self.assertEqual(str(e.exception), "No fastq files found for S2, E2")
 
-        with self.assertLogs() as l:
+        log_message = []
+        with self.assertLogs() as log_message:
             combine_files_with_samples(sample_list, file_list[1:])
-        self.assertTrue(l.output[0].startswith("WARNING:root:Un-even number of fastq"))
+        self.assertTrue(log_message.output[0].startswith("WARNING:root:Un-even number of fastq"))
 
     def test_create_json_update(self):
         from ductus.tools.utils import create_json_update_fastq
         from ductus.tools.utils import combine_files_with_samples
-        self.maxDiff = None        
-        
+        self.maxDiff = None
+
         sample_list = [('S1', 'E1'), ('S2', 'E2'), ('S3', 'E3')]
-        file_list=['path/S1_test_f.R1.fastq.gz',
-                   'path/S2_test_f.R1.fastq.gz',
-                   'path/S2_test_f.R2.fastq.gz',
-                   'path/S1_test_f.R2.fastq.gz',
-                   'path/E3_S3_test_f1.R1.fastq.gz',
-                   'path/E3_S3_test_f1.R2.fastq.gz',
-                   'path/E3_S3_test_f2.R1.fastq.gz',
-                   'path/E3_S3_test_f.R2.fastq.gz']
+        file_list = ['path/S1_test_f.R1.fastq.gz',
+                     'path/S2_test_f.R1.fastq.gz',
+                     'path/S2_test_f.R2.fastq.gz',
+                     'path/S1_test_f.R2.fastq.gz',
+                     'path/E3_S3_test_f1.R1.fastq.gz',
+                     'path/E3_S3_test_f1.R2.fastq.gz',
+                     'path/E3_S3_test_f2.R1.fastq.gz',
+                     'path/E3_S3_test_f.R2.fastq.gz']
 
         result_list = combine_files_with_samples(sample_list, file_list)
 
-        self.assertEqual(create_json_update_fastq(result_list), { 'add' : [
-            {'experiment': 'E1',
-             'path': 'path/S1_test_f.R1.fastq.gz',
-             'sample': 'S1'},
-            {'experiment': 'E1',
-             'path': 'path/S1_test_f.R2.fastq.gz',
-             'sample': 'S1'},
-             {'experiment': 'E2',
-             'path': 'path/S2_test_f.R1.fastq.gz',
-             'sample': 'S2'},
-             {'experiment': 'E2',
-             'path': 'path/S2_test_f.R2.fastq.gz',
-             'sample': 'S2'},
-             {'experiment': 'E3',
-             'path': 'path/E3_S3_test_f1.R1.fastq.gz',
-             'sample': 'S3'},
-             {'experiment': 'E3',
-             'path': 'path/E3_S3_test_f1.R2.fastq.gz',
-             'sample': 'S3'},
-             {'experiment': 'E3',
-             'path': 'path/E3_S3_test_f2.R1.fastq.gz',
-             'sample': 'S3'},
-             {'experiment': 'E3',
-             'path': 'path/E3_S3_test_f.R2.fastq.gz',
-             'sample': 'S3'}
-        ]})
+        self.assertEqual(
+            create_json_update_fastq(result_list),
+            {'add': [
+                {'experiment': 'E1', 'path': 'path/S1_test_f.R1.fastq.gz', 'sample': 'S1'},
+                {'experiment': 'E1', 'path': 'path/S1_test_f.R2.fastq.gz', 'sample': 'S1'},
+                {'experiment': 'E2', 'path': 'path/S2_test_f.R1.fastq.gz', 'sample': 'S2'},
+                {'experiment': 'E2', 'path': 'path/S2_test_f.R2.fastq.gz', 'sample': 'S2'},
+                {'experiment': 'E3', 'path': 'path/E3_S3_test_f1.R1.fastq.gz', 'sample': 'S3'},
+                {'experiment': 'E3', 'path': 'path/E3_S3_test_f1.R2.fastq.gz', 'sample': 'S3'},
+                {'experiment': 'E3', 'path': 'path/E3_S3_test_f2.R1.fastq.gz', 'sample': 'S3'},
+                {'experiment': 'E3', 'path': 'path/E3_S3_test_f.R2.fastq.gz', 'sample': 'S3'}]})
+
 
 if __name__ == '__main__':
     unittest.main()

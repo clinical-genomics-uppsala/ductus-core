@@ -25,6 +25,7 @@ def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, projec
                 }))
     return samples
 
+
 def generate_elastic_statistics_from_api_data(data):
     samples = []
     for d in data:
@@ -100,6 +101,7 @@ def is_old_ductus_format(samplesheet):
 
     return old_format
 
+
 def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
     with open(new_file, "w") as writer:
         s_data = extract_analysis_information(samplesheet)
@@ -108,15 +110,15 @@ def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
             if wp.startswith("wp"):
                 for _, data in s_data[wp].items():
                     for d in data:
-                        print(d)
                         new_samplesheet_format = f"{d[1]}_{d[0]}"
                         writer.write(d[-2].replace(d[0], new_samplesheet_format))
+
 
 def create_analysis_file(samplesheet, outputfolder):
     def create_description(wp, data):
         if "wp1" == wp:
             if re.match(r"[10]+\.[0-9]+", data):
-                return f"TC:{data}" 
+                return f"TC:{data}"
             else:
                 return ""
         elif wp in ["wp2", "wp3"]:
@@ -134,15 +136,9 @@ def create_analysis_file(samplesheet, outputfolder):
                     with open(files_created[-1], 'w') as writer:
                         writer.write(",".join(["Workpackage", "Experiment", "Analysis", "Sample_ID", "Description"]))
                         for d in data:
-                            writer.write('\n' + ','.join([
-                                wp,
-                                d[1],
-                                d[3],
-                                d[0],
-                                create_description(wp, d[4])
-                        ]))
+                            writer.write('\n' + ','.join([wp, d[1], d[3], d[0], create_description(wp, d[4])]))
     return files_created
-                            
+
 
 def get_samples_and_info(workpackage, analysis, samplesheet):
     data = extract_analysis_information(samplesheet)
@@ -229,7 +225,7 @@ def extract_analysis_information(samplesheet):
             if line.startswith("Experiment Name,"):
                 main_experiment = re.search("^Experiment Name,([A-Za-z0-9-]+)", line)[1]
             line = line.lower()
-            
+
             if pattern.search(line):
                 sera = True
             if "name,te" in line:
@@ -371,6 +367,7 @@ def extract_wp_and_typo(samplesheet):
                 break
         return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
 
+
 def combine_files_with_samples(sample_list, file_list):
     """
         The function takes two inputs:
@@ -407,10 +404,12 @@ def combine_files_with_samples(sample_list, file_list):
             logging.error(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
             raise Exception(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
         elif len(sample_dict[sample]['file_list']) % 2 != 0:
-            logging.warning(f"Un-even number of fastq files found for sample {sample}, {sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
+            logging.warning(f"Un-even number of fastq files found for sample {sample}, "
+                            f"{sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
         for f in sample_dict[sample]['file_list']:
             result_list.append((sample, sample_dict[sample]['experiment_id'], f))
     return result_list
 
+
 def create_json_update_fastq(sample_list, operation='add'):
-    return  {operation: list(map(lambda info: dict(zip(('sample', 'experiment', 'path'), info)), sample_list))}
+    return {operation: list(map(lambda info: dict(zip(('sample', 'experiment', 'path'), info)), sample_list))}
