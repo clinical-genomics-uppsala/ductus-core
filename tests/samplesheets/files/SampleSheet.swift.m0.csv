@@ -1,6 +1,6 @@
 [Header],,,,,,,,,
 IEMFileVersion,4,,,,,,,,
-Experiment Name,20210302_MS,,,,,,,,
+Experiment Name,20210302-MS,,,,,,,,
 Date,2021-03-03,,,,,,,,
 Workflow,GenerateFASTQ,,,,,,,,
 Application,FASTQ Only,,,,,,,,

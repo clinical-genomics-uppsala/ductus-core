@@ -1,6 +1,8 @@
 import datetime
 import json
+import os
 import re
+import logging
 
 
 def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, project, prep):
@@ -21,6 +23,26 @@ def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, projec
                   "experiment.sample": d[0],
                   "experiment.project": d[1]
                 }))
+    return samples
+
+
+def generate_elastic_statistics_from_api_data(data):
+    samples = []
+    for d in data:
+        d['settings'] = json.loads(d['settings'])
+        samples.append(
+            ({
+                "experiment.wp": d["analysis_id"]["workpackage"],
+                "experiment.prep": d["settings"].get('prep', 'NA'),
+                "@timestamp": d["analysis_id"]["created_date"],
+                "experiment.method": d["analysis_id"]["analysis"],
+                "experiment.rerun": False,
+                "experiment.user": d["settings"].get('user', 'NA'),
+                "experiment.tissue": d["settings"].get('tissue', 'NA'),
+                "experiment.id": d["sample_id"]["experiment_id"],
+                "experiment.sample": d["sample_id"]["sample_id"],
+                "experiment.project": d["settings"].get('project', 'NA'),
+            }))
     return samples
 
 
@@ -60,6 +82,64 @@ def get_samples_and_project(workpackage, analysis, samplesheet):
     return get_samples_and_info(workpackage, analysis, samplesheet)
 
 
+def is_old_ductus_format(samplesheet):
+    new_format = False
+    s_data = extract_analysis_information(samplesheet)
+    from pprint import pprint
+    old_format = False
+    new_format = False
+    for wp in s_data:
+        if wp.startswith("wp"):
+            for _, data in s_data[wp].items():
+                for d in data:
+                    if d[-1]:
+                        old_format = True
+                    else:
+                        new_format = True
+    if old_format and new_format:
+        raise Exception("Can not handle both new and old samplesheet format")
+
+    return old_format
+
+
+def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
+    with open(new_file, "w") as writer:
+        s_data = extract_analysis_information(samplesheet)
+        writer.write(s_data['header'])
+        for wp in s_data:
+            if wp.startswith("wp"):
+                for _, data in s_data[wp].items():
+                    for d in data:
+                        new_samplesheet_format = f"{d[1]}_{d[0]}"
+                        writer.write(d[-2].replace(d[0], new_samplesheet_format))
+
+
+def create_analysis_file(samplesheet, outputfolder):
+    def create_description(wp, data):
+        if "wp1" == wp:
+            if re.match(r"[10]+\.[0-9]+", data):
+                return f"TC:{data}"
+            else:
+                return ""
+        elif wp in ["wp2", "wp3"]:
+            keys = ['panel', 'gender', 'trio', 'experiment', 'project']
+            return "_".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
+        elif "wp3":
+            return "wp3"
+    s_data = extract_analysis_information(samplesheet)
+    files_created = []
+    for wp in s_data:
+        if wp.startswith("wp"):
+            for _, data in s_data[wp].items():
+                if data:
+                    files_created.append(os.path.join(outputfolder, f"{data[0][1]}_analysis.csv"))
+                    with open(files_created[-1], 'w') as writer:
+                        writer.write(",".join(["Workpackage", "Experiment", "Analysis", "Sample_ID", "Description"]))
+                        for d in data:
+                            writer.write('\n' + ','.join([wp, d[1], d[3], d[0], create_description(wp, d[4])]))
+    return files_created
+
+
 def get_samples_and_info(workpackage, analysis, samplesheet):
     data = extract_analysis_information(samplesheet)
     sample_project = []
@@ -70,7 +150,7 @@ def get_samples_and_info(workpackage, analysis, samplesheet):
                     user = "unknown"
                     tissue = "unknown"
                     if workpackage.lower() == "wp1":
-                        user = d[1].split("_")[1]
+                        user = "-".join(d[1].split("-")[1:])
                         if analysis.lower() == "tso500" or analysis.lower() == "gms560":
                             tissue = "RNA" if d[0].startswith("R") else "DNA"
                     elif workpackage.lower() == "wp2" and analysis.lower() == "tm":
@@ -118,7 +198,7 @@ def extract_analysis_information(samplesheet):
         workpackage and project type, example Klinik,s
     """
     with open(samplesheet) as file:
-        pattern = re.compile(r"experiment name,\d{8}_[a-z0-9-]+")
+        pattern = re.compile(r"experiment name,\d{8}-[a-z0-9-]+")
         sera = False
         tso500 = False
         gms560 = False
@@ -129,9 +209,10 @@ def extract_analysis_information(samplesheet):
         data = {'header': "",
                 'wp1': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
                 'wp2': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
-                'wp3': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []}}
+                'wp3': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
+                'wpN': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []}}
         date_string = None
-        experiment = None
+        main_experiment = None
         for line in file:
             data['header'] = data['header'] + line
             if line.startswith("Date"):
@@ -142,8 +223,9 @@ def extract_analysis_information(samplesheet):
                     date_result = re.search(r"^Date,(\d{4})-{0,1}(\d{1,2})-{0,1}(\d{1,2})", line)
                     date_string = "{}{:02d}{:02d}".format(date_result[1], int(date_result[2]), int(date_result[3]))
             if line.startswith("Experiment Name,"):
-                experiment = re.search("^Experiment Name,([A-Za-z0-9_-]+)", line)[1]
+                main_experiment = re.search("^Experiment Name,([A-Za-z0-9-]+)", line)[1]
             line = line.lower()
+
             if pattern.search(line):
                 sera = True
             if "name,te" in line:
@@ -172,54 +254,77 @@ def extract_analysis_information(samplesheet):
                     description = ""
                     if 'description' in header_map:
                         description = columns[header_map['description']]
-                    if 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
-                        data["wp2"]['klinik'].append((columns[header_map['sample_name']],
-                                                      experiment, date_string,
+                    sample_id = columns[header_map['sample_id']]
+                    sample_experiment = main_experiment
+                    old_format = True
+                    if "_" in sample_id:
+                        sample_experiment, sample_id = sample_id.split("_")
+                        old_format = False
+                    if not old_format:
+                        data["wpN"]['klinik'].append((sample_id,
+                                                      sample_experiment,
+                                                      date_string,
+                                                      "N",
+                                                      description,
+                                                      row,
+                                                      old_format))
+                    elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tm"):
+                        data["wp2"]['klinik'].append((sample_id,
+                                                      sample_experiment,
+                                                      date_string,
                                                       "tm",
                                                       description,
-                                                      row))
+                                                      row,
+                                                      old_format))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("abl"):
-                        data["wp2"]['klinik'].append((columns[header_map['sample_name']],
-                                                      experiment, date_string,
+                        data["wp2"]['klinik'].append((sample_id,
+                                                      sample_experiment,
+                                                      date_string,
                                                       "abl",
                                                       description,
-                                                      row))
+                                                      row,
+                                                      old_format))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("te"):
-                        data["wp3"]['klinik'].append((columns[header_map['sample_name']],
-                                                      experiment,
+                        data["wp3"]['klinik'].append((sample_id,
+                                                      sample_experiment,
                                                       date_string,
                                                       "te",
                                                       description,
-                                                      row))
+                                                      row,
+                                                      old_format))
                     elif 'sample_project' in header_map and columns[header_map['sample_project']].lower().startswith("tc"):
-                        data["wp3"]['klinik'].append((columns[header_map['sample_name']],
-                                                      experiment,
+                        data["wp3"]['klinik'].append((sample_id,
+                                                      sample_experiment,
                                                       date_string,
                                                       "tc",
                                                       description,
-                                                      row))
+                                                      row,
+                                                      old_format))
                     else:
                         if tso500:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_id']],
-                                                          experiment,
+                            data["wp1"]['klinik'].append((sample_id,
+                                                          sample_experiment,
                                                           date_string,
                                                           "tso500",
                                                           description,
-                                                          row))
+                                                          row,
+                                                          old_format))
                         elif sera:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_name']],
-                                                          experiment,
+                            data["wp1"]['klinik'].append((sample_id,
+                                                          sample_experiment,
                                                           date_string,
                                                           "sera",
                                                           description,
-                                                          row))
+                                                          row,
+                                                          old_format))
                         elif gms560:
-                            data["wp1"]['klinik'].append((columns[header_map['sample_id']],
-                                                          experiment,
+                            data["wp1"]['klinik'].append((sample_id,
+                                                          sample_experiment,
                                                           date_string,
                                                           "gms560",
                                                           description,
-                                                          row))
+                                                          row,
+                                                          old_format))
                         else:
                             raise Exception("Unhandled case: " + row)
         return data
@@ -261,3 +366,50 @@ def extract_wp_and_typo(samplesheet):
                         tso500 = False
                 break
         return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
+
+
+def combine_files_with_samples(sample_list, file_list):
+    """
+        The function takes two inputs:
+         - a list of tuples, containing sample id and experiment id
+         - a list of files
+
+         It will attempt to match files to the provided sample/experiment
+         information and return a new list of tuples containing (sample_id, experiment_id, file).
+         If a file can't be matched to a sample, an exception will be raised. If a
+         sample isn't assigned any files, an exception will be raised. A warning will
+         be generated if a sample doesn't have an even number of files assigned."
+
+         The expected file format is either experiment-id_sample-id or just sample-id
+    """
+    sample_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1], 'file_list': []}), sample_list))
+    for f in file_list[:]:
+        file_name = os.path.basename(f).split('_')
+        if file_name[1] in sample_dict and sample_dict[file_name[1]]['experiment_id'] == file_name[0]:
+            sample_dict[file_name[1]]['file_list'].append(f)
+            file_list.remove(f)
+        elif file_name[0] in sample_dict:
+            sample_dict[file_name[0]]['file_list'].append(f)
+            file_list.remove(f)
+        elif "Undetermined" in file_name[0]:
+            file_list.remove(f)
+        else:
+            raise Exception(f"Couldn't match file {f} with sample list {sample_list}")
+
+    if len(file_list) > 0:
+        raise Exception("Couldn't match all fastq files to a sample")
+    result_list = []
+    for sample in sample_dict:
+        if not sample_dict[sample]['file_list']:
+            logging.error(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
+            raise Exception(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
+        elif len(sample_dict[sample]['file_list']) % 2 != 0:
+            logging.warning(f"Un-even number of fastq files found for sample {sample}, "
+                            f"{sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
+        for f in sample_dict[sample]['file_list']:
+            result_list.append((sample, sample_dict[sample]['experiment_id'], f))
+    return result_list
+
+
+def create_json_update_fastq(sample_list, operation='add'):
+    return {operation: list(map(lambda info: dict(zip(('sample', 'experiment', 'path'), info)), sample_list))}
