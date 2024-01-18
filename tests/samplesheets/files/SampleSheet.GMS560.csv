@@ -1,7 +1,7 @@
 [Header],,,,,,,,,,
 IEMFileVersion,4,,,,,,,,,
 Investigator Name,,,,,,,,,,
-Experiment Name,20221025_MS,,,,,,,,,
+Experiment Name,20221025-MS,,,,,,,,,
 Date,20221025,,,,,,,,,
 Project,New Project,,,,,,,,,
 Workflow,GenerateFASTQ,,,,,,,,,
@@ -14,7 +14,7 @@ AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT,,,,,,,,,
 OverrideCycles,U3N2Y146;I8;I8;U3N2Y146,,,,,,,,,
 [Data],,,,,,,,,,
 Sample_ID,index,index2,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,I5_Index_ID,Project,Description,TC
-22-2427,CTGATCGT,GCGCATAT,,,,,,DNA,xGen_UDI_Index1,0.7
-22-2428,ACTCTCGA,CTGTACCA,,,,,,DNA,xGen_UDI_Index2,0.6
-R22-2429,TGAGCTAG,GAACGGTT,,,,,,RNA,xGen_UDI_Index3,
-R22-2430,GAGACGAT,ACCGGTTA,,,,,,RNA,xGen_UDI_Index4,
+22-2427,CTGATCGT,GCGCATAT,,,,,,WP1_GMS560_20221025-MS,xGen_UDI_Index1,0.7
+22-2428,ACTCTCGA,CTGTACCA,,,,,,WP1_GMS560_20221025-MS,xGen_UDI_Index2,0.6
+R22-2429,TGAGCTAG,GAACGGTT,,,,,,WP1_GMS560_20221025-MS,xGen_UDI_Index3,
+R22-2430,GAGACGAT,ACCGGTTA,,,,,,WP1_GMS560_20221025-MS,xGen_UDI_Index4,
