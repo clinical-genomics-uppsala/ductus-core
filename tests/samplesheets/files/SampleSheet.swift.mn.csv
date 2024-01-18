@@ -1,7 +1,7 @@
 [Header]
 Local Run Manager Analysis Id,115115
 Date,12/23/2020
-Experiment Name,20201221-LU
+Experiment Name,20201221_LU
 Workflow,GenerateFastQWorkflow
 Description,Auto generated sample sheet.  Used by workflow module to kick off Isis analysis
 Chemistry,Amplicon
@@ -11,6 +11,6 @@ Chemistry,Amplicon
 151
 
 [Data]
-Sample_ID,Sample_Name,index,I7_Index_ID,index2,I5_Index_ID,Description,Sample_Project
-20-2500,20-2500,CACTTCGA,D01,,,,WP1_SERA_20201221-LU
-20-2501,20-2501,GCCAAGAC,E01,,,,WP1_SERA_20201221-LU
+Sample_ID,Sample_Name,index,I7_Index_ID,index2,I5_Index_ID,Description
+20-2500-115115,20-2500,CACTTCGA,D01,,,
+20-2501-115115,20-2501,GCCAAGAC,E01,,,
