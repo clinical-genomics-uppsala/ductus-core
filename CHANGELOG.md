@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.9.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.8.0...v1.9.0) (2024-01-18)
+
+
+### Features
+
+* add functions to match samples with fastq files and to create json update structures ([a183e52](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/a183e5258f96d58a9aacc14ecf7aad45795969ce))
+* add wp info to get_experiments dict and update tests ([fb81f5c](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/fb81f5cace035c9fdb2d15e8208518621d5b6984))
+* function used to convert between old and new format ([f85b96f](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/f85b96f2f0bd18da1ce69c805876517d88c5a0bf))
+* make it possible to detetch if SampleSheet follow CGU new or old format ([14c9e51](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/14c9e51140524601cfebf1ec299a45368659ab51))
+* start support new wp1 and analysis format string ([070760e](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/070760e62000a22907652da5b33a348ee6ccda29))
+
+
+### Bug Fixes
+
+* change delimeter from _ to - for combined project and sampe name ([1d63984](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/1d63984745e49958be2ec44e9f9e5280d4da45b2))
+
 ## [1.8.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.7.0...v1.8.0) (2023-04-21)
 
 
