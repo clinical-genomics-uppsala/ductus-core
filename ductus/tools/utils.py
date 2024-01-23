@@ -223,7 +223,7 @@ def extract_analysis_information(samplesheet):
                     date_result = re.search(r"^Date,(\d{4})-{0,1}(\d{1,2})-{0,1}(\d{1,2})", line)
                     date_string = "{}{:02d}{:02d}".format(date_result[1], int(date_result[2]), int(date_result[3]))
             if line.startswith("Experiment Name,"):
-                main_experiment = re.search("^Experiment Name,([A-Za-z0-9-]+)", line)[1]
+                main_experiment = re.search("^Experiment Name,([A-Za-z0-9_-]+)", line)[1]
             line = line.lower()
 
             if pattern.search(line):
