@@ -1,4 +1,5 @@
 import datetime
+import glob
 import json
 import os
 import re
@@ -23,25 +24,27 @@ def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, projec
                   "experiment.sample": d[0],
                   "experiment.project": d[1]
                 }))
+    print(samples)
     return samples
 
 
 def generate_elastic_statistics_from_api_data(data):
     samples = []
-    for d in data:
-        d['settings'] = json.loads(d['settings'])
+    data = json.load(open(data))
+    for sample in data['samples']:
+        data['samples'][sample]['settings'] = json.loads(data['samples'][sample]['settings'])
         samples.append(
             ({
-                "experiment.wp": d["analysis_id"]["workpackage"],
-                "experiment.prep": d["settings"].get('prep', 'NA'),
-                "@timestamp": d["analysis_id"]["created_date"],
-                "experiment.method": d["analysis_id"]["analysis"],
+                "experiment.wp": data["samples"][sample]["workpackage"],
+                "experiment.prep": data["samples"][sample]["settings"].get('prep', 'NA'),
+                "@timestamp": datetime.datetime.now().strftime('%Y-%m-%dT01:01:01.000Z'),
+                "experiment.method": data["samples"][sample]["analysis"],
                 "experiment.rerun": False,
-                "experiment.user": d["settings"].get('user', 'NA'),
-                "experiment.tissue": d["settings"].get('tissue', 'NA'),
-                "experiment.id": d["sample_id"]["experiment_id"],
-                "experiment.sample": d["sample_id"]["sample_id"],
-                "experiment.project": d["settings"].get('project', 'NA'),
+                "experiment.user": data["samples"][sample]["settings"].get('user', 'NA'),
+                "experiment.tissue": data["samples"][sample]["settings"].get('type', 'NA'),
+                "experiment.id": data["samples"][sample]["analysis_name"],
+                "experiment.sample": sample,
+                "experiment.project": data["samples"][sample]["settings"].get('project', 'klinik'),
             }))
     return samples
 
@@ -115,12 +118,33 @@ def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
 
 
 def create_analysis_file(samplesheet, outputfolder):
-    def create_description(wp, data):
-        if "wp1" == wp:
-            if re.match(r"[10]+\.[0-9]+", data):
-                return f"TC:{data}"
+    def create_description(wp, data, sample, analysis, index_file):
+        index_data = None
+        if index_file and analysis == "sera":
+            header = None
+            data = None
+            with open(index_file) as reader:
+                header = next(reader).rstrip()
+                if "Experimentnamn" not in header:
+                    raise Exception(f"No head found in {index_file}")
+                for row in reader:
+                    if sample in row:
+                        data = row.rstrip()
+            if data is None:
+                raise Exception("Couldn't match sample with index file")
             else:
-                return ""
+                index_data = f"index_header:{header}_index_data:{data}"
+
+        if "wp1" == wp:
+            description = ""
+            if re.match(r"[10]+\.[0-9]+", data):
+                description = f"TC:{data}"
+            if index_data:
+                if description:
+                    description += description + "_" + index_data
+                else:
+                    description = index_data
+            return description
         elif wp in ["wp2", "wp3"]:
             keys = ['panel', 'gender', 'trio', 'experiment', 'project']
             return "_".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
@@ -133,10 +157,17 @@ def create_analysis_file(samplesheet, outputfolder):
             for _, data in s_data[wp].items():
                 if data:
                     files_created.append(os.path.join(outputfolder, f"{data[0][1]}_analysis.csv"))
+                    base_path = os.path.dirname(samplesheet)
+                    print()
+                    file = glob.glob(f"{base_path}/*ndex.csv")
+                    if len(file) > 0:
+                        file = file[0]
+                    else:
+                        file = None
                     with open(files_created[-1], 'w') as writer:
                         writer.write(",".join(["Workpackage", "Experiment", "Analysis", "Sample_ID", "Description"]))
                         for d in data:
-                            writer.write('\n' + ','.join([wp, d[1], d[3], d[0], create_description(wp, d[4])]))
+                            writer.write('\n' + ','.join([wp, d[1], d[3], d[0], create_description(wp, d[4], d[0], d[3], file)]))
     return files_created
 
 
