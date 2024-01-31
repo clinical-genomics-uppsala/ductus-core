@@ -8,6 +8,8 @@ from ductus.tools.utils import get_project_types
 from ductus.tools.utils import get_samples
 from ductus.tools.utils import get_samples_and_info
 from ductus.tools.utils import generate_elastic_statistics
+from ductus.tools.utils import generate_elastic_statistics_from_api_data
+from freezegun import freeze_time
 
 
 class TestUtils(unittest.TestCase):
@@ -1125,6 +1127,61 @@ class TestUtils(unittest.TestCase):
                                                 "klinik",
                                                 "TWIST"))
 
+    @freeze_time("2023-02-01 12:00:00")
+    def test_generate_elastic_statistics_from_api(self):
+        self.maxDiff = None
+        self.assertEqual(generate_elastic_statistics_from_api_data("tests/samplesheets/files/samples_and_settings_gms560.json"),
+                         [
+                                {
+                                    'experiment.wp': 'wp1',
+                                    'experiment.prep': 'NA',
+                                    '@timestamp': '2023-02-01T01:01:01.000Z',
+                                    'experiment.method': 'gms560',
+                                    'experiment.rerun': False,
+                                    'experiment.user': 'NA',
+                                    'experiment.tissue': 'T',
+                                    'experiment.id': '20221108_MS-HN-LM',
+                                    'experiment.sample': '22-2427',
+                                    'experiment.project': 'klinik',
+                                },
+                                {
+                                    'experiment.wp': 'wp1',
+                                    'experiment.prep': 'NA',
+                                    '@timestamp': '2023-02-01T01:01:01.000Z',
+                                    'experiment.method': 'gms560',
+                                    'experiment.rerun': False,
+                                    'experiment.user': 'NA',
+                                    'experiment.tissue': 'T',
+                                    'experiment.id': '20221108_MS-HN-LM',
+                                    'experiment.sample': '22-2428',
+                                    'experiment.project': 'klinik',
+                                },
+                                {
+                                    'experiment.wp': 'wp1',
+                                    'experiment.prep': 'NA',
+                                    '@timestamp': '2023-02-01T01:01:01.000Z',
+                                    'experiment.method': 'gms560',
+                                    'experiment.rerun': False,
+                                    'experiment.user': 'NA',
+                                    'experiment.tissue': 'R',
+                                    'experiment.id': '20221108_MS-HN-LM',
+                                    'experiment.sample': 'R22-2429',
+                                    'experiment.project': 'klinik',
+                                },
+                                {
+                                    'experiment.wp': 'wp1',
+                                    'experiment.prep': 'NA',
+                                    '@timestamp': '2023-02-01T01:01:01.000Z',
+                                    'experiment.method': 'gms560',
+                                    'experiment.rerun': False,
+                                    'experiment.user': 'NA',
+                                    'experiment.tissue': 'R',
+                                    'experiment.id': '20221108_MS-HN-LM',
+                                    'experiment.sample': 'R22-2430',
+                                    'experiment.project': 'klinik',
+                                }
+                            ])
+
     def test_old_or_new_format(self):
         from ductus.tools.utils import is_old_ductus_format
         old_format = [
@@ -1179,7 +1236,7 @@ class TestUtils(unittest.TestCase):
         gms560 = "tests/samplesheets/files/SampleSheet.GMS560.csv"
         gms560_expected_analysis = "tests/analysis/20221025-MS_analysis.csv"
         sera = "tests/samplesheets/files/SampleSheet.haloplex.csv"
-        sera_expected_analysis = "tests/analysis/20210203_LU_analysis.csv"
+        sera_expected_analysis = "tests/analysis/20210203-LU_analysis.csv"
         tc = "tests/samplesheets/files/SampleSheet.tc.csv"
         tc_expected_analysis = "tests/analysis/TC42_analysis.csv"
         te = "tests/samplesheets/files/SampleSheet.te.csv"
@@ -1188,15 +1245,15 @@ class TestUtils(unittest.TestCase):
         tm_expected_analysis = "tests/analysis/TM83_analysis.csv"
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            file_created = create_analysis_file(gms560, "tests/analysis")
+            file_created = create_analysis_file(gms560, temp_dir)
             self.assertEqual(open(file_created[0]).read(), open(gms560_expected_analysis).read())
-            file_created = create_analysis_file(sera, "tests/analysis")
+            file_created = create_analysis_file(sera, temp_dir)
             self.assertEqual(open(file_created[0]).read(), open(sera_expected_analysis).read())
-            file_created = create_analysis_file(tc, "tests/analysis")
+            file_created = create_analysis_file(tc, temp_dir)
             self.assertEqual(open(file_created[0]).read(), open(tc_expected_analysis).read())
-            file_created = create_analysis_file(tm, "tests/analysis")
+            file_created = create_analysis_file(tm, temp_dir)
             self.assertEqual(open(file_created[0]).read(), open(tm_expected_analysis).read())
-            file_created = create_analysis_file(te, "tests/analysis")
+            file_created = create_analysis_file(te, temp_dir)
             self.assertEqual(open(file_created[0]).read(), open(te_expected_analysis).read())
 
     def test_combine_sample_and_files(self):
