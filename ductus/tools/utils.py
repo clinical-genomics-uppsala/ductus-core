@@ -123,12 +123,12 @@ def create_analysis_file(samplesheet, outputfolder):
             header = None
             data = None
             with open(index_file) as reader:
-                header = next(reader).rstrip().replace(",", ";").replace("_","-")
+                header = next(reader).rstrip().replace(",", ";").replace("_", "-")
                 if "Experimentnamn" not in header:
                     raise Exception(f"No head found in {index_file}")
                 for row in reader:
                     if sample in row:
-                        data = row.rstrip().replace(",", ";").replace("_","-")
+                        data = row.rstrip().replace(",", ";").replace("_", "-")
             if data is None:
                 raise Exception("Couldn't match sample with index file")
             else:
