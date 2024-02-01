@@ -30,7 +30,6 @@ def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, projec
 
 def generate_elastic_statistics_from_api_data(data):
     samples = []
-    data = json.load(open(data))
     for sample in data['samples']:
         data['samples'][sample]['settings'] = json.loads(data['samples'][sample]['settings'])
         samples.append(
@@ -124,16 +123,16 @@ def create_analysis_file(samplesheet, outputfolder):
             header = None
             data = None
             with open(index_file) as reader:
-                header = next(reader).rstrip()
+                header = next(reader).rstrip().replace(",", ";").replace("_", "-")
                 if "Experimentnamn" not in header:
                     raise Exception(f"No head found in {index_file}")
                 for row in reader:
                     if sample in row:
-                        data = row.rstrip()
+                        data = row.rstrip().replace(",", ";").replace("_", "-")
             if data is None:
                 raise Exception("Couldn't match sample with index file")
             else:
-                index_data = f"index_header:{header}_index_data:{data}"
+                index_data = f"index-header:{header}_index-data:{data}"
 
         if "wp1" == wp:
             description = ""

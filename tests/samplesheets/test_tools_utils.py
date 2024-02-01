@@ -1,3 +1,4 @@
+import json
 import tempfile
 import os
 import unittest
@@ -1130,7 +1131,8 @@ class TestUtils(unittest.TestCase):
     @freeze_time("2023-02-01 12:00:00")
     def test_generate_elastic_statistics_from_api(self):
         self.maxDiff = None
-        self.assertEqual(generate_elastic_statistics_from_api_data("tests/samplesheets/files/samples_and_settings_gms560.json"),
+        data = json.load(open("tests/samplesheets/files/samples_and_settings_gms560.json"))
+        self.assertEqual(generate_elastic_statistics_from_api_data(data),
                          [
                                 {
                                     'experiment.wp': 'wp1',
