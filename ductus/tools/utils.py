@@ -31,7 +31,6 @@ def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, projec
 def generate_elastic_statistics_from_api_data(data):
     samples = []
     for sample in data['samples']:
-        data['samples'][sample]['settings'] = json.loads(data['samples'][sample]['settings'])
         samples.append(
             ({
                 "experiment.wp": data["samples"][sample]["workpackage"],
