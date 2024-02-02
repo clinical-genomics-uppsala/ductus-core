@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.10.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.9.0...v1.10.0) (2024-02-02)
+
+
+### Features
+
+* convert sera samplsheet and index file to new analysis file. And fix generate statistics ([7094bef](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/7094befa5d1f7477deea0518b574745915b932e0))
+
+
+### Bug Fixes
+
+* make compatible with old ductus ([1a64a2b](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/1a64a2b7c8070d1d9f3df86ca6f16e4fe6415ccd))
+* make statistics match new format of settings ([c8fb268](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/c8fb26876078125cd22a322b4a0ac09534af60c0))
+* remove , from sera index file, replace it with ; ([dd8b4d0](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/dd8b4d0664a14ab76daba7dc08c9a908099f43e3))
+* revert change in experiment name detection ([7eaf3d2](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/7eaf3d2b39476e132c206ab41cbcac835ba99ecc))
+
 ## [1.9.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.8.0...v1.9.0) (2024-01-18)
 
 
