@@ -123,16 +123,16 @@ def create_analysis_file(samplesheet, outputfolder):
             header = None
             data = None
             with open(index_file) as reader:
-                header = next(reader).rstrip().replace(",", ";").replace("_", "-")
+                header = next(reader).rstrip().replace(",", ";")
                 if "Experimentnamn" not in header:
                     raise Exception(f"No head found in {index_file}")
                 for row in reader:
                     if sample in row:
-                        data = row.rstrip().replace(",", ";").replace("_", "-")
+                        data = row.rstrip().replace(",", ";")
             if data is None:
                 raise Exception("Couldn't match sample with index file")
             else:
-                index_data = f"index-header:{header}_index-data:{data}"
+                index_data = f"index_header:{header}%index_data:{data}"
 
         if "wp1" == wp:
             description = ""
@@ -140,13 +140,13 @@ def create_analysis_file(samplesheet, outputfolder):
                 description = f"TC:{data}"
             if index_data:
                 if description:
-                    description += description + "_" + index_data
+                    description += description + "%" + index_data
                 else:
                     description = index_data
             return description
         elif wp in ["wp2", "wp3"]:
             keys = ['panel', 'gender', 'trio', 'experiment', 'project']
-            return "_".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
+            return "%".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
         elif "wp3":
             return "wp3"
     s_data = extract_analysis_information(samplesheet)
