@@ -1,0 +1,19 @@
+{
+  "samples": {
+    "22-2427": {
+        "analysis_name":"20221108_MS-HN-LM","analysis":"gms560","workpackage":"wp1","settings": {"type": "T", "tumor_content": 0.3}
+    },
+    "22-2428": {
+        "analysis_name":"20221108_MS-HN-LM","analysis":"gms560","workpackage":"wp1","settings": {"type": "T", "tumor_content": 0.5}
+    },
+    "R22-2429": {
+        "analysis_name":"20221108_MS-HN-LM","analysis":"gms560","workpackage":"wp1","settings": {"type": "R"}
+    },
+    "R22-2430": {
+        "analysis_name":"20221108_MS-HN-LM","analysis":"gms560","workpackage":"wp1","settings": {"type": "R"}
+    }
+  },
+  "analysis_name":"20221108_MS-HN-LM",
+  "analysis": "gms560",
+  "workpackage": "wp1"
+}
