@@ -121,8 +121,7 @@ def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
                     for d in data:
                         # Replace old Sample_Id format with new version
                         new_samplesheet_format = f"{d[1]}_{d[0]}"
-                        data_line = d[-2]
-                        writer.write(data_line.replace(d[0], new_samplesheet_format))
+                        writer.write(d[-2].replace(d[0], new_samplesheet_format))
 
 
 def create_analysis_file(samplesheet, outputfolder):
