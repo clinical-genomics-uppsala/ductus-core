@@ -104,6 +104,10 @@ def is_old_ductus_format(samplesheet):
 
 
 def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
+    """
+    New SampleSheet format will require the Sample_Id to be built up by experiment id and sample id, 
+    EXPERIMENT-ID_SAMPLEID, example TE42_45-61561.
+    """
     with open(new_file, "w") as writer:
         s_data = extract_analysis_information(samplesheet)
         writer.write(s_data['header'])
@@ -111,14 +115,26 @@ def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
             if wp.startswith("wp"):
                 for _, data in s_data[wp].items():
                     for d in data:
+                        # Replace old Sample_Id format with new version
                         new_samplesheet_format = f"{d[1]}_{d[0]}"
                         writer.write(d[-2].replace(d[0], new_samplesheet_format))
 
 
 def create_analysis_file(samplesheet, outputfolder):
-    def create_description(wp, data, sample, analysis, index_file):
+    def create_description(wp, data, sample, analysis, index_file=None):
+        """
+        Convert old SampleSheet description to new version. Old version contain
+        values separated by '_' and WP1 had a separate columnd for TC. New
+        format will contain key and values, seperated by ':', where each key:value item
+        is separated by '%'. Ex K1:V1%K2:V2%K3:V3
+        """
         index_data = None
         if index_file and analysis == "sera":
+            """
+            If an index file has been provided this is a sera analysis which will need this file
+            in later analysis steps. It will therefore be saved to description, as a header and
+            data section.
+            """
             header = None
             data = None
             with open(index_file) as reader:
@@ -136,14 +152,22 @@ def create_analysis_file(samplesheet, outputfolder):
         if "wp1" == wp:
             description = ""
             if re.match(r"[10]+\.[0-9]+", data):
-                description = f"TC:{data}"
+                """
+                Detect tumor content value. Note that ductus-core moved it to description
+                when parsing the SampleSheet.
+                """
+                description = f"tumor_content:{data}"
             if index_data:
+                # Add index data if it exist.
                 if description:
                     description += description + "%" + index_data
                 else:
                     description = index_data
             return description
         elif wp in ["wp2", "wp3"]:
+            """
+            ToDo: WP2 and WP3 should update this part to match there requirements.
+            """
             keys = ['panel', 'gender', 'trio', 'experiment', 'project']
             return "%".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
         elif "wp3":
@@ -283,6 +307,17 @@ def extract_analysis_information(samplesheet):
                     description = ""
                     if 'description' in header_map:
                         description = columns[header_map['description']]
+                    if gms560:
+                        """
+                        Move tc/tumor_content to description to make it easier to convert old
+                        samplesheet to new format.
+                        """
+                        if 'tc' in header_map:
+                            description = columns[header_map['tc']]
+                        elif 'tumor_content' in header_map:
+                            description = columns[header_map['tumor_content']]
+                        
+                        
                     sample_id = columns[header_map['sample_id']]
                     sample_experiment = main_experiment
                     old_format = True
