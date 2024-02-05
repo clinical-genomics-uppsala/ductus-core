@@ -105,11 +105,15 @@ def is_old_ductus_format(samplesheet):
 
 def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
     """
-    New SampleSheet format will require the Sample_Id to be built up by experiment id and sample id, 
+    New SampleSheet format will require the Sample_Id to be built up by experiment id and sample id,
     EXPERIMENT-ID_SAMPLEID, example TE42_45-61561.
     """
     with open(new_file, "w") as writer:
         s_data = extract_analysis_information(samplesheet)
+        tc_column_found = False
+        if "TC" in s_data['header']:
+            tc_column_found = True
+            s_data['header'] = s_data['header'].replace(',TC\n', '\n')
         writer.write(s_data['header'])
         for wp in s_data:
             if wp.startswith("wp"):
@@ -117,7 +121,8 @@ def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
                     for d in data:
                         # Replace old Sample_Id format with new version
                         new_samplesheet_format = f"{d[1]}_{d[0]}"
-                        writer.write(d[-2].replace(d[0], new_samplesheet_format))
+                        data_line = d[-2]
+                        writer.write(data_line.replace(d[0], new_samplesheet_format))
 
 
 def create_analysis_file(samplesheet, outputfolder):
@@ -148,15 +153,14 @@ def create_analysis_file(samplesheet, outputfolder):
                 raise Exception("Couldn't match sample with index file")
             else:
                 index_data = f"index_header:{header}%index_data:{data}"
-
         if "wp1" == wp:
             description = ""
-            if re.match(r"[10]+\.[0-9]+", data):
+            if re.match(r"tumor_content:[10]+\.[0-9]+", data):
                 """
                 Detect tumor content value. Note that ductus-core moved it to description
                 when parsing the SampleSheet.
                 """
-                description = f"tumor_content:{data}"
+                description = data
             if index_data:
                 # Add index data if it exist.
                 if description:
@@ -310,14 +314,26 @@ def extract_analysis_information(samplesheet):
                     if gms560:
                         """
                         Move tc/tumor_content to description to make it easier to convert old
-                        samplesheet to new format.
+                        samplesheet to new format. And remove tc column from row.
                         """
-                        if 'tc' in header_map:
-                            description = columns[header_map['tc']]
-                        elif 'tumor_content' in header_map:
-                            description = columns[header_map['tumor_content']]
-                        
-                        
+                        if 'tc' in header_map and len(columns[header_map['tc']].rstrip()) > 0:
+                            description = "tumor_content:" + columns[header_map['tc']].rstrip()
+                        elif 'tumor_content' in header_map and len(columns[header_map['tc']].rstrip()) > 0:
+                            description = "tumor_content:" + columns[header_map['tumor_content']].rstrip()
+                        if len(columns[header_map['tc']].rstrip()) > 0:
+                            row = re.sub(r',[0-9.]+$', '', row)
+                        else:
+                            row = re.sub(r',$', '', row)
+                        columns = row.split(",")
+                        columns[header_map['description']] = columns[header_map['description']].rstrip()
+                        if columns[header_map['description']]:
+                            columns[header_map['description']] = "oldDescription:" + columns[header_map['description']] + \
+                                                                 "%" + description
+                        else:
+                            columns[header_map['description']] = description
+                        columns[header_map['description']] += "\n"
+                        row = ",".join(columns)
+
                     sample_id = columns[header_map['sample_id']]
                     sample_experiment = main_experiment
                     old_format = True

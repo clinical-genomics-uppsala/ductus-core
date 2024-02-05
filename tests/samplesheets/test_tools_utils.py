@@ -244,8 +244,8 @@ class TestUtils(unittest.TestCase):
                                 '20221025-MS',
                                 "20221025",
                                 'gms560',
-                                '0.7',
-                                '22-2427,CTGATCGT,GCGCATAT,,,,,DNA,xGen_UDI_Index1,0.7\n',
+                                'tumor_content:0.7',
+                                '22-2427,CTGATCGT,GCGCATAT,,,,,DNA,xGen_UDI_Index1,tumor_content:0.7\n',
                                 True
                             ),
                             (
@@ -253,8 +253,8 @@ class TestUtils(unittest.TestCase):
                                 '20221025-MS',
                                 "20221025",
                                 'gms560',
-                                '0.6',
-                                '22-2428,ACTCTCGA,CTGTACCA,,,,,DNA,xGen_UDI_Index2,0.6\n',
+                                'tumor_content:0.6',
+                                '22-2428,ACTCTCGA,CTGTACCA,,,,,DNA,xGen_UDI_Index2,tumor_content:0.6\n',
                                 True
                             ),
                             (
