@@ -497,7 +497,7 @@ class TestUtils(unittest.TestCase):
                                 'TE42',
                                 '20210206',
                                 "te",
-                                'EXO_K_CGU-2018-16_42_NA',
+                                'EXO_K_NA_42_CGU-2018-16',
                                 "D98-05407,D98-05407,EXO_K_NA_42_CGU-2018-16,TAATTCCAGC,TAATTCCAGC,ATCGTATTCG,ATCGTATTCG,TE\n",
                                 True
                             )
@@ -687,7 +687,7 @@ class TestUtils(unittest.TestCase):
             [
                 ('D97-00415', 'klinik', 'TE42', '20210206', 'unknown',  'BIN_M_NA_42_NA'),
                 ('D97-00388', 'klinik', 'TE42', '20210206', 'unknown',  'CAD_K_NA_42_NA'),
-                ('D98-05407', 'klinik', 'TE42', '20210206', 'unknown',  'EXO_K_CGU-2018-16_42_NA')
+                ('D98-05407', 'klinik', 'TE42', '20210206', 'unknown',  'EXO_K_NA_42_CGU-2018-16')
             ],
             get_samples_and_info("wp3", "te", "tests/samplesheets/files/SampleSheet.te.csv"))
 
@@ -1086,7 +1086,7 @@ class TestUtils(unittest.TestCase):
                               'experiment.project': 'klinik',
                               'experiment.rerun': False,
                               'experiment.sample': 'D98-05407',
-                              'experiment.tissue': 'EXO_K_CGU-2018-16_42_NA',
+                              'experiment.tissue': 'EXO_K_NA_42_CGU-2018-16',
                               'experiment.user': 'unknown',
                               'experiment.wp': 'WP3'
                           }],
