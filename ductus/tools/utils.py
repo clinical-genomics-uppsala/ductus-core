@@ -171,7 +171,7 @@ def create_analysis_file(samplesheet, outputfolder):
             """
             ToDo: WP2 and WP3 should update this part to match there requirements.
             """
-            keys = ['panel', 'gender', 'trio', 'experiment', 'project']
+            keys = ['panel', 'sex', 'trio', 'experiment', 'project']
             return "%".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
         elif "wp3":
             return "wp3"
