@@ -1,4 +1,4 @@
 Workpackage,Experiment,Analysis,Sample_ID,Description
-wp3,TE42,te,D97-00415,panel:BIN%gender:M%trio:NA%experiment:42%project:NA
-wp3,TE42,te,D97-00388,panel:CAD%gender:K%trio:NA%experiment:42%project:NA
-wp3,TE42,te,D98-05407,panel:EXO%gender:K%trio:CGU-2018-16%experiment:42%project:NA
+wp3,TE42,te,D97-00415,panel:BIN%sex:M%trio:NA%experiment:42%project:NA
+wp3,TE42,te,D97-00388,panel:CAD%sex:K%trio:NA%experiment:42%project:NA
+wp3,TE42,te,D98-05407,panel:EXO%sex:K%trio:NA%experiment:42%project:CGU-2018-16

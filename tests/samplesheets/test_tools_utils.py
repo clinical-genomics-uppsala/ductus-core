@@ -498,7 +498,7 @@ class TestUtils(unittest.TestCase):
                                 '20210206',
                                 "te",
                                 'EXO_K_CGU-2018-16_42_NA',
-                                "D98-05407,D98-05407,EXO_K_CGU-2018-16_42_NA,TAATTCCAGC,TAATTCCAGC,ATCGTATTCG,ATCGTATTCG,TE\n",
+                                "D98-05407,D98-05407,EXO_K_NA_42_CGU-2018-16,TAATTCCAGC,TAATTCCAGC,ATCGTATTCG,ATCGTATTCG,TE\n",
                                 True
                             )
         ])
