@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.11.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.10.0...v1.11.0) (2024-05-08)
+
+
+### Features
+
+* update tc key to tumor_content and add documentation ([b45f152](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/b45f152573aa0e47d97395e708a08b9da205e8ad))
+
+
+### Bug Fixes
+
+* update wp3 sample sheet key ([40222e0](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/40222e05633ef368d5fa061b98d9f04fcdf20022))
+
 ## [1.10.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.9.0...v1.10.0) (2024-02-02)
 
 
