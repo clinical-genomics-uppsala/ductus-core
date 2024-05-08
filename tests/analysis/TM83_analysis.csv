@@ -1,7 +1,7 @@
 Workpackage,Experiment,Analysis,Sample_ID,Description
-wp2,TM83,tm,56063,panel:NA%gender:NA%trio:NA%experiment:83%project:CGU-2020-12
-wp2,TM83,tm,FD99-00078,panel:NA%gender:NA%trio:NA%experiment:83%project:CGU-2017-5
-wp2,TM83,tm,D99-00574,panel:NA%gender:NA%trio:NA%experiment:83%project:NA
-wp2,TM83,tm,D99-00576,panel:NA%gender:NA%trio:NA%experiment:83%project:NA
-wp2,TM83,tm,D99-00581,panel:NA%gender:NA%trio:NA%experiment:83%project:NA
-wp2,TM83,tm,D99-00586,panel:NA%gender:NA%trio:NA%experiment:83%project:NA
+wp2,TM83,tm,56063,panel:NA%sex:NA%trio:NA%experiment:83%project:CGU-2020-12
+wp2,TM83,tm,FD99-00078,panel:NA%sex:NA%trio:NA%experiment:83%project:CGU-2017-5
+wp2,TM83,tm,D99-00574,panel:NA%sex:NA%trio:NA%experiment:83%project:NA
+wp2,TM83,tm,D99-00576,panel:NA%sex:NA%trio:NA%experiment:83%project:NA
+wp2,TM83,tm,D99-00581,panel:NA%sex:NA%trio:NA%experiment:83%project:NA
+wp2,TM83,tm,D99-00586,panel:NA%sex:NA%trio:NA%experiment:83%project:NA
