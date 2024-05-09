@@ -1,3 +1,4 @@
+import io
 import json
 import tempfile
 import os
@@ -1233,7 +1234,8 @@ class TestUtils(unittest.TestCase):
                 self.assertEqual(generated_lines, expected_lines)
 
     def test_create_analysis_file_from_samplesheet(self):
-        from ductus.tools.utils import create_analysis_file
+        from ductus.tools.utils import create_analysis_file, detect_encoding
+
         self.maxDiff = None
         gms560 = "tests/samplesheets/files/SampleSheet.GMS560.csv"
         gms560_expected_analysis = "tests/analysis/20221025-MS_analysis.csv"
@@ -1250,7 +1252,8 @@ class TestUtils(unittest.TestCase):
             file_created = create_analysis_file(gms560, temp_dir)
             self.assertEqual(open(file_created[0]).read(), open(gms560_expected_analysis).read())
             file_created = create_analysis_file(sera, temp_dir)
-            self.assertEqual(open(file_created[0]).read(), open(sera_expected_analysis).read())
+            self.assertEqual(io.open(file_created[0]).read(),
+                             io.open(sera_expected_analysis, encoding=detect_encoding(sera_expected_analysis)).read())
             file_created = create_analysis_file(tc, temp_dir)
             self.assertEqual(open(file_created[0]).read(), open(tc_expected_analysis).read())
             file_created = create_analysis_file(tm, temp_dir)
