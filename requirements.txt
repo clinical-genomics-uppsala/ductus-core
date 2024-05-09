@@ -1,3 +1,4 @@
 pycodestyle==2.6.0
 pytest
 freezegun
+cchardet

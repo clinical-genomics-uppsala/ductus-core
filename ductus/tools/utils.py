@@ -1,9 +1,19 @@
+import cchardet
 import datetime
 import glob
+import io
 import json
 import os
 import re
 import logging
+
+
+def detect_encoding(file_path):
+    with open(file_path, 'rb') as file:
+        raw_data = file.read()
+    result = cchardet.detect(raw_data)
+    encoding = result['encoding']
+    return encoding
 
 
 def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, project, prep):
@@ -141,7 +151,7 @@ def create_analysis_file(samplesheet, outputfolder):
             """
             header = None
             data = None
-            with open(index_file) as reader:
+            with io.open(index_file, mode="r", encoding=detect_encoding(index_file)) as reader:
                 header = next(reader).rstrip().replace(",", ";")
                 if "Experimentnamn" not in header:
                     raise Exception(f"No head found in {index_file}")
