@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.11.2](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.11.1...v1.11.2) (2024-05-09)
+
+
+### Bug Fixes
+
+* add missing library ([9ed96c3](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/9ed96c318a71f809e4e29764ea9a4b175d7ca89f))
+
 ### [1.11.1](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.11.0...v1.11.1) (2024-05-09)
 
 
