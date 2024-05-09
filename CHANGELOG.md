@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.11.1](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.11.0...v1.11.1) (2024-05-09)
+
+
+### Bug Fixes
+
+* read file from windows with special characters ([6431ea3](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/6431ea3f12afc87762e6b54cea02832af6a80320))
+
 ## [1.11.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.10.0...v1.11.0) (2024-05-08)
 
 
