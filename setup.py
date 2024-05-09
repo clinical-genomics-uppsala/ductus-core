@@ -11,7 +11,9 @@ setup(
     description="Helper classes for the ductus project",
     long_description=read_file('README.md'),
     keywords='bioinformatics',
-    install_requires=[],
+    install_requires=[
+        'cchardet'
+    ],
     author='IGP Platform, Uppsala University',
     packages=find_packages(),
     include_package_data=True
