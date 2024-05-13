@@ -157,7 +157,10 @@ def create_analysis_file(samplesheet, outputfolder):
                     raise Exception(f"No head found in {index_file}")
                 for row in reader:
                     if sample in row:
-                        data = row.rstrip().replace(",", ";")
+                        data = row.rstrip().replace(",", ";").split(";")
+                        data[0] = data[0].replace('_', '-')
+                        data = ";".join(data)
+                        break
             if data is None:
                 raise Exception("Couldn't match sample with index file")
             else:
@@ -185,6 +188,7 @@ def create_analysis_file(samplesheet, outputfolder):
             return "%".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
         elif "wp3":
             return "wp3"
+
     s_data = extract_analysis_information(samplesheet)
     files_created = []
     for wp in s_data:
@@ -392,7 +396,7 @@ def extract_analysis_information(samplesheet):
                     else:
                         if tso500:
                             data["wp1"]['klinik'].append((sample_id,
-                                                          sample_experiment,
+                                                          sample_experiment.replace('_', '-'),
                                                           date_string,
                                                           "tso500",
                                                           description,
@@ -400,7 +404,7 @@ def extract_analysis_information(samplesheet):
                                                           old_format))
                         elif sera:
                             data["wp1"]['klinik'].append((sample_id,
-                                                          sample_experiment,
+                                                          sample_experiment.replace('_', '-'),
                                                           date_string,
                                                           "sera",
                                                           description,
@@ -408,7 +412,7 @@ def extract_analysis_information(samplesheet):
                                                           old_format))
                         elif gms560:
                             data["wp1"]['klinik'].append((sample_id,
-                                                          sample_experiment,
+                                                          sample_experiment.replace('_', '-'),
                                                           date_string,
                                                           "gms560",
                                                           description,

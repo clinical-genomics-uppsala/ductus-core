@@ -21,7 +21,7 @@ class TestUtils(unittest.TestCase):
 
         self.assertEqual("[Header]\n"
                          "Local Run Manager Analysis Id,56056\n"
-                         "Experiment Name,20210203-LU\n"
+                         "Experiment Name,20210203_LU\n"
                          "Date,2021-02-04\n"
                          "Module,GenerateFASTQ - 2.0.0\n"
                          "Workflow,GenerateFASTQ\n"
@@ -220,7 +220,7 @@ class TestUtils(unittest.TestCase):
         self.assertEqual("[Header],,,,,,,,,,\n"
                          "IEMFileVersion,4,,,,,,,,,\n"
                          "Investigator Name,,,,,,,,,,\n"
-                         "Experiment Name,20221025-MS,,,,,,,,,\n"
+                         "Experiment Name,20221025_MS,,,,,,,,,\n"
                          "Date,20221025,,,,,,,,,\n"
                          "Project,New Project,,,,,,,,,\n"
                          "Workflow,GenerateFASTQ,,,,,,,,,\n"
