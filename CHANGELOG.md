@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.11.3](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.11.2...v1.11.3) (2024-05-13)
+
+
+### Bug Fixes
+
+* handle old project format wp1 ([3b014b3](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/3b014b3dad75893b621b8da047cec135594570c5))
+* minor change to make old sera format compatible with new ductus ([efaeec0](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/efaeec03448880f6db819e82a05e94db00953b16))
+
 ### [1.11.2](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.11.1...v1.11.2) (2024-05-09)
 
 
