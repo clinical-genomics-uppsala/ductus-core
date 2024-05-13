@@ -1,7 +1,7 @@
 Experimentnamn;Prov;Barcode_I7;Barcode_I5;Design;Refseq;Cutadapt_prefix;Metod;Typ;Vavnad
-20210203-LU;97-181;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
-20210203-LU;97-217;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
-20210203-LU;97-218;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
-20210203-LU;97-219;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
-20210203-LU;97-220;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
-20210203-LU;97-221;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
+20210203_LU;97-181;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
+20210203_LU;97-217;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
+20210203_LU;97-218;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
+20210203_LU;97-219;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
+20210203_LU;97-220;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
+20210203_LU;97-221;AGCAGGAA;false;16051-1456135206;DiagnosticPanel_Lung_20160222;false;HaloPlex;ffpe;lung
