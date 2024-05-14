@@ -11,6 +11,11 @@ setup(
     description="Helper classes for the ductus project",
     long_description=read_file('README.md'),
     keywords='bioinformatics',
+    entry_points={
+        'console_scripts': [
+            'rsync.py=ductus.scripts.rsync'
+        ]
+    },
     install_requires=[
         'cchardet'
     ],
