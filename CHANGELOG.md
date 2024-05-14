@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.11.3...v1.12.0) (2024-05-14)
+
+
+### Features
+
+* setup executable script (rsync.py) ([91a95c0](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/91a95c046662762a791ea9c89bfd4df295d0995b))
+
 ### [1.11.3](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.11.2...v1.11.3) (2024-05-13)
 
 
