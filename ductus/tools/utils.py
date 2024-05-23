@@ -143,9 +143,9 @@ def create_analysis_file(samplesheet, outputfolder):
         is separated by '%'. Ex K1:V1%K2:V2%K3:V3
         """
         index_data = None
-        if index_file and analysis == "sera":
+        if index_file and analysis == "haloplex-idt":
             """
-            If an index file has been provided this is a sera analysis which will need this file
+            If an index file has been provided this is a haloplex-idt analysis which will need this file
             in later analysis steps. It will therefore be saved to description, as a header and
             data section.
             """
