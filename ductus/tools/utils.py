@@ -406,7 +406,7 @@ def extract_analysis_information(samplesheet):
                             data["wp1"]['klinik'].append((sample_id,
                                                           sample_experiment.replace('_', '-'),
                                                           date_string,
-                                                          "sera",
+                                                          "haloplex-idt",
                                                           description,
                                                           row,
                                                           old_format))
