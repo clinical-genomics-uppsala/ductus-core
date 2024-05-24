@@ -39,12 +39,12 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('97-181', '20210203-LU', '20210204', 'sera', '', '97-181,97-181,,ACCTCCAA,E03,\n', True),
-                         ('97-217', '20210203-LU', '20210204', 'sera', '', '97-217,97-217,,GCGAGTAA,F03,\n', True),
-                         ('97-218', '20210203-LU', '20210204', 'sera', '', '97-218,97-218,,ACTATGCA,G03,\n', True),
-                         ('97-219', '20210203-LU', '20210204', 'sera', '', '97-219,97-219,,CGGATTGC,H03,\n', True),
-                         ('97-220', '20210203-LU', '20210204', 'sera', '', '97-220,97-220,,AACTCACC,A04,\n', True),
-                         ('97-221', '20210203-LU', '20210204', 'sera', '', '97-221,97-221,,GCTAACGA,B04,\n', True)])
+                         [('97-181', '20210203-LU', '20210204', 'haloplex-idt', '', '97-181,97-181,,ACCTCCAA,E03,\n', True),
+                         ('97-217', '20210203-LU', '20210204', 'haloplex-idt', '', '97-217,97-217,,GCGAGTAA,F03,\n', True),
+                         ('97-218', '20210203-LU', '20210204', 'haloplex-idt', '', '97-218,97-218,,ACTATGCA,G03,\n', True),
+                         ('97-219', '20210203-LU', '20210204', 'haloplex-idt', '', '97-219,97-219,,CGGATTGC,H03,\n', True),
+                         ('97-220', '20210203-LU', '20210204', 'haloplex-idt', '', '97-220,97-220,,AACTCACC,A04,\n', True),
+                         ('97-221', '20210203-LU', '20210204', 'haloplex-idt', '', '97-221,97-221,,GCTAACGA,B04,\n', True)])
 
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
@@ -78,8 +78,8 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('20-2500', '20201221-LU', "20201223", 'sera', '', '20-2500,20-2500,CACTTCGA,D01,,,\n', True),
-                         ('20-2501', '20201221-LU', "20201223", 'sera', '', '20-2501,20-2501,GCCAAGAC,E01,,,\n', True)])
+                         [('20-2500', '20201221-LU', "20201223", 'haloplex-idt', '', '20-2500,20-2500,CACTTCGA,D01,,,\n', True),
+                         ('20-2501', '20201221-LU', "20201223", 'haloplex-idt', '', '20-2501,20-2501,GCCAAGAC,E01,,,\n', True)])
 
         self.assertEqual(result['wp2']['forskning'], [])
         self.assertEqual(result['wp2']['projekt'], [])
@@ -119,9 +119,9 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp1']['projekt'], [])
         self.assertEqual(result['wp1']['utveckling'], [])
         self.assertEqual(result['wp1']['klinik'],
-                         [('21-399', '20210302-MS', '20210303', 'sera', '',
+                         [('21-399', '20210302-MS', '20210303', 'haloplex-idt', '',
                            '21-399,21-399,,,D701,ATTACTCG,D502,ATAGAGGC,,\n', True),
-                         ('21-417', '20210302-MS', '20210303', 'sera', '',
+                         ('21-417', '20210302-MS', '20210303', 'haloplex-idt', '',
                           '21-417,21-417,,,D702,TCCGGAGA,D502,ATAGAGGC,,\n', True)])
 
         self.assertEqual(result['wp2']['forskning'], [])
@@ -560,32 +560,32 @@ class TestUtils(unittest.TestCase):
         ])
 
     def test_contains_haloplex(self):
-        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "haloplex-idt"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "gms560"))
 
     def test_contains_klinik_haloplex(self):
-        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera", "klinik"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "haloplex-idt", "klinik"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500", "klinik"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "gms560", "klinik"))
 
     def test_contains_tso500(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "tso500"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "sera"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "haloplex-idt"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tso500.csv", "wp1", "gms560"))
 
     def test_contains_gms560(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "gms560"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "sera"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "haloplex-idt"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.GMS560.csv", "wp1", "tso500"))
 
     def test_contains_abl(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.abl.csv", "wp2", "abl"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.abl.csv", "wp1", "sera"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.abl.csv", "wp1", "haloplex-idt"))
 
     def test_contains_tm(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp2", "tm"))
-        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp1", "sera"))
+        self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tm.csv", "wp1", "haloplex-idt"))
 
     def test_contains_te(self):
         self.assertTrue(contains("tests/samplesheets/files/SampleSheet.te.csv", "wp3", "te"))
@@ -598,12 +598,12 @@ class TestUtils(unittest.TestCase):
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.tc.csv", "wp3", "te"))
 
     def test_get_info_types_haloplex(self):
-        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "sera"))
+        self.assertTrue(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "haloplex-idt"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "tso500"))
         self.assertFalse(contains("tests/samplesheets/files/SampleSheet.haloplex.csv", "wp1", "gms560"))
 
     def test_info_types(self):
-        self.assertEqual(get_project_types("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"), {'klinik', })
+        self.assertEqual(get_project_types("wp1", "haloplex-idt", "tests/samplesheets/files/SampleSheet.haloplex.csv"), {'klinik', })
         self.assertEqual(get_project_types("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
         self.assertEqual(get_project_types("wp1", "gms560", "tests/samplesheets/files/SampleSheet.haloplex.csv"), set())
         self.assertEqual(get_project_types("wp2", "abl", "tests/samplesheets/files/SampleSheet.abl.csv"), {'klinik'})
@@ -613,13 +613,13 @@ class TestUtils(unittest.TestCase):
 
     def test_get_project_and_experiment(self):
         self.assertEqual({("klinik", "20210203-LU")},
-                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+                         get_project_and_experiment("wp1", "haloplex-idt", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual(set(),
                          get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual({("klinik", "20201221-LU")},
-                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.swift.mn.csv"))
+                         get_project_and_experiment("wp1", "haloplex-idt", "tests/samplesheets/files/SampleSheet.swift.mn.csv"))
         self.assertEqual({("klinik", "20210302-MS")},
-                         get_project_and_experiment("wp1", "sera", "tests/samplesheets/files/SampleSheet.swift.m0.csv"))
+                         get_project_and_experiment("wp1", "haloplex-idt", "tests/samplesheets/files/SampleSheet.swift.m0.csv"))
         self.assertEqual({("klinik", "20190409-LM-GL-HN")},
                          get_project_and_experiment("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual({("klinik", "20221025-MS")},
@@ -644,7 +644,7 @@ class TestUtils(unittest.TestCase):
                 ('97-220', 'klinik', '20210203-LU', '20210204', 'LU', 'unknown'),
                 ('97-221', 'klinik', '20210203-LU', '20210204', 'LU', 'unknown')
             ],
-            get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+            get_samples_and_info("wp1", "haloplex-idt", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual(
@@ -655,7 +655,7 @@ class TestUtils(unittest.TestCase):
                 ('21-33', 'klinik', '20190409-LM-GL-HN', '20190409', 'LM-GL-HN', 'DNA')
             ],
             get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.tso500.csv"))
-        self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.tso500.csv"))
+        self.assertEqual([], get_samples_and_info("wp1", "haloplex-idt", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual(
             [
@@ -666,7 +666,7 @@ class TestUtils(unittest.TestCase):
             ],
             get_samples_and_info("wp1", "gms560", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([], get_samples_and_info("wp1", "tso500", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
-        self.assertEqual([], get_samples_and_info("wp1", "sera", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+        self.assertEqual([], get_samples_and_info("wp1", "haloplex-idt", "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual(
             [
                 ('R99-00277', 'klinik', 'BCRABL42', '20230324', 'unknown', 'RNA'),
@@ -701,19 +701,19 @@ class TestUtils(unittest.TestCase):
 
     def test_get_samples(self):
         self.assertEqual(["97-181", "97-217", "97-218", "97-219", "97-220", "97-221"],
-                         get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+                         get_samples("wp1", "klinik", 'haloplex-idt', "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual([],
-                         get_samples("wp1", "utveckling", 'sera', "tests/samplesheets/files/SampleSheet.haloplex.csv"))
+                         get_samples("wp1", "utveckling", 'haloplex-idt', "tests/samplesheets/files/SampleSheet.haloplex.csv"))
         self.assertEqual(['R21-2', 'R21-3', 'R21-33', '21-33'],
                          get_samples("wp1", "klinik", 'tso500', "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual([],
-                         get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.tso500.csv"))
+                         get_samples("wp1", "klinik", 'haloplex-idt', "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual([],
                          get_samples("wp1", "klinik", 'gms560', "tests/samplesheets/files/SampleSheet.tso500.csv"))
         self.assertEqual(['22-2427', '22-2428', 'R22-2429', 'R22-2430'],
                          get_samples("wp1", "klinik", 'gms560', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([],
-                         get_samples("wp1", "klinik", 'sera', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
+                         get_samples("wp1", "klinik", 'haloplex-idt', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual([],
                          get_samples("wp1", "klinik", 'tso500', "tests/samplesheets/files/SampleSheet.GMS560.csv"))
         self.assertEqual(['R99-00277', 'R99-00255'],
@@ -729,7 +729,7 @@ class TestUtils(unittest.TestCase):
         self.maxDiff = None
         self.assertCountEqual(generate_elastic_statistics("tests/samplesheets/files/SampleSheet.haloplex.csv",
                                                           "wp1",
-                                                          "sera",
+                                                          "haloplex-idt",
                                                           'haloplex',
                                                           "klinik",
                                                           "ffpe"),
@@ -809,7 +809,7 @@ class TestUtils(unittest.TestCase):
                               )
         self.assertCountEqual([], generate_elastic_statistics("tests/samplesheets/files/SampleSheet.haloplex.csv",
                                                               "wp1",
-                                                              "sera",
+                                                              "haloplex-idt",
                                                               "haloplex",
                                                               "utveckling",
                                                               'ffpe'))
@@ -870,7 +870,7 @@ class TestUtils(unittest.TestCase):
                                                      'FFPE'))
         self.assertCountEqual([], generate_elastic_statistics("tests/samplesheets/files/SampleSheet.tso500.csv",
                                                               "wp1",
-                                                              'sera',
+                                                              'haloplex-idt',
                                                               'TSO500',
                                                               "klinik",
                                                               'plasma'))
@@ -932,7 +932,7 @@ class TestUtils(unittest.TestCase):
                                                      'FFPE'))
         self.assertCountEqual([], generate_elastic_statistics("tests/samplesheets/files/SampleSheet.GMS560.csv",
                                                               "wp1",
-                                                              'sera',
+                                                              'haloplex-idt',
                                                               'gms560',
                                                               "klinik",
                                                               'plasma'))
