@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.12.0...v1.13.0) (2024-05-24)
+
+
+### Features
+
+* change method name from sera to haloplex-idt ([5852231](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/5852231de132905144ac3bbb28378c0cc2b22ad0))
+
 ## [1.12.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.11.3...v1.12.0) (2024-05-14)
 
 
