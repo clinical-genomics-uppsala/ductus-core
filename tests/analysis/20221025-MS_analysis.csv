@@ -1,5 +1,5 @@
 Workpackage,Experiment,Analysis,Sample_ID,Description
-wp1,20221025-MS,gms560,22-2427,tumor_content:0.7
-wp1,20221025-MS,gms560,22-2428,tumor_content:0.6
-wp1,20221025-MS,gms560,R22-2429,
-wp1,20221025-MS,gms560,R22-2430,
+wp1,20221025-MS,gms560,22-2427,tumor_content:0.7%type:T
+wp1,20221025-MS,gms560,22-2428,tumor_content:0.6%type:T
+wp1,20221025-MS,gms560,R22-2429,type:R
+wp1,20221025-MS,gms560,R22-2430,type:R

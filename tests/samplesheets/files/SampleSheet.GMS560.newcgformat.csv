@@ -13,8 +13,8 @@ AdapterRead1,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,,,,,,,,,
 AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT,,,,,,,,,
 OverrideCycles,U3N2Y146;I8;I8;U3N2Y146,,,,,,,,,
 [Data],,,,,,,,,,
-Sample_ID,index,index2,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,I5_Index_ID,Project,Description
-20221025-MS_22-2427,CTGATCGT,GCGCATAT,,,,,DNA,xGen_UDI_Index1,tumor_content:0.7
-20221025-MS_22-2428,ACTCTCGA,CTGTACCA,,,,,DNA,xGen_UDI_Index2,tumor_content:0.6
-20221025-MS_R22-2429,TGAGCTAG,GAACGGTT,,,,,RNA,xGen_UDI_Index3,
-20221025-MS_R22-2430,GAGACGAT,ACCGGTTA,,,,,RNA,xGen_UDI_Index4,
+Sample_ID,index,index2,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,Project,I5_Index_ID,Description
+20221025-MS_22-2427,CTGATCGT,GCGCATAT,,,,,DNA,xGen_UDI_Index1,tumor_content:0.7%type:T
+20221025-MS_22-2428,ACTCTCGA,CTGTACCA,,,,,DNA,xGen_UDI_Index2,tumor_content:0.6%type:T
+20221025-MS_R22-2429,TGAGCTAG,GAACGGTT,,,,,RNA,xGen_UDI_Index3,type:R
+20221025-MS_R22-2430,GAGACGAT,ACCGGTTA,,,,,RNA,xGen_UDI_Index4,type:R

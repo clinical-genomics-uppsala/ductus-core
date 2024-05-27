@@ -167,7 +167,7 @@ def create_analysis_file(samplesheet, outputfolder):
                 index_data = f"index_header:{header}%index_data:{data}"
         if "wp1" == wp:
             description = ""
-            if re.match(r"tumor_content:[10]+\.[0-9]+", data):
+            if re.search(r"tumor_content:[10]+\.[0-9]+", data) or re.search(r"type:[TRAU]+", data):
                 """
                 Detect tumor content value. Note that ductus-core moved it to description
                 when parsing the SampleSheet.
@@ -197,7 +197,6 @@ def create_analysis_file(samplesheet, outputfolder):
                 if data:
                     files_created.append(os.path.join(outputfolder, f"{data[0][1]}_analysis.csv"))
                     base_path = os.path.dirname(samplesheet)
-                    print()
                     file = glob.glob(f"{base_path}/*ndex.csv")
                     if len(file) > 0:
                         file = file[0]
@@ -337,6 +336,27 @@ def extract_analysis_information(samplesheet):
                             row = re.sub(r',[0-9.]+$', '', row)
                         else:
                             row = re.sub(r',$', '', row)
+                        if 'project' in header_map and len(columns[header_map['project']].rstrip()) > 0:
+                            if len(description) > 0:
+                                description += "%"
+                            if columns[header_map['project']].lower() == "dna":
+                                description += "type:T"
+                            elif columns[header_map['project']].lower() == "rna":
+                                description += "type:R"
+                            else:
+                                description += "type:U"
+                        elif 'sample_project' in header_map and len(columns[header_map['sample_project']].rstrip()) > 0:
+                            if len(description) > 0:
+                                description += "%"
+                            if columns[header_map['sample_project']].lower() == "dna":
+                                description += "type:T"
+                            elif columns[header_map['sample_project']].lower() == "rna":
+                                description += "type:R"
+                            else:
+                                description += "type:U"
+                        else:
+                            description += "type:U"
+
                         columns = row.split(",")
                         columns[header_map['description']] = columns[header_map['description']].rstrip()
                         if columns[header_map['description']]:
