@@ -167,7 +167,7 @@ def create_analysis_file(samplesheet, outputfolder):
                 index_data = f"index_header:{header}%index_data:{data}"
         if "wp1" == wp:
             description = ""
-            if re.match(r"tumor_content:[10]+\.[0-9]+", data) or re.match(r"type:[TRAU]+", data):
+            if re.search(r"tumor_content:[10]+\.[0-9]+", data) or re.search(r"type:[TRAU]+", data):
                 """
                 Detect tumor content value. Note that ductus-core moved it to description
                 when parsing the SampleSheet.
