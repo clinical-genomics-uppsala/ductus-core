@@ -354,7 +354,7 @@ def extract_analysis_information(samplesheet):
                                 description += "type:R"
                             else:
                                 description += "type:U"
-                        else
+                        else:
                             description += "type:U"
 
                         columns = row.split(",")
