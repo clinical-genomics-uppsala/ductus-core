@@ -345,6 +345,15 @@ def extract_analysis_information(samplesheet):
                                 description += "type:R"
                             else:
                                 description += "type:U"
+                        elif 'sample_project' in header_map and len(columns[header_map['sample_project']].rstrip()) > 0:
+                            if len(description) > 0:
+                                description += "%"
+                            if columns[header_map['sample_project']].lower() == "dna":
+                                description += "type:T"
+                            elif columns[header_map['sample_project']].lower() == "rna":
+                                description += "type:R"
+                            else:
+                                description += "type:U"
                         else:
                             description += "type:U"
 
