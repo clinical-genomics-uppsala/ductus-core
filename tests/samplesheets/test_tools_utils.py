@@ -233,7 +233,7 @@ class TestUtils(unittest.TestCase):
                          "OverrideCycles,U3N2Y146;I8;I8;U3N2Y146,,,,,,,,,\n"
                          "[Data],,,,,,,,,,\n"
                          "Sample_ID,index,index2,Sample_Name,Sample_Plate,Sample_Well,"
-                         "I7_Index_ID,I5_Index_ID,Project,Description,TC\n", result['header'])
+                         "I7_Index_ID,Project,I5_Index_ID,Description,TC\n", result['header'])
 
         self.assertEqual(result['wp1']['forskning'], [])
         self.assertEqual(result['wp1']['projekt'], [])
@@ -245,8 +245,8 @@ class TestUtils(unittest.TestCase):
                                 '20221025-MS',
                                 "20221025",
                                 'gms560',
-                                'tumor_content:0.7',
-                                '22-2427,CTGATCGT,GCGCATAT,,,,,DNA,xGen_UDI_Index1,tumor_content:0.7\n',
+                                'tumor_content:0.7%type:T',
+                                '22-2427,CTGATCGT,GCGCATAT,,,,,DNA,xGen_UDI_Index1,tumor_content:0.7%type:T\n',
                                 True
                             ),
                             (
@@ -254,8 +254,8 @@ class TestUtils(unittest.TestCase):
                                 '20221025-MS',
                                 "20221025",
                                 'gms560',
-                                'tumor_content:0.6',
-                                '22-2428,ACTCTCGA,CTGTACCA,,,,,DNA,xGen_UDI_Index2,tumor_content:0.6\n',
+                                'tumor_content:0.6%type:T',
+                                '22-2428,ACTCTCGA,CTGTACCA,,,,,DNA,xGen_UDI_Index2,tumor_content:0.6%type:T\n',
                                 True
                             ),
                             (
@@ -263,8 +263,8 @@ class TestUtils(unittest.TestCase):
                                 '20221025-MS',
                                 "20221025",
                                 'gms560',
-                                '',
-                                'R22-2429,TGAGCTAG,GAACGGTT,,,,,RNA,xGen_UDI_Index3,\n',
+                                'type:R',
+                                'R22-2429,TGAGCTAG,GAACGGTT,,,,,RNA,xGen_UDI_Index3,type:R\n',
                                 True
                             ),
                             (
@@ -272,8 +272,8 @@ class TestUtils(unittest.TestCase):
                                 '20221025-MS',
                                 "20221025",
                                 'gms560',
-                                '',
-                                'R22-2430,GAGACGAT,ACCGGTTA,,,,,RNA,xGen_UDI_Index4,\n',
+                                'type:R',
+                                'R22-2430,GAGACGAT,ACCGGTTA,,,,,RNA,xGen_UDI_Index4,type:R\n',
                                 True
                             )
                         ])
