@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.14.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.13.0...v1.14.0) (2024-05-27)
+
+
+### Features
+
+* extract type when converting old format to new format ([df9682c](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/df9682ca4b781d7324f4e46651d05caf1c7c4b42))
+
+
+### Bug Fixes
+
+* change match to search ([ad9205c](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/ad9205cd4d5ae7b72cf68ac2a615cb2fc3293d62))
+* handle sample_project ([76d48dd](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/76d48dd6d17c57bc2f95ee19f565188b4d960a47))
+
 ## [1.13.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.12.0...v1.13.0) (2024-05-24)
 
 
