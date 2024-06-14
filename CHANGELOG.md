@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.14.1](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.14.0...v1.14.1) (2024-06-14)
+
+
+### Bug Fixes
+
+* handle gms560 with stuff in description ([6861e98](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/6861e9836ec9a3d44b68c1c18ca1841d65cb888b))
+
 ## [1.14.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.13.0...v1.14.0) (2024-05-27)
 
 
