@@ -328,6 +328,9 @@ def extract_analysis_information(samplesheet):
                         Move tc/tumor_content to description to make it easier to convert old
                         samplesheet to new format. And remove tc column from row.
                         """
+
+                        # existing description will be added later for gms560
+                        description = ""
                         if 'tc' in header_map and len(columns[header_map['tc']].rstrip()) > 0:
                             description = "tumor_content:" + columns[header_map['tc']].rstrip()
                         elif 'tumor_content' in header_map and len(columns[header_map['tc']].rstrip()) > 0:
