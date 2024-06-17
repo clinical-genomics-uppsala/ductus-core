@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.14.2](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.14.1...v1.14.2) (2024-06-17)
+
+
+### Bug Fixes
+
+* set timeout to 0 which is equal to no timeout ([95b4a4d](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/95b4a4daf0e0673944fa93ca836444a20dc1c09e))
+
 ### [1.14.1](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.14.0...v1.14.1) (2024-06-14)
 
 
