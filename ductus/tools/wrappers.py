@@ -191,7 +191,7 @@ class Rsync:
 
     def __init__(self, from_path, to_path, remote_address=None, user=None, from_is_remote=1, repeat=1, identity_file=None,
                  checksum_validate=False, preserve_permissions=True, verbose=False, ignore_ping=False, local_sync=False,
-                 timeout=1200):
+                 timeout=0):
         """ :param from_path: where data should be transferred from
             :param to_path: where data should be transferred to
             :param remote_address: server address that should be used
