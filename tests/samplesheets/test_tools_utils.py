@@ -1255,8 +1255,10 @@ class TestUtils(unittest.TestCase):
                 self.assertEqual(created.read(), expected.read())
 
             file_created = create_analysis_file(sera, temp_dir)
-            with io.open(file_created[0]) as created, io.open(sera_expected_analysis, encoding=detect_encoding(sera_expected_analysis)) as expected:
-                self.assertEqual(created.read(),expected.read())
+            with io.open(file_created[0]) as created, io.open(sera_expected_analysis,
+                                                              encoding=detect_encoding(sera_expected_analysis)
+                                                              ) as expected:
+                self.assertEqual(created.read(), expected.read())
 
             file_created = create_analysis_file(tc, temp_dir)
             with open(file_created[0]) as created, open(tc_expected_analysis) as expected:
@@ -1267,7 +1269,7 @@ class TestUtils(unittest.TestCase):
                 self.assertEqual(created.read(), expected.read())
 
             file_created = create_analysis_file(te, temp_dir)
-            with open(file_created[0]) as created, open(te_expected_analysis) as expected: 
+            with open(file_created[0]) as created, open(te_expected_analysis) as expected:
                 self.assertEqual(created.read(), expected.read())
 
     def test_combine_sample_and_files(self):
@@ -1334,19 +1336,17 @@ class TestUtils(unittest.TestCase):
                 {'experiment': 'E3', 'path': 'path/E3_S3_test_f.R2.fastq.gz', 'sample': 'S3'}]})
 
     def test_filter_experiment_false(self):
-        with open('tests/samplesheets/files/SampleSheet.te.csv') as file:
-            bioinfo_sample_sheet = file.read()
+        bioinfo_sample_sheet = 'tests/samplesheets/files/SampleSheet.te.csv'
         self.assertFalse(filter_experiment(bioinfo_sample_sheet))
 
     def test_filter_experiment_true(self):
-        with open('tests/samplesheets/files/SampleSheet.ah.csv') as file:
-            bioinfo_sample_sheet = file.read()
+        bioinfo_sample_sheet = 'tests/samplesheets/files/SampleSheet.ah.csv'
         self.assertTrue(filter_experiment(bioinfo_sample_sheet))
 
     def test_filter_lymphotrack(self):
-        with open('tests/samplesheets/files/SampleSheet.lymphotrack.csv') as file:
-            lympho_sample_sheet = file.read()
+        lympho_sample_sheet = 'tests/samplesheets/files/SampleSheet.lymphotrack.csv'
         self.assertTrue(filter_experiment(lympho_sample_sheet))
+
 
 if __name__ == '__main__':
     unittest.main()
