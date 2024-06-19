@@ -1,0 +1,16 @@
+[Header]
+Local Run Manager Analysis Id,9009
+Experiment Name,AH99
+Date,2024-06-14
+Module,GenerateFASTQ - 3.1.0
+Workflow,GenerateFASTQ
+Library Prep Kit,Custom
+Index Kit,Custom
+Chemistry,Amplicon
+[Reads]
+151
+151
+[Settings]
+[Data]
+Sample_ID,Sample_Name,Description,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project
+R24-01000,R24-01000,NA_NA_NA_NA_NA,CTCTCTAC,CTCTCTAC,ATGACACG,ATGACACG,AH
