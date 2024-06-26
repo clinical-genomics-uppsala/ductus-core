@@ -11,6 +11,7 @@ from ductus.tools.utils import get_samples
 from ductus.tools.utils import get_samples_and_info
 from ductus.tools.utils import generate_elastic_statistics
 from ductus.tools.utils import generate_elastic_statistics_from_api_data
+from ductus.tools.utils import filter_experiment
 from freezegun import freeze_time
 
 
@@ -1132,7 +1133,9 @@ class TestUtils(unittest.TestCase):
     @freeze_time("2023-02-01 12:00:00")
     def test_generate_elastic_statistics_from_api(self):
         self.maxDiff = None
-        data = json.load(open("tests/samplesheets/files/samples_and_settings_gms560.json"))
+
+        with open("tests/samplesheets/files/samples_and_settings_gms560.json") as samples_and_settings_gms560:
+            data = json.load(samples_and_settings_gms560)
         self.assertEqual(generate_elastic_statistics_from_api_data(data),
                          [
                                 {
@@ -1200,8 +1203,7 @@ class TestUtils(unittest.TestCase):
 
         for old_file in old_format:
             match_old_format_only = is_old_ductus_format(old_file)
-            if not match_old_format_only:
-                print(old_file)
+
             self.assertTrue(match_old_format_only)
 
         new_format = [
@@ -1215,8 +1217,7 @@ class TestUtils(unittest.TestCase):
 
         for new_file in new_format:
             match_old_format_only = is_old_ductus_format(new_file)
-            if match_old_format_only:
-                print(new_file)
+
             self.assertFalse(match_old_format_only)
 
     def test_convert_old_cgu_format_to_new(self):
@@ -1250,16 +1251,26 @@ class TestUtils(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp_dir:
             file_created = create_analysis_file(gms560, temp_dir)
-            self.assertEqual(open(file_created[0]).read(), open(gms560_expected_analysis).read())
+            with open(file_created[0]) as created, open(gms560_expected_analysis) as expected:
+                self.assertEqual(created.read(), expected.read())
+
             file_created = create_analysis_file(sera, temp_dir)
-            self.assertEqual(io.open(file_created[0]).read(),
-                             io.open(sera_expected_analysis, encoding=detect_encoding(sera_expected_analysis)).read())
+            with io.open(file_created[0]) as created, io.open(sera_expected_analysis,
+                                                              encoding=detect_encoding(sera_expected_analysis)
+                                                              ) as expected:
+                self.assertEqual(created.read(), expected.read())
+
             file_created = create_analysis_file(tc, temp_dir)
-            self.assertEqual(open(file_created[0]).read(), open(tc_expected_analysis).read())
+            with open(file_created[0]) as created, open(tc_expected_analysis) as expected:
+                self.assertEqual(created.read(), expected.read())
+
             file_created = create_analysis_file(tm, temp_dir)
-            self.assertEqual(open(file_created[0]).read(), open(tm_expected_analysis).read())
+            with open(file_created[0]) as created, open(tm_expected_analysis) as expected:
+                self.assertEqual(created.read(), expected.read())
+
             file_created = create_analysis_file(te, temp_dir)
-            self.assertEqual(open(file_created[0]).read(), open(te_expected_analysis).read())
+            with open(file_created[0]) as created, open(te_expected_analysis) as expected:
+                self.assertEqual(created.read(), expected.read())
 
     def test_combine_sample_and_files(self):
         from ductus.tools.utils import combine_files_with_samples
@@ -1323,6 +1334,18 @@ class TestUtils(unittest.TestCase):
                 {'experiment': 'E3', 'path': 'path/E3_S3_test_f1.R2.fastq.gz', 'sample': 'S3'},
                 {'experiment': 'E3', 'path': 'path/E3_S3_test_f2.R1.fastq.gz', 'sample': 'S3'},
                 {'experiment': 'E3', 'path': 'path/E3_S3_test_f.R2.fastq.gz', 'sample': 'S3'}]})
+
+    def test_filter_experiment_false(self):
+        bioinfo_sample_sheet = 'tests/samplesheets/files/SampleSheet.te.csv'
+        self.assertFalse(filter_experiment(bioinfo_sample_sheet))
+
+    def test_filter_experiment_true(self):
+        bioinfo_sample_sheet = 'tests/samplesheets/files/SampleSheet.ah.csv'
+        self.assertTrue(filter_experiment(bioinfo_sample_sheet))
+
+    def test_filter_lymphotrack(self):
+        lympho_sample_sheet = 'tests/samplesheets/files/SampleSheet.lymphotrack.csv'
+        self.assertTrue(filter_experiment(lympho_sample_sheet))
 
 
 if __name__ == '__main__':
