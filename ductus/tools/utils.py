@@ -484,17 +484,19 @@ def extract_wp_and_typo(samplesheet):
         return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
 
 
-def combine_files_with_samples(sample_list, file_list):
+def combine_files_with_samples(sample_list, file_list, force_paired_sequence_files=False):
     """
-        The function takes two inputs:
+        The function takes three inputs:
          - a list of tuples, containing sample id and experiment id
          - a list of files
+         - a boolean indicating whether the function should fail if the samples do not contain paired reads
 
          It will attempt to match files to the provided sample/experiment
          information and return a new list of tuples containing (sample_id, experiment_id, file).
          If a file can't be matched to a sample, an exception will be raised. If a
-         sample isn't assigned any files, an exception will be raised. A warning will
-         be generated if a sample doesn't have an even number of files assigned."
+         sample isn't assigned any files, an exception will be raised. A warning will be 
+         generated if a sample does not have an even number of files assigned. If 
+         force_paired_sequence_files is set to true, the function will fail instead.
 
          The expected file format is either experiment-id_sample-id or just sample-id
     """
@@ -520,8 +522,12 @@ def combine_files_with_samples(sample_list, file_list):
             logging.debug(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
             raise Exception(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
         elif len(sample_dict[sample]['file_list']) % 2 != 0:
-            logging.warning(f"Un-even number of fastq files found for sample {sample}, "
-                            f"{sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
+            if force_paired_sequence_files:
+                raise Exception(f"Un-even number of fastq files found for sample {sample}")
+            else:
+                logging.warning(f"Un-even number of fastq files found for sample {sample}, "
+                                f"{sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
+            
         for f in sample_dict[sample]['file_list']:
             result_list.append((sample, sample_dict[sample]['experiment_id'], f))
     return result_list
