@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.15.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.14.2...v1.15.0) (2024-07-02)
+
+
+### Features
+
+* Filter out experiments - processing ([44fcf2c](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/44fcf2c11027edb6ef9bfcfe6e26a2f59a6e9a09))
+* make it possible to force paired reads when combining samples and fastq files ([be02866](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/be028665b620b3aacd0a5ef60dac74c2bb2e7baa))
+
+
+### Bug Fixes
+
+* Use path to file instead of string. ([4d1ddb5](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/4d1ddb585792a173d2e4fe93b983816c90552ea3))
+
 ### [1.14.2](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.14.1...v1.14.2) (2024-06-17)
 
 
