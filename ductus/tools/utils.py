@@ -494,8 +494,8 @@ def combine_files_with_samples(sample_list, file_list, force_paired_sequence_fil
          It will attempt to match files to the provided sample/experiment
          information and return a new list of tuples containing (sample_id, experiment_id, file).
          If a file can't be matched to a sample, an exception will be raised. If a
-         sample isn't assigned any files, an exception will be raised. A warning will be 
-         generated if a sample does not have an even number of files assigned. If 
+         sample isn't assigned any files, an exception will be raised. A warning will be
+         generated if a sample does not have an even number of files assigned. If
          force_paired_sequence_files is set to true, the function will fail instead.
 
          The expected file format is either experiment-id_sample-id or just sample-id
@@ -527,7 +527,6 @@ def combine_files_with_samples(sample_list, file_list, force_paired_sequence_fil
             else:
                 logging.warning(f"Un-even number of fastq files found for sample {sample}, "
                                 f"{sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
-            
         for f in sample_dict[sample]['file_list']:
             result_list.append((sample, sample_dict[sample]['experiment_id'], f))
     return result_list
