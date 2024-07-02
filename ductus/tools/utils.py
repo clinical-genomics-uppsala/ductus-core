@@ -34,7 +34,7 @@ def generate_elastic_statistics(samplesheet, workpackage, tool, analysis, projec
                   "experiment.sample": d[0],
                   "experiment.project": d[1]
                 }))
-    print(samples)
+
     return samples
 
 
@@ -484,17 +484,19 @@ def extract_wp_and_typo(samplesheet):
         return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
 
 
-def combine_files_with_samples(sample_list, file_list):
+def combine_files_with_samples(sample_list, file_list, force_paired_sequence_files=False):
     """
-        The function takes two inputs:
+        The function takes three inputs:
          - a list of tuples, containing sample id and experiment id
          - a list of files
+         - a boolean indicating whether the function should fail if the samples do not contain paired reads
 
          It will attempt to match files to the provided sample/experiment
          information and return a new list of tuples containing (sample_id, experiment_id, file).
          If a file can't be matched to a sample, an exception will be raised. If a
-         sample isn't assigned any files, an exception will be raised. A warning will
-         be generated if a sample doesn't have an even number of files assigned."
+         sample isn't assigned any files, an exception will be raised. A warning will be
+         generated if a sample does not have an even number of files assigned. If
+         force_paired_sequence_files is set to true, the function will fail instead.
 
          The expected file format is either experiment-id_sample-id or just sample-id
     """
@@ -517,11 +519,14 @@ def combine_files_with_samples(sample_list, file_list):
     result_list = []
     for sample in sample_dict:
         if not sample_dict[sample]['file_list']:
-            logging.error(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
+            logging.debug(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
             raise Exception(f"No fastq files found for {sample}, {sample_dict[sample]['experiment_id']}")
         elif len(sample_dict[sample]['file_list']) % 2 != 0:
-            logging.warning(f"Un-even number of fastq files found for sample {sample}, "
-                            f"{sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
+            if force_paired_sequence_files:
+                raise Exception(f"Un-even number of fastq files found for sample {sample}")
+            else:
+                logging.warning(f"Un-even number of fastq files found for sample {sample}, "
+                                f"{sample_dict[sample]['experiment_id']}, files {sample_dict[sample]['file_list']}")
         for f in sample_dict[sample]['file_list']:
             result_list.append((sample, sample_dict[sample]['experiment_id'], f))
     return result_list
@@ -529,3 +534,35 @@ def combine_files_with_samples(sample_list, file_list):
 
 def create_json_update_fastq(sample_list, operation='add'):
     return {operation: list(map(lambda info: dict(zip(('sample', 'experiment', 'path'), info)), sample_list))}
+
+
+def filter_experiment(sample_sheet_file):
+    """
+        This function uses a path to a bioinformatic samples sheet and read it as a string to sort out the experiment name
+        for the current run being processed. The file will be converted to a list to separate rows in
+        to distinct items. A list of known patterns is provided inside the function and each
+        row from the sample sheet will be compared with all known patterns. If a match is found the
+        function will return True and if no mathc was found the return value will be False.
+        In further processing this means that a return value equal to False should continue
+        the processing of the current run and that a return value of True should end the processing.
+        param sample_sheet_string: string
+        return: boolean
+    """
+    with open(sample_sheet_file) as file:
+        sample_sheet_list = file.readlines()
+
+    filter_out = [".*[Ll]ymphotrack.*",
+                  "DC",
+                  "AH",
+                  ]
+    experiment_match = []
+    for exp in filter_out:
+        experiment_name = r'^[Ee]xperiment [Nn]ame,{}'.format(exp)
+        pattern = re.compile(experiment_name)
+        experiment_match = experiment_match + list(filter(pattern.match, sample_sheet_list))
+
+    if not experiment_match:
+        # No match will give an empty list.
+        return False
+    else:
+        return True
