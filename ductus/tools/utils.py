@@ -156,8 +156,8 @@ def create_analysis_file(samplesheet, outputfolder):
                 if "Experimentnamn" not in header:
                     raise Exception(f"No head found in {index_file}")
                 for row in reader:
-                    if sample in row:
-                        data = row.rstrip().replace(",", ";").split(";")
+                    data = row.rstrip().replace(",", ";").split(";")
+                    if sample in data:
                         data[0] = data[0].replace('_', '-')
                         data = ";".join(data)
                         break
