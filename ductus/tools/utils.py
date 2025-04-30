@@ -566,3 +566,53 @@ def filter_experiment(sample_sheet_file):
         return False
     else:
         return True
+    
+
+def get_no_expected_fastqs(sample_sheet_file, file_list):
+    """
+        This function uses the information in a sample sheet to calculate the expected
+        number of fastq-files that should be transferred from the instrument to
+        the hospital file area. It uses the lane information available in the sample sheet, 
+        i.e. this is only applicable for sample sheet version 2. The number of expected
+        fastq-files is compared to the length of a list of files generated with the expression
+        glob.glob("<% ctx(fastq_files_path) %>/**/*.fastq.gz", recursive=True). 
+
+        - The function should return True, i.e. continue processing without any further
+        checks, if the sample sheet is v1. 
+
+        - If the sample sheet is detected as version 2 the expected number of fastq-files 
+        will be calculated and compared to the list of files. If the expected number of
+        files is found the return value us True, 
+        otherwise false (to enable retry until all expected files are transferred).
+        
+        param sample_sheet_file: string
+        param file_list: list
+        return: boolean
+    """
+    
+    if is_old_ductus_format(sample_sheet_file):
+        return True
+    else:
+        with open(sample_sheet_file) as file:
+            line = file.readline()
+            while not line.startswith("Lane,"):
+                line = file.readline()
+            
+            nr_of_samples = 0
+            lane_count = []
+            line = file.readline()
+            while line.startswith(("1,", "2,", "3,", "4,", "5,", "6,", "7,", "8,")):
+                nr_of_samples += 1
+                if line.split(",")[0] not in lane_count:
+                    lane_count.append(line.split(",")[0])
+                line = file.readline()
+              
+        expected_undetermined = len(lane_count)
+        expected_fastqs = 2*(expected_undetermined + nr_of_samples)
+
+        if expected_fastqs == len(file_list):
+            return True
+        else:
+            return False
+            
+    

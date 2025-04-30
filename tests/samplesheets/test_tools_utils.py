@@ -12,6 +12,7 @@ from ductus.tools.utils import get_samples_and_info
 from ductus.tools.utils import generate_elastic_statistics
 from ductus.tools.utils import generate_elastic_statistics_from_api_data
 from ductus.tools.utils import filter_experiment
+from ductus.tools.utils import get_no_expected_fastqs
 from freezegun import freeze_time
 
 
@@ -1346,6 +1347,43 @@ class TestUtils(unittest.TestCase):
     def test_filter_lymphotrack(self):
         lympho_sample_sheet = 'tests/samplesheets/files/SampleSheet.lymphotrack.csv'
         self.assertTrue(filter_experiment(lympho_sample_sheet))
+
+    def test_get_no_expected_fastqs_true(self):
+        lab_sample_sheet_v1 = "tests/samplesheets/files/SampleSheet.GMS560.csv"
+        file_list = ['path/20-2500_L001.R1.fastq.gz',
+                     'path/D98-05407_L001.R1.fastq.gz',
+                     'path/20-2500_L001.R2.fastq.gz',
+                     'path/D98-05407_L001.R2.fastq.gz',
+                     'path/20-2500_L002.R1.fastq.gz',
+                     'path/20-2500_L002.R2.fastq.gz',
+                     'path/D98-05407_L002.R1.fastq.gz',
+                     'path/D98-05407_L002.R2.fastq.gz',
+                     'path/Undetermined_L001.R1.fastq.gz',
+                     'path/Undetermined_L001.R2.fastq.gz',
+                     'path/Undetermined_L002.R1.fastq.gz',
+                     'path/Undetermined_L002.R2.fastq.gz']
+        
+        self.assertTrue(get_no_expected_fastqs(lab_sample_sheet_v1, file_list))
+
+        lab_sample_sheet_v2 = "tests/samplesheets/files/SampleSheet.v2.csv"
+
+        self.assertTrue(get_no_expected_fastqs(lab_sample_sheet_v2, file_list))
+
+    def test_get_no_expected_fastqs_false(self):
+        lab_sample_sheet_v2 = "tests/samplesheets/files/SampleSheet.v2.csv"
+        missing_file = ['path/20-2500_L001.R1.fastq.gz',
+                     'path/D98-05407_L001.R1.fastq.gz',
+                     'path/20-2500_L001.R2.fastq.gz',
+                     'path/D98-05407_L001.R2.fastq.gz',
+                     'path/20-2500_L002.R1.fastq.gz',
+                     'path/20-2500_L002.R2.fastq.gz',
+                     'path/D98-05407_L002.R1.fastq.gz',
+                     'path/Undetermined_L001.R1.fastq.gz',
+                     'path/Undetermined_L001.R2.fastq.gz',
+                     'path/Undetermined_L002.R1.fastq.gz',
+                     'path/Undetermined_L002.R2.fastq.gz']
+        
+        self.assertFalse(get_no_expected_fastqs(lab_sample_sheet_v2, missing_file))
 
 
 if __name__ == '__main__':
