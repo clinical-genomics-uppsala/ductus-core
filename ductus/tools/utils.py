@@ -590,25 +590,24 @@ def get_nr_expected_fastqs(sample_sheet_file, file_list):
         return: boolean
     """
 
-    if is_old_ductus_format(sample_sheet_file):
+    with open(sample_sheet_file) as file:
+        sample_sheet_list = file.readlines()
+
+    if not any(line.startswith("Lane,") for line in sample_sheet_list):
         return True
     else:
-        with open(sample_sheet_file) as file:
-            line = file.readline()
-            paired_end = False
-            while not line.startswith("Lane,"):
+        paired_end = False
+        nr_of_samples = 0
+        lane_count = []
+        for line in sample_sheet_list:
+            if not line.startswith("Lane,"):
                 if re.search("Read2Cycles", line):
                     paired_end = True
-                line = file.readline()
             
-            nr_of_samples = 0
-            lane_count = []
-            line = file.readline()
-            while re.search("^[0-9]+,", line):
+            if re.search("^[0-9]+,", line):
                 nr_of_samples += 1
                 if line.split(",")[0] not in lane_count:
                     lane_count.append(line.split(",")[0])
-                line = file.readline()
               
         expected_undetermined = len(lane_count)
         if paired_end:
