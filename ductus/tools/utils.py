@@ -572,15 +572,14 @@ def get_nr_expected_fastqs(sample_sheet_file, file_list):
     """
         This function uses the information in a sample sheet to calculate the expected
         number of fastq-files that should be transferred from the instrument to
-        the hospital file area. It uses the lane information available in the sample sheet, 
-        i.e. this is only applicable for sample sheet version 2. The number of expected
-        fastq-files is compared to the length of a list of files generated with the expression
-        glob.glob("<% ctx(fastq_files_path) %>/**/*.fastq.gz", recursive=True). 
+        the hospital file area. It uses the lane information, if available, from the sample sheet. 
+        The number of expected fastq-files is compared to the length of a list of files 
+        generated with the expression glob.glob("<% ctx(fastq_files_path) %>/**/*.fastq.gz", recursive=True). 
 
         - The function should return True, i.e. continue processing without any further
-        checks, if the sample sheet is v1. 
+        checks, if the sample sheet is missing lane information. 
 
-        - If the sample sheet is detected as version 2 the expected number of fastq-files 
+        - If lane information is detected the expected number of fastq-files 
         will be calculated and compared to the list of files. If the expected number of
         files is found the return value us True, 
         otherwise false (to enable retry until all expected files are transferred).
