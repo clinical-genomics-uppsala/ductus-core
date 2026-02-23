@@ -1,0 +1,10 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "python",
+      "package-name": "ductus-core",
+      "bump-minor-pre-major": true,
+      "include-v-in-tag": true
+    }
+  }
+}
