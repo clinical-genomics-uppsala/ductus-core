@@ -502,10 +502,10 @@ def combine_files_with_samples(sample_list, file_list, force_paired_sequence_fil
          The expected file format is either experiment-id_sample-id or just sample-id
     """
     sample_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1], 'file_list': []}), sample_list))
-    if ignore_samples is None:
-        ignore_samples = {}
-    else:
-        sample_ingore_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1], 'file_list': []}), ignore_samples))
+    sample_ingore_dict = {}
+    if ignore_samples is not None:
+        sample_ingore_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1],
+                                                                            'file_list': []}), ignore_samples))
     for f in file_list[:]:
         file_name = os.path.basename(f).split('_')
         if file_name[1] in sample_dict and sample_dict[file_name[1]]['experiment_id'] == file_name[0]:
@@ -525,7 +525,6 @@ def combine_files_with_samples(sample_list, file_list, force_paired_sequence_fil
                 file_list.remove(f)
             else:
                 raise Exception(f"Couldn't match file {f} with sample list {sample_list}")
-
     if len(file_list) > 0:
         raise Exception("Couldn't match all fastq files to a sample")
     result_list = []
