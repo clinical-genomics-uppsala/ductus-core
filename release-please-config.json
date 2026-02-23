@@ -6,5 +6,6 @@
       "bump-minor-pre-major": true,
       "include-v-in-tag": true
     }
-  }
+  },
+  "bootstrap-sha": "8faa71bfd766901cd2c1a316b5a60b0e907f9189"
 }
