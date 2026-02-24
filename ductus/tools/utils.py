@@ -484,12 +484,13 @@ def extract_wp_and_typo(samplesheet):
         return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
 
 
-def combine_files_with_samples(sample_list, file_list, force_paired_sequence_files=False):
+def combine_files_with_samples(sample_list, file_list, force_paired_sequence_files=False, ignore_samples=None):
     """
         The function takes three inputs:
          - a list of tuples, containing sample id and experiment id
          - a list of files
          - a boolean indicating whether the function should fail if the samples do not contain paired reads
+         - a list of samples to ignore, samples that are expected but should be skipped
 
          It will attempt to match files to the provided sample/experiment
          information and return a new list of tuples containing (sample_id, experiment_id, file).
@@ -501,6 +502,10 @@ def combine_files_with_samples(sample_list, file_list, force_paired_sequence_fil
          The expected file format is either experiment-id_sample-id or just sample-id
     """
     sample_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1], 'file_list': []}), sample_list))
+    sample_ingore_dict = {}
+    if ignore_samples is not None:
+        sample_ingore_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1],
+                                                                            'file_list': []}), ignore_samples))
     for f in file_list[:]:
         file_name = os.path.basename(f).split('_')
         if file_name[1] in sample_dict and sample_dict[file_name[1]]['experiment_id'] == file_name[0]:
@@ -512,8 +517,14 @@ def combine_files_with_samples(sample_list, file_list, force_paired_sequence_fil
         elif "Undetermined" in file_name[0]:
             file_list.remove(f)
         else:
-            raise Exception(f"Couldn't match file {f} with sample list {sample_list}")
-
+            if file_name[1] in sample_ingore_dict and sample_ingore_dict[file_name[1]]['experiment_id'] == file_name[0]:
+                logging.debug(f"Ignoring file {f} for sample {file_name[1]}, {file_name[0]}")
+                file_list.remove(f)
+            elif file_name[0] in sample_ingore_dict:
+                logging.debug(f"Ignoring file {f} for sample {file_name[0]}")
+                file_list.remove(f)
+            else:
+                raise Exception(f"Couldn't match file {f} with sample list {sample_list}")
     if len(file_list) > 0:
         raise Exception("Couldn't match all fastq files to a sample")
     result_list = []
@@ -566,3 +577,55 @@ def filter_experiment(sample_sheet_file):
         return False
     else:
         return True
+
+
+def get_nr_expected_fastqs(sample_sheet_file, file_list):
+    """
+        This function uses the information in a sample sheet to calculate the expected
+        number of fastq-files that should be transferred from the instrument to
+        the hospital file area. It uses the lane information, if available, from the sample sheet.
+        The number of expected fastq-files is compared to the length of a list of files
+        generated with the expression glob.glob("<% ctx(fastq_files_path) %>/**/*.fastq.gz", recursive=True)
+
+        - The function should return True, i.e. continue processing without any further
+        checks, if the sample sheet is missing lane information.
+
+        - If lane information is detected the expected number of fastq-files
+        will be calculated and compared to the list of files. If the expected number of
+        files is found the return value is True,
+        otherwise false (to enable retry until all expected files are transferred).
+
+        param sample_sheet_file: string
+        param file_list: list
+        return: boolean
+    """
+
+    with open(sample_sheet_file) as file:
+        sample_sheet_list = file.readlines()
+
+    if not any(line.startswith("Lane,") for line in sample_sheet_list):
+        return True
+    else:
+        paired_end = False
+        nr_of_samples = 0
+        lane_count = []
+        for line in sample_sheet_list:
+            if not line.startswith("Lane,"):
+                if re.search("Read2Cycles", line):
+                    paired_end = True
+
+            if re.search("^[0-9]+,", line):
+                nr_of_samples += 1
+                if line.split(",")[0] not in lane_count:
+                    lane_count.append(line.split(",")[0])
+
+        expected_undetermined = len(lane_count)
+        if paired_end:
+            expected_fastqs = 2*(expected_undetermined + nr_of_samples)
+        else:
+            expected_fastqs = expected_undetermined + nr_of_samples
+
+        if expected_fastqs == len(file_list):
+            return True
+        else:
+            return False
