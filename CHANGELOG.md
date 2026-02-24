@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.16.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.15.0...v1.16.0) (2025-05-07)
+
+
+### Features
+
+* **utils.py:** Check expected no. fastq-files ([50491a1](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/50491a1e582da07a9abd6c0c0fb3ef6c4a0b117c))
+
+
+### Bug Fixes
+
+* **github actions:** Updated github actions version ([52b0e42](https://www.github.com/clinical-genomics-uppsala/ductus-core/commit/52b0e42fe0b4f9680c7fe9d193890911f3e6e25e))
+
 ## [1.15.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.14.2...v1.15.0) (2024-07-02)
 
 
