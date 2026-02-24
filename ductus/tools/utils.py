@@ -134,7 +134,7 @@ def convert_old_cgu_samplesheet_format_to_new(samplesheet, new_file):
                         writer.write(d[-2].replace(d[0], new_samplesheet_format))
 
 
-def create_analysis_file(samplesheet, outputfolder):
+def create_analysis_file(samplesheet, outputfolder, demultiplex_on_server=False):
     def create_description(wp, data, sample, analysis, index_file=None):
         """
         Convert old SampleSheet description to new version. Old version contain
@@ -179,6 +179,8 @@ def create_analysis_file(samplesheet, outputfolder):
                     description += description + "%" + index_data
                 else:
                     description = index_data
+            if demultiplex_on_server:
+                description += "%demux_location:server"
             return description
         elif wp in ["wp2", "wp3"]:
             """
