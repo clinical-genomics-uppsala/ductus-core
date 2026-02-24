@@ -484,12 +484,13 @@ def extract_wp_and_typo(samplesheet):
         return (('haloplex', haloplex), ('tso500', tso500), ('gms560', gms560), ('te', TE), ('tm', TM), ('abl', ABL), ('tc', TC))
 
 
-def combine_files_with_samples(sample_list, file_list, force_paired_sequence_files=False):
+def combine_files_with_samples(sample_list, file_list, force_paired_sequence_files=False, ignore_samples=None):
     """
         The function takes three inputs:
          - a list of tuples, containing sample id and experiment id
          - a list of files
          - a boolean indicating whether the function should fail if the samples do not contain paired reads
+         - a list of samples to ignore, samples that are expected but should be skipped
 
          It will attempt to match files to the provided sample/experiment
          information and return a new list of tuples containing (sample_id, experiment_id, file).
@@ -501,6 +502,10 @@ def combine_files_with_samples(sample_list, file_list, force_paired_sequence_fil
          The expected file format is either experiment-id_sample-id or just sample-id
     """
     sample_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1], 'file_list': []}), sample_list))
+    sample_ingore_dict = {}
+    if ignore_samples is not None:
+        sample_ingore_dict = dict(map(lambda sample_info: (sample_info[0], {'experiment_id': sample_info[1],
+                                                                            'file_list': []}), ignore_samples))
     for f in file_list[:]:
         file_name = os.path.basename(f).split('_')
         if file_name[1] in sample_dict and sample_dict[file_name[1]]['experiment_id'] == file_name[0]:
@@ -512,8 +517,14 @@ def combine_files_with_samples(sample_list, file_list, force_paired_sequence_fil
         elif "Undetermined" in file_name[0]:
             file_list.remove(f)
         else:
-            raise Exception(f"Couldn't match file {f} with sample list {sample_list}")
-
+            if file_name[1] in sample_ingore_dict and sample_ingore_dict[file_name[1]]['experiment_id'] == file_name[0]:
+                logging.debug(f"Ignoring file {f} for sample {file_name[1]}, {file_name[0]}")
+                file_list.remove(f)
+            elif file_name[0] in sample_ingore_dict:
+                logging.debug(f"Ignoring file {f} for sample {file_name[0]}")
+                file_list.remove(f)
+            else:
+                raise Exception(f"Couldn't match file {f} with sample list {sample_list}")
     if len(file_list) > 0:
         raise Exception("Couldn't match all fastq files to a sample")
     result_list = []
