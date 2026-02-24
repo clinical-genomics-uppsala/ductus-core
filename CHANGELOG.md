@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.17.0](https://github.com/clinical-genomics-uppsala/ductus-core/compare/ductus-core-v1.16.0...ductus-core-v1.17.0) (2026-02-24)
+
+
+### Features
+
+* add option to ignore samples when combining. without failing. ([fd76f58](https://github.com/clinical-genomics-uppsala/ductus-core/commit/fd76f5877678046ed9c09dc08cc1dc196eaf913d))
+* add option to ignore samples when combining. without failing. ([342626d](https://github.com/clinical-genomics-uppsala/ductus-core/commit/342626de80b05929d80f9cbe9caee1c842a5ed75))
+
+
+### Bug Fixes
+
+* test if sample is in list instead of string ([f32bbdc](https://github.com/clinical-genomics-uppsala/ductus-core/commit/f32bbdc810794896b3ffc9b446c910ea1d08f17d))
+* update gitaction versions and configuration ([9123d62](https://github.com/clinical-genomics-uppsala/ductus-core/commit/9123d62e88ba1ce05b8c79485d2a2b945928e631))
+* update gitaction versions and configuration ([0b0b92e](https://github.com/clinical-genomics-uppsala/ductus-core/commit/0b0b92eb888a0a5f09a6ca3b9374dd33cf8dd451))
+
 ## [1.16.0](https://www.github.com/clinical-genomics-uppsala/ductus-core/compare/v1.15.0...v1.16.0) (2025-05-07)
 
 
