@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.18.0](https://github.com/clinical-genomics-uppsala/ductus-core/compare/ductus-core-v1.17.0...ductus-core-v1.18.0) (2026-02-25)
+
+
+### Features
+
+* make it possible to set demultiplexing location to server when … ([4573ec9](https://github.com/clinical-genomics-uppsala/ductus-core/commit/4573ec98a3fdb4d0946c396706fce44b84a830dc))
+* make it possible to set demultiplexing location to server when auto creating analysis file ([bad7c75](https://github.com/clinical-genomics-uppsala/ductus-core/commit/bad7c75fccbc469bc3425728e92f5153f5c47d5f))
+
 ## [1.17.0](https://github.com/clinical-genomics-uppsala/ductus-core/compare/ductus-core-v1.16.0...ductus-core-v1.17.0) (2026-02-24)
 
 
