@@ -1241,8 +1241,10 @@ class TestUtils(unittest.TestCase):
         self.maxDiff = None
         gms560 = "tests/samplesheets/files/SampleSheet.GMS560.csv"
         gms560_expected_analysis = "tests/analysis/20221025-MS_analysis.csv"
+        gms560_expected_analysis_demux_server = "tests/analysis/20221025-MS_analysis.demuxServer.csv"
         sera = "tests/samplesheets/files/SampleSheet.haloplex.csv"
         sera_expected_analysis = "tests/analysis/20210203-LU_analysis.csv"
+        sera_expected_analysis_demux_server = "tests/analysis/20210203-LU_analysis.demuxServer.csv"
         tc = "tests/samplesheets/files/SampleSheet.tc.csv"
         tc_expected_analysis = "tests/analysis/TC42_analysis.csv"
         te = "tests/samplesheets/files/SampleSheet.te.csv"
@@ -1255,9 +1257,19 @@ class TestUtils(unittest.TestCase):
             with open(file_created[0]) as created, open(gms560_expected_analysis) as expected:
                 self.assertEqual(created.read(), expected.read())
 
+            file_created = create_analysis_file(gms560, temp_dir, demultiplex_on_server=True)
+            with open(file_created[0]) as created, open(gms560_expected_analysis_demux_server) as expected:
+                self.assertEqual(created.read(), expected.read())
+
             file_created = create_analysis_file(sera, temp_dir)
             with io.open(file_created[0]) as created, io.open(sera_expected_analysis,
                                                               encoding=detect_encoding(sera_expected_analysis)
+                                                              ) as expected:
+                self.assertEqual(created.read(), expected.read())
+
+            file_created = create_analysis_file(sera, temp_dir, demultiplex_on_server=True)
+            with io.open(file_created[0]) as created, io.open(sera_expected_analysis_demux_server,
+                                                              encoding=detect_encoding(sera_expected_analysis_demux_server)
                                                               ) as expected:
                 self.assertEqual(created.read(), expected.read())
 
