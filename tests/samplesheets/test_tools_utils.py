@@ -1360,45 +1360,95 @@ class TestUtils(unittest.TestCase):
         lympho_sample_sheet = 'tests/samplesheets/files/SampleSheet.lymphotrack.csv'
         self.assertTrue(filter_experiment(lympho_sample_sheet))
 
-    def test_get_nr_expected_fastqs_true(self):
-        file_list = ['path/20-2500_L001.R1.fastq.gz',
-                     'path/D98-05407_L001.R1.fastq.gz',
-                     'path/20-2500_L001.R2.fastq.gz',
-                     'path/D98-05407_L001.R2.fastq.gz',
-                     'path/20-2500_L002.R1.fastq.gz',
-                     'path/20-2500_L002.R2.fastq.gz',
-                     'path/D98-05407_L002.R1.fastq.gz',
-                     'path/D98-05407_L002.R2.fastq.gz',
-                     'path/Undetermined_L001.R1.fastq.gz',
-                     'path/Undetermined_L001.R2.fastq.gz',
-                     'path/Undetermined_L002.R1.fastq.gz',
-                     'path/Undetermined_L002.R2.fastq.gz',
-                     ]
+    def test_get_nr_expected_fastqs_lane(self):
+        '''
+        Test if the number of fastq-files transferred from instrument or
+        demultiplexed by server corresponds to the expected number of files
+        based on the number of samples sequenced on each lane.
 
-        lab_sample_sheet_v1 = "tests/samplesheets/files/SampleSheet.GMS560.csv"
+        param file_list: A list of all files in the demultiplex output
+        directory, either transferred from the instrument or created by the
+        bcl-convert service.
+        Created in workflow by: glob.glob("<% ctx(fastq_files_path) %>/**/*.fastq.gz"
 
-        self.assertTrue(get_nr_expected_fastqs(lab_sample_sheet_v1, file_list))
+        param sample_list: A list of sample extracted from the api, based on demultiplexing
+        location, i.e. all samples in a run that should be demultiplexed on server or
+        all samples in a run that should be demultiplexed on instrument.
 
-        lab_sample_sheet_v2 = "tests/samplesheets/files/SampleSheet.v2.csv"
+        Extracted in workflow by curl command:
+        curl -H 'Authorization: Api-Key <key-value>'
+        'http://127.0.0.1:8000/api/v1/samples/list/server/?sequence_run__run_id=<% ctx(runfolder) %>' |
+        python3 -c 'import json; import sys;
+        print(json.dumps([(sample["sample_id"], sample["experiment_id"], sample["lane"], sample["sequence_run"]["nr_of_reads"])
+        for sample in json.load(sys.stdin)]))'
 
-        self.assertTrue(get_nr_expected_fastqs(lab_sample_sheet_v2, file_list))
+        The resulting list will have the following format:
+        [[<sample_id_1>, <experiment_id>, [<lanes containing sample_id_1>], <nr of reads>],
+        [<sample_id_2>, <experiment_id>, [<lanes containing sample_id_2>], <nr of reads>], ...]
 
-    def test_get_nr_expected_fastqs_false(self):
-        lab_sample_sheet_v2 = "tests/samplesheets/files/SampleSheet.v2.csv"
-        missing_file = ['path/20-2500_L001.R1.fastq.gz',
-                        'path/D98-05407_L001.R1.fastq.gz',
-                        'path/20-2500_L001.R2.fastq.gz',
-                        'path/D98-05407_L001.R2.fastq.gz',
-                        'path/20-2500_L002.R1.fastq.gz',
-                        'path/20-2500_L002.R2.fastq.gz',
-                        'path/D98-05407_L002.R1.fastq.gz',
-                        'path/Undetermined_L001.R1.fastq.gz',
-                        'path/Undetermined_L001.R2.fastq.gz',
-                        'path/Undetermined_L002.R1.fastq.gz',
-                        'path/Undetermined_L002.R2.fastq.gz',
-                        ]
+        E.g. curl -H 'Authorization: Api-Key <key-value>'
+        'http://127.0.0.1:8000/api/v1/samples/list/server/?sequence_run__run_id=231103_VH01573_14_DDC7KTKHV' |
+        python3 -c 'import json; import sys; print(json.dumps([(sample["sample_id"],
+        sample["experiment_id"],
+        sample["lane"],
+        sample["sequence_run"]["nr_of_reads"]) for sample in json.load(sys.stdin)]))',
+        return [["20-2500", "20230607-LU", [1, 2], 2], ["20-2501", "20230607-LU", [1], 2]]
 
-        self.assertFalse(get_nr_expected_fastqs(lab_sample_sheet_v2, missing_file))
+        If the number of expected fastq-files, based on the sample_list, is the same as
+        the number of listed fastq-files for the corresponding sample, based on file list,
+        the function will return True, else False.
+
+        '''
+        file_list_1 = ['path/D21-00744_L001.R1.fastq.gz',
+                       'path/D21-00745_L001.R1.fastq.gz',
+                       'path/D21-00744_L001.R2.fastq.gz',
+                       'path/D21-00745_L001.R2.fastq.gz',
+                       'path/Undetermined_L001.R1.fastq.gz',
+                       'path/Undetermined_L001.R2.fastq.gz',
+                       ]
+
+        # samples no lane info
+        sample_list_1 = [["D21-00744", "TM86", [1], 2], ["D21-00745", "TM86", [1], 2]]
+
+        # Return True if all fastq-files are available
+        self.assertTrue(get_nr_expected_fastqs(sample_list_1, file_list_1))
+
+        file_list_2 = ['path/D21-00744_L001.R1.fastq.gz',
+                       'path/D21-00745_L001.R1.fastq.gz',
+                       'path/D21-00744_L001.R2.fastq.gz',
+                       ]
+
+        # Return False if fastq-files are missing.
+        self.assertFalse(get_nr_expected_fastqs(sample_list_1, file_list_2))
+
+        file_list_138 = ['path/120-2500_L001.R1.fastq.gz',
+                         'path/1D98-05407_L001.R1.fastq.gz',
+                         'path/120-2500_L001.R2.fastq.gz',
+                         'path/1D98-05407_L001.R2.fastq.gz',
+                         'path/120-2500_L003.R1.fastq.gz',
+                         'path/120-2500_L003.R2.fastq.gz',
+                         'path/3D98-05407_L003.R1.fastq.gz',
+                         'path/3D98-05407_L003.R2.fastq.gz',
+                         'path/8D98-05407_L003.R1.fastq.gz',
+                         'path/8D98-05407_L003.R2.fastq.gz',
+                         'path/120-2500_L008.R1.fastq.gz',
+                         'path/120-2500_L008.R2.fastq.gz',
+                         'path/8D98-05407_L008.R1.fastq.gz',
+                         'path/8D98-05407_L008.R2.fastq.gz',
+                         'path/Undetermined_L001.R1.fastq.gz',
+                         'path/Undetermined_L001.R2.fastq.gz',
+                         'path/Undetermined_L003.R1.fastq.gz',
+                         'path/Undetermined_L003.R2.fastq.gz',
+                         'path/Undetermined_L008.R1.fastq.gz',
+                         'path/Undetermined_L008.R2.fastq.gz',
+                         ]
+
+        sample_list_138 = [["120-2500", "20230607-LU", [1, 3, 8], 2],
+                           ["1D98-05407", "20230607-LU", [1], 2],
+                           ["3D98-05407", "20230607-LU", [3], 2],
+                           ["8D98-05407", "20230607-LU", [3, 8], 2]]
+
+        self.assertTrue(get_nr_expected_fastqs(sample_list_138, file_list_138))
 
     def test_get_nr_expected_fastqs_SE(self):
         file_list_SE = ['path/20-2500_L001.R1.fastq.gz',
@@ -1409,9 +1459,10 @@ class TestUtils(unittest.TestCase):
                         'path/Undetermined_L002.R1.fastq.gz',
                         ]
 
-        lab_sample_sheet_v2_SE = "tests/samplesheets/files/SampleSheet.v2.SE.csv"
+        sample_list_SE = [["20-2500", "20230607-LU", [1, 2], 1],
+                          ["D98-05407", "20230607-LU", [1, 2], 1]]
 
-        self.assertTrue(get_nr_expected_fastqs(lab_sample_sheet_v2_SE, file_list_SE))
+        self.assertTrue(get_nr_expected_fastqs(sample_list_SE, file_list_SE))
 
 
 if __name__ == '__main__':
