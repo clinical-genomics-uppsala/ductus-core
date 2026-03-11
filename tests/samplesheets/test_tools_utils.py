@@ -1372,7 +1372,7 @@ class TestUtils(unittest.TestCase):
         Created in workflow by: glob.glob("<% ctx(fastq_files_path) %>/**/*.fastq.gz"
 
         param sample_list: A list of sample extracted from the api, based on demultiplexing
-        loaction, i.e. all samples in a run that should be demultiplexed on server or
+        location, i.e. all samples in a run that should be demultiplexed on server or
         all samples in a run that should be demultiplexed on instrument.
 
         Extracted in workflow by curl command:

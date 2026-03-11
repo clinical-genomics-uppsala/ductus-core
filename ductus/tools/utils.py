@@ -588,7 +588,7 @@ def get_nr_expected_fastqs(sample_list, file_list):
     based on the number of samples sequenced on each lane.
 
     param sample_list: A list of sequencing-samples extracted from the api, based on demultiplexing
-    loaction, i.e. all samples in a run that should be demultiplexed on server or
+    location, i.e. all samples in a run that should be demultiplexed on server or
     all samples in a run that should be demultiplexed on instrument.
 
     Extracted in workflow by curl command:
@@ -622,17 +622,11 @@ def get_nr_expected_fastqs(sample_list, file_list):
     status_list = []
     for sample in sample_list:
         sample_id = sample[0]
-        print(sample[2])
         nr_of_lanes = len(sample[2])
-        print(nr_of_lanes)
         nr_of_reads = sample[3]
-        print(nr_of_reads)
 
-        nr_of_fastqs = len(list(i for i, s in enumerate(file_list) if sample_id in s))
-        print(sample_id)
-        print(nr_of_fastqs)
+        nr_of_fastqs = len(list(i for i in file_list if f"{sample_id}_" in i))
         nr_of_expected_fastqs = nr_of_lanes*nr_of_reads
-        print(nr_of_expected_fastqs)
 
         if nr_of_expected_fastqs == nr_of_fastqs:
             status_list.append(True)
