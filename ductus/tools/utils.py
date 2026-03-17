@@ -581,53 +581,59 @@ def filter_experiment(sample_sheet_file):
         return True
 
 
-def get_nr_expected_fastqs(sample_sheet_file, file_list):
+def get_nr_expected_fastqs(sample_list, file_list):
     """
-        This function uses the information in a sample sheet to calculate the expected
-        number of fastq-files that should be transferred from the instrument to
-        the hospital file area. It uses the lane information, if available, from the sample sheet.
-        The number of expected fastq-files is compared to the length of a list of files
-        generated with the expression glob.glob("<% ctx(fastq_files_path) %>/**/*.fastq.gz", recursive=True)
+    Test if the number of fastq-files transferred from instrument or
+    demultiplexed by server corresponds to the expected number of files
+    based on the number of samples sequenced on each lane.
 
-        - The function should return True, i.e. continue processing without any further
-        checks, if the sample sheet is missing lane information.
+    param sample_list: A list of sequencing-samples extracted from the api, based on demultiplexing
+    location, i.e. all samples in a run that should be demultiplexed on server or
+    all samples in a run that should be demultiplexed on instrument.
 
-        - If lane information is detected the expected number of fastq-files
-        will be calculated and compared to the list of files. If the expected number of
-        files is found the return value is True,
-        otherwise false (to enable retry until all expected files are transferred).
+    Extracted in workflow by curl command:
+    curl -H 'Authorization: Api-Key <key-value>'
+    'http://127.0.0.1:8000/api/v1/samples/list/server/?sequence_run__run_id=<% ctx(runfolder) %>'
+    | python3 -c 'import json; import sys;
+    print(json.dumps([(sample["sample_id"],
+    sample["experiment_id"], sample["lane"],
+    sample["sequence_run"]["nr_of_reads"])
+    for sample in json.load(sys.stdin)]))'
 
-        param sample_sheet_file: string
-        param file_list: list
-        return: boolean
+    The resulting list will have the following format:
+    [[<sample_id_1>, <experiment_id>, [<lanes containing sample_id_1>], <nr of reads>],
+    [<sample_id_2>, <experiment_id>, [<lanes containing sample_id_2>], <nr of reads>], ...]
+
+    param file_list: A list of all files in the demultiplex output
+    directory, either transferred from the instrument or created by the
+    bcl-convert service.
+    Created in workflow by: glob.glob("<% ctx(fastq_files_path) %>/**/*.fastq.gz"
+
+    If the number of expected fastq-files, based on the sample_list, is the same as
+    the number of listed fastq-files for the corresponding sample, based on file list,
+    the function will add True to a status list, else add False.
+
+    return bool: When all samples in the input sample list have been parsed the
+    status list will be searched for False values. If any "sample" is False
+    the function will return False. If all values in list are True, i.e. all
+    samples in the sample_list have their corresponding fastq-files the return
+    value is True.
     """
+    status_list = []
+    for sample in sample_list:
+        sample_id = sample[0]
+        nr_of_lanes = len(sample[2])
+        nr_of_reads = sample[3]
 
-    with open(sample_sheet_file) as file:
-        sample_sheet_list = file.readlines()
+        nr_of_fastqs = len(list(i for i in file_list if f"{sample_id}_" in i))
+        nr_of_expected_fastqs = nr_of_lanes*nr_of_reads
 
-    if not any(line.startswith("Lane,") for line in sample_sheet_list):
+        if nr_of_expected_fastqs == nr_of_fastqs:
+            status_list.append(True)
+        else:
+            status_list.append(False)
+
+    if all(status_list):
         return True
     else:
-        paired_end = False
-        nr_of_samples = 0
-        lane_count = []
-        for line in sample_sheet_list:
-            if not line.startswith("Lane,"):
-                if re.search("Read2Cycles", line):
-                    paired_end = True
-
-            if re.search("^[0-9]+,", line):
-                nr_of_samples += 1
-                if line.split(",")[0] not in lane_count:
-                    lane_count.append(line.split(",")[0])
-
-        expected_undetermined = len(lane_count)
-        if paired_end:
-            expected_fastqs = 2*(expected_undetermined + nr_of_samples)
-        else:
-            expected_fastqs = expected_undetermined + nr_of_samples
-
-        if expected_fastqs == len(file_list):
-            return True
-        else:
-            return False
+        return False
