@@ -549,7 +549,7 @@ def create_json_update_fastq(sample_list, operation='add'):
     return {operation: list(map(lambda info: dict(zip(('sample', 'experiment', 'path'), info)), sample_list))}
 
 
-def filter_experiment(sample_sheet_file):
+def filter_experiment(sample_sheet_file, filter_out):
     """
         This function uses a path to a bioinformatic samples sheet and read it as a string to sort out the experiment name
         for the current run being processed. The file will be converted to a list to separate rows in
@@ -564,10 +564,6 @@ def filter_experiment(sample_sheet_file):
     with open(sample_sheet_file) as file:
         sample_sheet_list = file.readlines()
 
-    filter_out = [".*[Ll]ymphotrack.*",
-                  "DC",
-                  "AH",
-                  ]
     experiment_match = []
     for exp in filter_out:
         experiment_name = r'^[Ee]xperiment [Nn]ame,{}'.format(exp)
