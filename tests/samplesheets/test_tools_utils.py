@@ -1356,7 +1356,7 @@ class TestUtils(unittest.TestCase):
                            ".*[Aa]rcher.*",
                            ]
         self.assertFalse(filter_experiment(bioinfo_sample_sheet, filter_out_conf))
-                
+
         filter_out_conf_empty = []
         self.assertFalse(filter_experiment(bioinfo_sample_sheet, filter_out_conf_empty))
 
