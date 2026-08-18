@@ -1350,15 +1350,42 @@ class TestUtils(unittest.TestCase):
 
     def test_filter_experiment_false(self):
         bioinfo_sample_sheet = 'tests/samplesheets/files/SampleSheet.te.csv'
-        self.assertFalse(filter_experiment(bioinfo_sample_sheet))
+        filter_out_conf = [".*[Ll]ymphotrack.*",
+                           "DC",
+                           "AH",
+                           ".*[Aa]rcher.*",
+                           ]
+        self.assertFalse(filter_experiment(bioinfo_sample_sheet, filter_out_conf))
+
+        filter_out_conf_empty = []
+        self.assertFalse(filter_experiment(bioinfo_sample_sheet, filter_out_conf_empty))
 
     def test_filter_experiment_true(self):
         bioinfo_sample_sheet = 'tests/samplesheets/files/SampleSheet.ah.csv'
-        self.assertTrue(filter_experiment(bioinfo_sample_sheet))
+        filter_out_conf = [".*[Ll]ymphotrack.*",
+                           "DC",
+                           "AH",
+                           ".*[Aa]rcher.*",
+                           ]
+        self.assertTrue(filter_experiment(bioinfo_sample_sheet, filter_out_conf))
 
     def test_filter_lymphotrack(self):
         lympho_sample_sheet = 'tests/samplesheets/files/SampleSheet.lymphotrack.csv'
-        self.assertTrue(filter_experiment(lympho_sample_sheet))
+        filter_out_conf = [".*[Ll]ymphotrack.*",
+                           "DC",
+                           "AH",
+                           ".*[Aa]rcher.*",
+                           ]
+        self.assertTrue(filter_experiment(lympho_sample_sheet, filter_out_conf))
+
+    def test_filter_archer(self):
+        archer_sample_sheet = 'tests/samplesheets/files/SampleSheet.Archer.csv'
+        filter_out_conf = [".*[Ll]ymphotrack.*",
+                           "DC",
+                           "AH",
+                           ".*[Aa]rcher.*",
+                           ]
+        self.assertTrue(filter_experiment(archer_sample_sheet, filter_out_conf))
 
     def test_get_nr_expected_fastqs_lane(self):
         '''

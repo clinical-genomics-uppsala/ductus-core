@@ -1,0 +1,20 @@
+[Header]
+Local Run Manager Analysis Id,38038
+Experiment Name,260812_Archer Lymphom_LA8
+Date,Enter Date Here
+Module,GenerateFASTQ - 3.0.1
+Workflow,GenerateFASTQ
+Library Prep Kit,Custom
+Index Kit,Custom
+Description,Description
+Chemistry,Amplicon
+iemfileversion,4
+investigator name,BLS
+project name,Fusion Plex Lymphoma
+application,FASTQ Only 
+[Reads]
+151
+151
+[Settings]
+[Data]
+Sample_ID,Sample_Name,Description,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project
