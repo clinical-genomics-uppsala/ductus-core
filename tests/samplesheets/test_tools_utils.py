@@ -1356,6 +1356,9 @@ class TestUtils(unittest.TestCase):
                            ".*[Aa]rcher.*",
                            ]
         self.assertFalse(filter_experiment(bioinfo_sample_sheet, filter_out_conf))
+                
+        filter_out_conf_empty = []
+        self.assertFalse(filter_experiment(bioinfo_sample_sheet, filter_out_conf_empty))
 
     def test_filter_experiment_true(self):
         bioinfo_sample_sheet = 'tests/samplesheets/files/SampleSheet.ah.csv'
