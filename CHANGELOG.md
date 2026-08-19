@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.20.0](https://github.com/clinical-genomics-uppsala/ductus-core/compare/v1.19.0...v1.20.0) (2026-08-18)
+
+
+### Features
+
+* Make exp. filter configurable. ([a4fe2f3](https://github.com/clinical-genomics-uppsala/ductus-core/commit/a4fe2f339b91746f9607b1aeb16f7ebe96630709))
+* Make exp. filter configurable. ([a287f2f](https://github.com/clinical-genomics-uppsala/ductus-core/commit/a287f2f221ae0f19c2b37ba58b6d98ae7b5b750a))
+
 ## [1.19.0](https://github.com/clinical-genomics-uppsala/ductus-core/compare/v1.18.0...v1.19.0) (2026-03-17)
 
 
