@@ -13,12 +13,13 @@ setup(
     keywords='bioinformatics',
     entry_points={
         'console_scripts': [
-            'rsync.py=ductus.scripts.rsync'
+            'rsync.py=ductus.scripts.rsync:main'
         ]
     },
     install_requires=[
-        'cchardet'
+        'faust-cchardet'
     ],
+    python_requires='>=3.10',
     author='IGP Platform, Uppsala University',
     packages=find_packages(),
     include_package_data=True

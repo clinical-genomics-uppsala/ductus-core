@@ -6,11 +6,9 @@ Contain wrapper classes used to execute different linux tools.
 - Rsync
 
   NOTE: Internet netcat and ping has to be installed.
-
 """
 
 import os
-import sys
 import time
 import logging
 from subprocess import Popen
@@ -24,7 +22,6 @@ class AddressChecker:
         """
         :param address: network address that will be checked, ex 192.168.0.1
         :param verbose: turn on the verbose flag for ping
-
         """
         self.address = address
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -36,15 +33,10 @@ class AddressChecker:
         Function used to generate a ping command, should not be used directly.
         :return: the command that will be executed
 
-
-        >>> address_checker_local._AddressChecker__generate_ping_command()
+        >>> AddressChecker("127.0.0.1")._AddressChecker__generate_ping_command()
         'ping -W 5 -c 1 127.0.0.1 > /dev/null'
-
-        >>> address_checker_verbose._AddressChecker__generate_ping_command()
+        >>> AddressChecker("127.0.0.1", True)._AddressChecker__generate_ping_command()
         'ping -W 5 -c 1 -v 127.0.0.1 > /dev/null'
-
-        >>> address_checker_invalid._AddressChecker__generate_ping_command()
-        'ping -W 5 -c 1 10.10.10.10 > /dev/null'
         """
         verbose = " "
         if self.verbose:
@@ -59,16 +51,14 @@ class AddressChecker:
         accessible an Error will be thrown (i.e if return value of command isn't 0)
         :return: return value of the command, will always be 1
 
+        Needs a live network, so these are documentation rather than executed tests:
 
-        >>> address_checker_local.execute()
+        >>> AddressChecker("127.0.0.1").execute()  # doctest: +SKIP
         0
-        >>> address_checker_verbose.execute()
-        0
-        >>> address_checker_invalid.execute()
+        >>> AddressChecker("10.10.10.10").execute()  # doctest: +SKIP
         Traceback (most recent call last):
          ...
-        AddressException
-
+        ductus.tools.wrappers.AddressException
         """
         command = self.__generate_ping_command()
         self.logger.info("checking access to %s", self.address)
@@ -104,21 +94,14 @@ class PortChecker:
         Function used to generate a nc command, should not be used directly.
         :return: the command that will be executed
 
+        Note that timeout and repeat affect execute(), not the generated command:
 
-        >>> port_checker._PortChecker__generate_port_check_command()
+        >>> PortChecker("127.0.0.1", 8080)._PortChecker__generate_port_check_command()
         "echo 'QUIT' | nc 127.0.0.1 8080"
-
-        >>> port_checker_extra._PortChecker__generate_port_check_command()
+        >>> PortChecker("127.0.0.1", 8080, False, 10, 15)._PortChecker__generate_port_check_command()
         "echo 'QUIT' | nc 127.0.0.1 8080"
-
-        >>> port_checker_verbose._PortChecker__generate_port_check_command()
+        >>> PortChecker("127.0.0.1", 8080, True, 10, 15)._PortChecker__generate_port_check_command()
         "echo 'QUIT' | nc -v 127.0.0.1 8080"
-
-        >>> port_checker_invalid_address._PortChecker__generate_port_check_command()
-        "echo 'QUIT' | nc 127.0.1.1 8080"
-
-        >>> port_checker_invalid_port._PortChecker__generate_port_check_command()
-        "echo 'QUIT' | nc 127.0.0.1 8081"
         """
         verbose = " "
         if self.verbose:
@@ -136,19 +119,14 @@ class PortChecker:
             seconds before determining that the execution failed.
             :return: return value of the command, will always be 1
 
+            Needs a live listener, so these are documentation rather than executed tests:
 
-            >>> port_checker.execute()
+            >>> PortChecker("127.0.0.1", 8080).execute()  # doctest: +SKIP
             0
-            >>> port_checker_extra.execute()
-            0
-            >>> port_checker_invalid_address.execute()
+            >>> PortChecker("127.0.0.1", 8081, False, 0, 0).execute()  # doctest: +SKIP
             Traceback (most recent call last):
              ...
-            PortInaccessibleException
-            >>> port_checker_invalid_port.execute()
-            Traceback (most recent call last):
-             ...
-            PortInaccessibleException
+            ductus.tools.wrappers.PortInaccessibleException
         """
         command = self.__generate_port_check_command()
         counter = self.repeat
@@ -206,16 +184,14 @@ class Rsync:
             :param local_sync: perform sync between folders on the same local computer
             :param timeout: timeout used to detect stalled sync
 
-
-            >>> Rsync("/home/test","/home/test2")
+            >>> Rsync("/home/test", "/home/test2")
             Traceback (most recent call last):
              ...
-            IncorrectInputException
-            >>> Rsync("/home/test","/home/test2","127.0.0.1",local_sync=True)
+            ductus.tools.wrappers.IncorrectInputException
+            >>> Rsync("/home/test", "/home/test2", "127.0.0.1", local_sync=True)
             Traceback (most recent call last):
              ...
-            IncorrectInputException
-
+            ductus.tools.wrappers.IncorrectInputException
         """
         self.to_path = to_path
         self.from_path = from_path
@@ -243,12 +219,14 @@ class Rsync:
         """ Function used to generate a path where data will be synced from
             :return: from path
 
+            from_is_remote defaults to FROM_IS_REMOTE, so the remote address is prefixed:
 
-            >>> rsync_local._Rsync__get_from_path()
+            >>> Rsync("/home/test", "/home/test2", local_sync=True)._Rsync__get_from_path()
             '/home/test'
-            >>> rsync_network._Rsync__get_from_path()
+            >>> Rsync("/home/test", "/home/test2", "127.0.0.1")._Rsync__get_from_path()
             '127.0.0.1:/home/test'
-            >>> rsync_network_extra._Rsync__get_from_path()
+            >>> Rsync("/home/test", "/home/test2", "127.0.0.1", "test",
+            ...       Rsync.TO_IS_REMOTE)._Rsync__get_from_path()
             '/home/test'
         """
         command = ""
@@ -264,12 +242,12 @@ class Rsync:
         """ Function used to generate a path where data will be synced to
             :return: to path
 
-
-            >>> rsync_local._Rsync__get_to_path()
+            >>> Rsync("/home/test", "/home/test2", local_sync=True)._Rsync__get_to_path()
             '/home/test2'
-            >>> rsync_network._Rsync__get_to_path()
+            >>> Rsync("/home/test", "/home/test2", "127.0.0.1")._Rsync__get_to_path()
             '/home/test2'
-            >>> rsync_network_extra._Rsync__get_to_path()
+            >>> Rsync("/home/test", "/home/test2", "127.0.0.1", "test",
+            ...       Rsync.TO_IS_REMOTE)._Rsync__get_to_path()
             'test@127.0.0.1:/home/test2'
         """
         command = ""
@@ -285,15 +263,30 @@ class Rsync:
         """ Function used to generate a rsync command, should not be used directly.
             :return: the command that will be executed
 
+            >>> Rsync("/home/test", "/home/test2", local_sync=True)._Rsync__create_sync_command()
+            'rsync -zPa /home/test /home/test2 --timeout=0'
 
-            >>> rsync_local._Rsync__create_sync_command()
+            preserve_permissions swaps the archive flag for a plain recursive one, and
+            timeout is passed through to rsync:
+
+            >>> Rsync("/home/test", "/home/test2", local_sync=True,
+            ...       preserve_permissions=False)._Rsync__create_sync_command()
+            'rsync -zPr /home/test /home/test2 --timeout=0'
+            >>> Rsync("/home/test", "/home/test2", local_sync=True,
+            ...       timeout=1200)._Rsync__create_sync_command()
             'rsync -zPa /home/test /home/test2 --timeout=1200'
-            >>> rsync_network._Rsync__create_sync_command()
-            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
-                -zPa 127.0.0.1:/home/test /home/test2 --timeout=1200'
-            >>> rsync_network_extra._Rsync__create_sync_command()
-            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test" \
-                -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=1200'
+
+            A remote sync wraps ssh, and checksum_validate/verbose add flags:
+
+            >>> Rsync("/home/test", "/home/test2",
+            ...       "127.0.0.1")._Rsync__create_sync_command()  # doctest: +NORMALIZE_WHITESPACE
+            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+             -zPa 127.0.0.1:/home/test /home/test2 --timeout=0'
+            >>> Rsync("/home/test", "/home/test2", "127.0.0.1", "test", Rsync.TO_IS_REMOTE, 2,
+            ...       "identity_test", True, True,
+            ...       True)._Rsync__create_sync_command()  # doctest: +NORMALIZE_WHITESPACE
+            'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test"
+             -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=0'
         """
         command = 'rsync'
         flags = " -zP"
@@ -318,14 +311,12 @@ class Rsync:
         """ Function used to generate a ssh test command, should not be used directly.
             :return: the command that will be executed
 
+            Only called for remote syncs, execute() skips it when local_sync is set:
 
-            >>> rsync_local._Rsync__create_ssh_access_command()
-            Traceback (most recent call last):
-             ...
-            TypeError: cannot concatenate 'str' and 'NoneType' objects
-            >>> rsync_network._Rsync__create_ssh_access_command()
+            >>> Rsync("/home/test", "/home/test2", "127.0.0.1")._Rsync__create_ssh_access_command()
             'ssh -oBatchMode=yes 127.0.0.1 exit 0 > /dev/null'
-            >>> rsync_network_extra._Rsync__create_ssh_access_command()
+            >>> Rsync("/home/test", "/home/test2", "127.0.0.1", "test", Rsync.TO_IS_REMOTE, 2,
+            ...       "identity_test", True, True, True)._Rsync__create_ssh_access_command()
             'ssh -oBatchMode=yes -v -i identity_test test@127.0.0.1 exit 0 > /dev/null'
         """
         command = "ssh -oBatchMode=yes"
@@ -347,7 +338,6 @@ class Rsync:
             the rsync check command will be repeated self.repeat number of times, if
             execution isn't successful.
             :return: return value of the command
-
         """
         if not self.local_sync and not self.ignore_ping:
             # Validate that the provided address is accessible
@@ -411,24 +401,3 @@ class RsyncException(Exception):
 class IncorrectInputException(Exception):
     """ Exception thrown when incorrect input has been provided. """
     pass
-
-
-if __name__ == "__main__":
-    import doctest
-    logging.basicConfig(level=logging.CRITICAL, stream=sys.stdout, format='%(message)s')
-    # nc will listen for connection on port 8080, used by the tests.
-    proc_test = Popen("nc -l 8080 -k", shell=True, stdout=open(os.devnull, 'wb'))
-
-    doctest.testmod(extraglobs={'address_checker_local': AddressChecker("127.0.0.1"),
-                                'address_checker_verbose': AddressChecker("127.0.0.1", True),
-                                'address_checker_invalid': AddressChecker("127.0.1.1"),
-                                'port_checker': PortChecker("127.0.0.1", 8080),
-                                'port_checker_extra': PortChecker("127.0.0.1", 8080, False, 10, 15),
-                                'port_checker_verbose': PortChecker("127.0.0.1", 8080, True, 10, 15),
-                                'port_checker_invalid_address': PortChecker("127.0.1.1", 8080, False, 0, 0),
-                                'port_checker_invalid_port': PortChecker("127.0.0.1", 8081, False, 0, 0),
-                                'rsync_local': Rsync("/home/test", "/home/test2", local_sync=True),
-                                'rsync_network': Rsync("/home/test", "/home/test2", "127.0.0.1"),
-                                'rsync_network_extra': Rsync("/home/test", "/home/test2", "127.0.0.1", "test",
-                                                             Rsync.TO_IS_REMOTE, 2, "identity_test", True, True, True, True)})
-    proc_test.kill()

@@ -1,4 +1,4 @@
-pycodestyle==2.6.0
+pycodestyle>=2.11
 pytest
 freezegun
-cchardet
+faust-cchardet

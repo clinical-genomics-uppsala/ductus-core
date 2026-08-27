@@ -1,18 +1,20 @@
 image: atlassian/default-image:latest
 
+definitions:
+  steps:
+    - step: &run-tests
+        script:
+          - pip3 install -r requirements.txt
+          - pip3 install -e .
+          - pytest
+
 pipelines:
   custom:
     validate-wrappers:
-      - step:
-          script:
-            - python ductus/tools/wrappers.py
+      - step: *run-tests
   tags:
     v*:
-      - step:
-          script:
-            - python ductus/tools/wrappers.py
+      - step: *run-tests
   branches:
     master:
-      - step:
-          script:
-            - python ductus/tools/wrappers.py 
+      - step: *run-tests
