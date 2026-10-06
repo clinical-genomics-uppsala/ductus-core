@@ -1,0 +1,4 @@
+Workpackage,Experiment,Analysis,Sample_ID,Description
+wp3,DC221,DC,PED26281_D2607132_Blod_CD15_240826,processing_steps:archive_only
+wp3,DC221,DC,D47439_D2607142_Blod_CD3_240826,processing_steps:archive_only
+wp3,DC221,DC,Chimkontroll1_CK1DC220_Blod_QC_310826,processing_steps:archive_only

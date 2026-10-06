@@ -165,6 +165,7 @@ def create_analysis_file(samplesheet, outputfolder, demultiplex_on_server=False)
                 raise Exception("Couldn't match sample with index file")
             else:
                 index_data = f"index_header:{header}%index_data:{data}"
+
         if "wp1" == wp:
             description = ""
             if re.search(r"tumor_content:[10]+\.[0-9]+", data) or re.search(r"type:[TRAU]+", data):
@@ -183,11 +184,15 @@ def create_analysis_file(samplesheet, outputfolder, demultiplex_on_server=False)
                 description += "%demux_location:server"
             return description
         elif wp in ["wp2", "wp3"]:
-            """
-            ToDo: WP2 and WP3 should update this part to match there requirements.
-            """
-            keys = ['panel', 'sex', 'trio', 'experiment', 'project']
-            return "%".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
+            if analysis in ["DC"]:
+                description = data
+                return description
+            else:
+                """
+                ToDo: WP2 and WP3 should update this part to match there requirements.
+                """
+                keys = ['panel', 'sex', 'trio', 'experiment', 'project']
+                return "%".join(map(lambda v: f"{v[0]}:{v[1]}", zip(keys, data.split('_'))))
         elif "wp3":
             return "wp3"
 
@@ -277,6 +282,8 @@ def extract_analysis_information(samplesheet):
         ABL = False
         TE = False
         TC = False
+        DC = False
+        allow_underscore = False
         data = {'header': "",
                 'wp1': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
                 'wp2': {'klinik': [], 'projekt': [], 'forskning': [], 'utveckling': []},
@@ -307,6 +314,9 @@ def extract_analysis_information(samplesheet):
                 ABL = True
             if "name,tc" in line:
                 TC = True
+            if "name,dc" in line:
+                DC = True
+                allow_underscore = True
             if line.startswith("[data]"):
                 line = next(file)
                 if "description,tc" in line.lower():
@@ -375,7 +385,8 @@ def extract_analysis_information(samplesheet):
                     sample_id = columns[header_map['sample_id']]
                     sample_experiment = main_experiment
                     old_format = True
-                    if "_" in sample_id:
+
+                    if "_" in sample_id and not allow_underscore:
                         sample_experiment, sample_id = sample_id.split("_")
                         old_format = False
                     if not old_format:
@@ -440,6 +451,18 @@ def extract_analysis_information(samplesheet):
                                                           sample_experiment.replace('_', '-'),
                                                           date_string,
                                                           "gms560",
+                                                          description,
+                                                          row,
+                                                          old_format))
+                        elif DC:
+                            if description == "":
+                                description = "processing_steps:archive_only"
+                            else:
+                                description += "%" + "processing_steps:archive_only"
+                            data["wp3"]['klinik'].append((sample_id,
+                                                          sample_experiment,
+                                                          date_string,
+                                                          "DC",
                                                           description,
                                                           row,
                                                           old_format))
