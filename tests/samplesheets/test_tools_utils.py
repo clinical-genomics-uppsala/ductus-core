@@ -1491,6 +1491,100 @@ class TestUtils(unittest.TestCase):
 
         self.assertTrue(get_nr_expected_fastqs(sample_list_SE, file_list_SE))
 
+    def test_parse_dc(self):
+        from ductus.tools.utils import is_old_ductus_format
+        lab_sample_sheet = "tests/samplesheets/files/SampleSheet.DC.csv"
+
+        match_old_format_only = is_old_ductus_format(lab_sample_sheet)
+        self.assertTrue(match_old_format_only)
+
+        result = extract_analysis_information(lab_sample_sheet)
+
+        self.assertEqual("[Header]\n"
+                         "Local Run Manager Analysis Id,117117\n"
+                         "Experiment Name,DC221\n"
+                         "Date,2026-09-01\n"
+                         "Module,GenerateFASTQ - 3.1.1\n"
+                         "Workflow,GenerateFASTQ\n"
+                         "Library Prep Kit,Devyser 2x76 LB A\n"
+                         "Description,Devyser Chimerism\n"
+                         "Chemistry,Amplicon\n"
+                         "\n"
+                         "[Reads]\n"
+                         "76\n"
+                         "76\n"
+                         "\n"
+                         "[Settings]\n"
+                         "adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA\n"
+                         "adapterread2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT\n"
+                         "\n"
+                         "[Data]\n"
+                         "Sample_ID,Sample_Name,Description,Index_Plate_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project\n",
+                         result['header'])
+
+        self.assertEqual(result['wp1']['forskning'], [])
+        self.assertEqual(result['wp1']['projekt'], [])
+        self.assertEqual(result['wp1']['utveckling'], [])
+        self.assertEqual(result['wp1']['klinik'], [])
+
+        self.assertEqual(result['wp2']['forskning'], [])
+        self.assertEqual(result['wp2']['projekt'], [])
+        self.assertEqual(result['wp2']['utveckling'], [])
+        self.assertEqual(result['wp2']['klinik'], [])
+
+        self.assertEqual(result['wp3']['forskning'], [])
+        self.assertEqual(result['wp3']['projekt'], [])
+        self.assertEqual(result['wp3']['utveckling'], [])
+        self.assertEqual(result['wp3']['klinik'],
+                         [('PED26281_D2607132_Blod_CD15_240826',
+                           'DC221',
+                           '20260901',
+                           'DC',
+                           'processing_steps:archive_only',
+                           'PED26281_D2607132_Blod_CD15_240826,PED26281_D2607132_Blod_CD15_240826,,F02,LB014,GAAGCGGCAC,LB014,GTGCCGCTTC,\n',  # noqa: E501
+                           True),
+                          ('D47439_D2607142_Blod_CD3_240826',
+                           'DC221',
+                           '20260901',
+                           'DC',
+                           'processing_steps:archive_only',
+                           'D47439_D2607142_Blod_CD3_240826,D47439_D2607142_Blod_CD3_240826,,G02,LB015,TCCATTGCCG,LB015,CGGCAATGGA,\n',  # noqa: E501
+                           True),
+                          ('Chimkontroll1_CK1DC220_Blod_QC_310826',
+                           'DC221',
+                           '20260901',
+                           'DC',
+                           'processing_steps:archive_only',
+                           'Chimkontroll1_CK1DC220_Blod_QC_310826,Chimkontroll1_CK1DC220_Blod_QC_310826,,C04,LB027,TAAGCATCCA,LB027,TGGATGCTTA,',  # noqa: E501
+                           True)])
+
+    def test_create_analysis_file_from_dc_samplesheet(self):
+        from ductus.tools.utils import create_analysis_file
+
+        self.maxDiff = None
+        dc_lab_sample_sheet = "tests/samplesheets/files/SampleSheet.DC.csv"
+        dc_expected_analysis = "tests/analysis/DC221_analysis.csv"
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            file_created = create_analysis_file(dc_lab_sample_sheet, temp_dir)
+
+            with open(file_created[0]) as created, open(dc_expected_analysis) as expected:
+                self.assertEqual(created.read(), expected.read())
+
+    def test_create_dc_samplesheet_new_format(self):
+        from ductus.tools.utils import convert_old_cgu_samplesheet_format_to_new
+
+        self.maxDiff = None
+        dc_lab_sample_sheet_old = "tests/samplesheets/files/SampleSheet.DC.csv"
+        dc_lab_sample_sheet_new_expected = "tests/samplesheets/files/SampleSheet.DC.newcgformat.csv"
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path_to_created = os.path.join(temp_dir, "new_samplesheet.csv")
+            convert_old_cgu_samplesheet_format_to_new(dc_lab_sample_sheet_old, path_to_created)
+
+            with open(path_to_created) as created, open(dc_lab_sample_sheet_new_expected) as expected:
+                self.assertEqual(created.read(), expected.read())
+
 
 if __name__ == '__main__':
     unittest.main()
