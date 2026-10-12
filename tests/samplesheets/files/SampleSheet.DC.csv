@@ -1,0 +1,23 @@
+[Header]
+Local Run Manager Analysis Id,117117
+Experiment Name,DC221
+Date,2026-09-01
+Module,GenerateFASTQ - 3.1.1
+Workflow,GenerateFASTQ
+Library Prep Kit,Devyser 2x76 LB A
+Description,Devyser Chimerism
+Chemistry,Amplicon
+
+[Reads]
+76
+76
+
+[Settings]
+adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+adapterread2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+
+[Data]
+Sample_ID,Sample_Name,Description,Index_Plate_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project
+PED26281_D2607132_Blod_CD15_240826,PED26281_D2607132_Blod_CD15_240826,,F02,LB014,GAAGCGGCAC,LB014,GTGCCGCTTC,
+D47439_D2607142_Blod_CD3_240826,D47439_D2607142_Blod_CD3_240826,,G02,LB015,TCCATTGCCG,LB015,CGGCAATGGA,
+Chimkontroll1_CK1DC220_Blod_QC_310826,Chimkontroll1_CK1DC220_Blod_QC_310826,,C04,LB027,TAAGCATCCA,LB027,TGGATGCTTA,
