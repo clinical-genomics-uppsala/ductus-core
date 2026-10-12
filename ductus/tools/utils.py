@@ -456,9 +456,9 @@ def extract_analysis_information(samplesheet):
                                                           old_format))
                         elif DC:
                             if description == "":
-                                description = "processing_steps:archive_only"
+                                description = "processing_steps:archive"
                             else:
-                                description += "%" + "processing_steps:archive_only"
+                                description += "%" + "processing_steps:archive"
                             data["wp3"]['klinik'].append((sample_id,
                                                           sample_experiment,
                                                           date_string,

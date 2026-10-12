@@ -1540,21 +1540,21 @@ class TestUtils(unittest.TestCase):
                            'DC221',
                            '20260901',
                            'DC',
-                           'processing_steps:archive_only',
+                           'processing_steps:archive',
                            'PED26281_D2607132_Blod_CD15_240826,PED26281_D2607132_Blod_CD15_240826,,F02,LB014,GAAGCGGCAC,LB014,GTGCCGCTTC,\n',  # noqa: E501
                            True),
                           ('D47439_D2607142_Blod_CD3_240826',
                            'DC221',
                            '20260901',
                            'DC',
-                           'processing_steps:archive_only',
+                           'processing_steps:archive',
                            'D47439_D2607142_Blod_CD3_240826,D47439_D2607142_Blod_CD3_240826,,G02,LB015,TCCATTGCCG,LB015,CGGCAATGGA,\n',  # noqa: E501
                            True),
                           ('Chimkontroll1_CK1DC220_Blod_QC_310826',
                            'DC221',
                            '20260901',
                            'DC',
-                           'processing_steps:archive_only',
+                           'processing_steps:archive',
                            'Chimkontroll1_CK1DC220_Blod_QC_310826,Chimkontroll1_CK1DC220_Blod_QC_310826,,C04,LB027,TAAGCATCCA,LB027,TGGATGCTTA,',  # noqa: E501
                            True)])
 
