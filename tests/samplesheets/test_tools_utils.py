@@ -1536,26 +1536,26 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(result['wp3']['projekt'], [])
         self.assertEqual(result['wp3']['utveckling'], [])
         self.assertEqual(result['wp3']['klinik'],
-                         [('PED26281_D2607132_Blod_CD15_240826',
+                         [('PED26281-D2607132-Blod-CD15-240826',
                            'DC221',
                            '20260901',
                            'DC',
                            'processing_steps:archive',
-                           'PED26281_D2607132_Blod_CD15_240826,PED26281_D2607132_Blod_CD15_240826,,F02,LB014,GAAGCGGCAC,LB014,GTGCCGCTTC,\n',  # noqa: E501
+                           'PED26281-D2607132-Blod-CD15-240826,PED26281-D2607132-Blod-CD15-240826,,F02,LB014,GAAGCGGCAC,LB014,GTGCCGCTTC,\n',  # noqa: E501
                            True),
-                          ('D47439_D2607142_Blod_CD3_240826',
+                          ('D47439-D2607142-Blod-CD3-240826',
                            'DC221',
                            '20260901',
                            'DC',
                            'processing_steps:archive',
-                           'D47439_D2607142_Blod_CD3_240826,D47439_D2607142_Blod_CD3_240826,,G02,LB015,TCCATTGCCG,LB015,CGGCAATGGA,\n',  # noqa: E501
+                           'D47439-D2607142-Blod-CD3-240826,D47439-D2607142-Blod-CD3-240826,,G02,LB015,TCCATTGCCG,LB015,CGGCAATGGA,\n',  # noqa: E501
                            True),
-                          ('Chimkontroll1_CK1DC220_Blod_QC_310826',
+                          ('Chimkontroll1-CK1DC220-Blod-QC-310826',
                            'DC221',
                            '20260901',
                            'DC',
                            'processing_steps:archive',
-                           'Chimkontroll1_CK1DC220_Blod_QC_310826,Chimkontroll1_CK1DC220_Blod_QC_310826,,C04,LB027,TAAGCATCCA,LB027,TGGATGCTTA,',  # noqa: E501
+                           'Chimkontroll1-CK1DC220-Blod-QC-310826,Chimkontroll1-CK1DC220-Blod-QC-310826,,C04,LB027,TAAGCATCCA,LB027,TGGATGCTTA,',  # noqa: E501
                            True)])
 
     def test_create_analysis_file_from_dc_samplesheet(self):

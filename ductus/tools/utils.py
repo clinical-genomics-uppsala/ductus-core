@@ -459,12 +459,12 @@ def extract_analysis_information(samplesheet):
                                 description = "processing_steps:archive"
                             else:
                                 description += "%" + "processing_steps:archive"
-                            data["wp3"]['klinik'].append((sample_id,
+                            data["wp3"]['klinik'].append((sample_id.replace('_', '-'),
                                                           sample_experiment,
                                                           date_string,
                                                           "DC",
                                                           description,
-                                                          row,
+                                                          row.replace(sample_id, sample_id.replace('_', '-')),
                                                           old_format))
                         else:
                             raise Exception("Unhandled case: " + row)
