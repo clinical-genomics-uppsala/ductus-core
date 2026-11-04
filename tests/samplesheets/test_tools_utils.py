@@ -1491,6 +1491,38 @@ class TestUtils(unittest.TestCase):
 
         self.assertTrue(get_nr_expected_fastqs(sample_list_SE, file_list_SE))
 
+    def test_get_nr_expected_fastqs_suffix_sample_id(self):
+        # 4-79 is a suffix of 64-79, files for 64-79 must not be counted for 4-79
+        file_list = ['path/4-79_S2_L001_R1_001.fastq.gz',
+                     'path/4-79_S2_L001_R2_001.fastq.gz',
+                     'path/64-79_S15_L001_R1_001.fastq.gz',
+                     'path/64-79_S15_L001_R2_001.fastq.gz',
+                     'path/Undetermined_L001.R1.fastq.gz',
+                     'path/Undetermined_L001.R2.fastq.gz',
+                     ]
+
+        sample_list = [["4-79", "20261029-GMS560", [1], 2],
+                       ["64-79", "20261029-GMS560", [1], 2]]
+
+        self.assertTrue(get_nr_expected_fastqs(sample_list, file_list))
+
+        # Return False when files for 4-79 are missing, even if 64-79 is complete
+        self.assertFalse(get_nr_expected_fastqs(sample_list, file_list[2:]))
+
+    def test_get_nr_expected_fastqs_experiment_prefix(self):
+        file_list = ['path/20261030-GMSPRIO_26-2751_S87_L008_R1_001.fastq.gz',
+                     'path/20261030-GMSPRIO_26-2751_S87_L008_R2_001.fastq.gz',
+                     'path/20261030-GMSPRIO_126-2751_S88_L008_R1_001.fastq.gz',
+                     'path/20261030-GMSPRIO_126-2751_S88_L008_R2_001.fastq.gz',
+                     'path/Undetermined_L008.R1.fastq.gz',
+                     'path/Undetermined_L008.R2.fastq.gz',
+                     ]
+
+        sample_list = [["26-2751", "20261030-GMSPRIO", [8], 2],
+                       ["126-2751", "20261030-GMSPRIO", [8], 2]]
+
+        self.assertTrue(get_nr_expected_fastqs(sample_list, file_list))
+
 
 if __name__ == '__main__':
     unittest.main()
