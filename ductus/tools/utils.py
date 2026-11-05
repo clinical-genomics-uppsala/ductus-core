@@ -627,7 +627,7 @@ def get_nr_expected_fastqs(sample_list, file_list):
         nr_of_fastqs = 0
         for f in file_list:
             file_name = os.path.basename(f).split('_')
-            if file_name[0] == sample_id or (file_name[0] == experiment_id and file_name[1:2] == [sample_id]):
+            if file_name[0] == sample_id or (file_name[0] == experiment_id and file_name[1] == [sample_id]):
                 nr_of_fastqs += 1
         nr_of_expected_fastqs = nr_of_lanes*nr_of_reads
 
