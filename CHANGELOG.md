@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.20.1](https://github.com/clinical-genomics-uppsala/ductus-core/compare/v1.20.0...v1.20.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* remove compression from rsync to speed up transfer ([9a73faf](https://github.com/clinical-genomics-uppsala/ductus-core/commit/9a73fafc68df52b95db02d1817a8afe6cdb719b9))
+* remove compression from rsync to speed up transfer ([edcad4f](https://github.com/clinical-genomics-uppsala/ductus-core/commit/edcad4f142f24ecd5c3df9862052ba18cc4a632e))
+* **utils.py:** Avoid substring match ([a1c7a32](https://github.com/clinical-genomics-uppsala/ductus-core/commit/a1c7a32489ddac2fa6066cc3d1c42e53c87d8433))
+* **utils.py:** Avoid substring match ([6b44aca](https://github.com/clinical-genomics-uppsala/ductus-core/commit/6b44acad309a055b67e01c85d9b5e5400be35eac))
+
 ## [1.20.0](https://github.com/clinical-genomics-uppsala/ductus-core/compare/v1.19.0...v1.20.0) (2026-08-18)
 
 
