@@ -287,16 +287,16 @@ class Rsync:
 
 
             >>> rsync_local._Rsync__create_sync_command()
-            'rsync -zPa /home/test /home/test2 --timeout=1200'
+            'rsync -Pa /home/test /home/test2 --timeout=1200'
             >>> rsync_network._Rsync__create_sync_command()
             'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
-                -zPa 127.0.0.1:/home/test /home/test2 --timeout=1200'
+                -Pa 127.0.0.1:/home/test /home/test2 --timeout=1200'
             >>> rsync_network_extra._Rsync__create_sync_command()
             'rsync -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i identity_test" \
-                -zPcva /home/test test@127.0.0.1:/home/test2 --timeout=1200'
+                -Pcva /home/test test@127.0.0.1:/home/test2 --timeout=1200'
         """
         command = 'rsync'
-        flags = " -zP"
+        flags = " -P"
         if not self.local_sync:
             if self.identity_file:
                 command += ' -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ' + self.identity_file + '"'

@@ -618,10 +618,17 @@ def get_nr_expected_fastqs(sample_list, file_list):
     status_list = []
     for sample in sample_list:
         sample_id = sample[0]
+        experiment_id = sample[1]
         nr_of_lanes = len(sample[2])
         nr_of_reads = sample[3]
 
-        nr_of_fastqs = len(list(i for i in file_list if f"{sample_id}_" in i))
+        # File names are either <sample_id>_... or <experiment_id>_<sample_id>_...
+        # Compare whole name parts, a substring match lets 4-79 match 64-79_...
+        nr_of_fastqs = 0
+        for f in file_list:
+            file_name = os.path.basename(f).split('_')
+            if file_name[0] == sample_id or (file_name[0] == experiment_id and file_name[1] == sample_id):
+                nr_of_fastqs += 1
         nr_of_expected_fastqs = nr_of_lanes*nr_of_reads
 
         if nr_of_expected_fastqs == nr_of_fastqs:
